@@ -39,17 +39,6 @@ export class InternalServerErrorException extends HttpException {
       | string
       | HttpExceptionOptions = 'Internal Server Error',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      ),
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

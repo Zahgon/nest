@@ -29,12 +29,10 @@ function callOperator(
   signal?: string,
 ): Promise<any>[] {
   return iterate(instances)
-    .filter(instance => !isNil(instance))
+    .filter(instance => { throw new Error("STUB"); })
     .filter(hasBeforeApplicationShutdownHook)
     .map(async instance =>
-      (instance as any as BeforeApplicationShutdown).beforeApplicationShutdown(
-        signal,
-      ),
+      { throw new Error("STUB"); },
     )
     .toArray();
 }

@@ -28,15 +28,7 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
   }> = [];
 
   constructor(options: Required<TcpClientOptions>['options']) {
-    super();
-    this.port = this.getOptionsProp(options, 'port', TCP_DEFAULT_PORT);
-    this.host = this.getOptionsProp(options, 'host', TCP_DEFAULT_HOST);
-    this.socketClass = this.getOptionsProp(options, 'socketClass', JsonSocket);
-    this.tlsOptions = this.getOptionsProp(options, 'tlsOptions');
-    this.maxBufferSize = this.getOptionsProp(options, 'maxBufferSize');
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public connect(): Promise<any> {
@@ -49,15 +41,13 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
     this.registerErrorListener(this.socket);
 
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.socket!.on(event, callback as any),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
 
     const source$ = this.connect$(this.socket.netSocket).pipe(
       tap(() => {
-        this.socket!.on('message', (buffer: WritePacket & PacketId) =>
-          this.handleResponse(buffer),
-        );
+          throw new Error("STUB");
       }),
       share(),
     );
@@ -67,10 +57,7 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
       this.socket.connect(this.port, this.host);
     }
     this.connectionPromise = lastValueFrom(source$).catch(err => {
-      if (err instanceof EmptyError) {
-        return;
-      }
-      throw err;
+        throw new Error("STUB");
     });
 
     return this.connectionPromise;
@@ -128,24 +115,19 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
 
   public registerConnectListener(socket: TcpSocket) {
     socket.on(TcpEventsMap.CONNECT, () => {
-      this._status$.next(TcpStatus.CONNECTED);
+        throw new Error("STUB");
     });
   }
 
   public registerErrorListener(socket: TcpSocket) {
     socket.on(TcpEventsMap.ERROR, err => {
-      if (err.code !== ECONNREFUSED) {
-        this.handleError(err);
-      } else {
-        this._status$.next(TcpStatus.DISCONNECTED);
-      }
+        throw new Error("STUB");
     });
   }
 
   public registerCloseListener(socket: TcpSocket) {
     socket.on(TcpEventsMap.CLOSE, () => {
-      this._status$.next(TcpStatus.DISCONNECTED);
-      this.handleClose();
+        throw new Error("STUB");
     });
   }
 
@@ -178,12 +160,7 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.socket) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return this.socket.netSocket as T;
+      throw new Error("STUB");
   }
 
   protected publish(
@@ -197,10 +174,12 @@ export class ClientTCP extends ClientProxy<TcpEvents, TcpStatus> {
       this.routingMap.set(packet.id, callback);
       this.socket!.sendMessage(serializedPacket);
 
-      return () => this.routingMap.delete(packet.id);
+      return () => { throw new Error("STUB"); };
     } catch (err) {
       callback({ err });
-      return () => {};
+      return () => {
+          throw new Error("STUB");
+      };
     }
   }
 

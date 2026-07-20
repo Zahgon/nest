@@ -8,22 +8,15 @@ import { IncomingMessage, OutgoingHttpHeaders } from 'http';
 import { Transform } from 'stream';
 
 function serializeSseLines(value: string, prefix: string): string {
-  return value
-    .split(/\r\n|\r|\n/)
-    .map(line => `${prefix}${line}\n`)
-    .join('');
+    throw new Error("STUB");
 }
 
 function toDataString(data: string | object): string {
-  if (isObject(data)) {
-    return toDataString(JSON.stringify(data));
-  }
-
-  return serializeSseLines(data, 'data: ');
+    throw new Error("STUB");
 }
 
 function toCommentString(comment: string): string {
-  return serializeSseLines(comment, ': ');
+    throw new Error("STUB");
 }
 
 function isCommentOnly(message: MessageEvent): boolean {
@@ -80,16 +73,11 @@ export class SseStream extends Transform {
   private _additionalHeaders: AdditionalHeaders | undefined;
 
   constructor(req?: IncomingMessage) {
-    super({ objectMode: true });
-    if (req && req.socket) {
-      req.socket.setKeepAlive(true);
-      req.socket.setNoDelay(true);
-      req.socket.setTimeout(0);
-    }
+      throw new Error("STUB");
   }
 
   get headersCommitted(): boolean {
-    return this._headersCommitted;
+      throw new Error("STUB");
   }
 
   pipe<T extends WritableHeaderStream>(
@@ -146,19 +134,7 @@ export class SseStream extends Transform {
     encoding: string,
     callback: (error?: Error | null, data?: any) => void,
   ) {
-    this.commitHeaders();
-
-    const sanitize = (val: string | number) =>
-      String(val).replace(/[\r\n]/g, '');
-
-    let data = message.type ? `event: ${sanitize(message.type)}\n` : '';
-    data += !isNil(message.id) ? `id: ${sanitize(message.id)}\n` : '';
-    data += message.retry ? `retry: ${sanitize(message.retry)}\n` : '';
-    data += !isNil(message.comment) ? toCommentString(message.comment) : '';
-    data += !isNil(message.data) ? toDataString(message.data) : '';
-    data += '\n';
-    this.push(data);
-    callback();
+      throw new Error("STUB");
   }
 
   /**

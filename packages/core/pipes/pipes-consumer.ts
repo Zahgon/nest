@@ -22,9 +22,7 @@ export class PipesConsumer {
     transforms: PipeTransform[],
   ) {
     return transforms.reduce(async (deferredValue, pipe) => {
-      const val = await deferredValue;
-      const result = pipe.transform(val, { metatype, type, data });
-      return result;
+        throw new Error("STUB");
     }, Promise.resolve(value));
   }
 }

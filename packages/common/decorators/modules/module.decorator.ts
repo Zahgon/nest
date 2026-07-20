@@ -20,10 +20,6 @@ export function Module(metadata: ModuleMetadata): ClassDecorator {
   validateModuleKeys(propsKeys);
 
   return (target: Function) => {
-    for (const property in metadata) {
-      if (Object.hasOwnProperty.call(metadata, property)) {
-        Reflect.defineMetadata(property, (metadata as any)[property], target);
-      }
-    }
+      throw new Error("STUB");
   };
 }

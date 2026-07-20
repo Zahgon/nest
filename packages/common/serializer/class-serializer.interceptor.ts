@@ -38,15 +38,7 @@ export class ClassSerializerInterceptor implements NestInterceptor {
     @Optional()
     protected readonly defaultOptions: ClassSerializerInterceptorOptions = {},
   ) {
-    classTransformer =
-      defaultOptions?.transformerPackage ??
-      loadPackage('class-transformer', 'ClassSerializerInterceptor', () =>
-        require('class-transformer'),
-      );
-
-    if (!defaultOptions?.transformerPackage) {
-      require('class-transformer');
-    }
+      throw new Error("STUB");
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -59,7 +51,7 @@ export class ClassSerializerInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         map((res: PlainLiteralObject | Array<PlainLiteralObject>) =>
-          this.serialize(res, options),
+          { throw new Error("STUB"); },
         ),
       );
   }
@@ -76,7 +68,7 @@ export class ClassSerializerInterceptor implements NestInterceptor {
     }
 
     return Array.isArray(response)
-      ? response.map(item => this.transformToPlain(item, options))
+      ? response.map(item => { throw new Error("STUB"); })
       : this.transformToPlain(response, options);
   }
 

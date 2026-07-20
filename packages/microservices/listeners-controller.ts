@@ -76,85 +76,13 @@ export class ListenersController {
     patternHandlers
       .filter(
         ({ transport }) =>
-          isUndefined(transport) ||
-          isUndefined(serverInstance.transportId) ||
-          transport === serverInstance.transportId,
+          { throw new Error("STUB"); },
       )
       .reduce((acc, handler) => {
-        handler.patterns.forEach(pattern =>
-          acc.push({ ...handler, patterns: [pattern] }),
-        );
-        return acc;
+          throw new Error("STUB");
       }, [] as EventOrMessageListenerDefinition[])
       .forEach((definition: EventOrMessageListenerDefinition) => {
-        const {
-          patterns: [pattern],
-          targetCallback,
-          methodKey,
-          extras,
-          isEventHandler,
-        } = definition;
-
-        this.insertEntrypointDefinition(
-          instanceWrapper,
-          definition,
-          serverInstance.transportId!,
-        );
-
-        if (isStatic) {
-          const proxy = this.contextCreator.create(
-            instance,
-            targetCallback,
-            moduleKey,
-            methodKey,
-            STATIC_CONTEXT,
-            undefined,
-            defaultCallMetadata,
-          );
-          if (isEventHandler) {
-            const eventHandler: MessageHandler = async (...args: unknown[]) => {
-              const originalArgs = args;
-              const [dataOrContextHost] = originalArgs;
-              if (dataOrContextHost instanceof RequestContextHost) {
-                args = args.slice(1, args.length);
-              }
-              const returnValue = proxy(...args);
-              return this.forkJoinHandlersIfAttached(
-                returnValue,
-                originalArgs,
-                eventHandler,
-              );
-            };
-            return serverInstance.addHandler(
-              pattern,
-              eventHandler,
-              isEventHandler,
-              extras,
-            );
-          } else {
-            return serverInstance.addHandler(
-              pattern,
-              proxy,
-              isEventHandler,
-              extras,
-            );
-          }
-        }
-        const asyncHandler = this.createRequestScopedHandler(
-          instanceWrapper,
-          pattern,
-          moduleRef!,
-          moduleKey,
-          methodKey,
-          defaultCallMetadata,
-          isEventHandler,
-        );
-        serverInstance.addHandler(
-          pattern,
-          asyncHandler,
-          isEventHandler,
-          extras,
-        );
+          throw new Error("STUB");
       });
   }
 
@@ -236,65 +164,7 @@ export class ListenersController {
     const isTreeDurable = wrapper.isDependencyTreeDurable();
 
     const requestScopedHandler: MessageHandler = async (...args: unknown[]) => {
-      try {
-        let contextId: ContextId;
-
-        let [dataOrContextHost] = args;
-        if (dataOrContextHost instanceof RequestContextHost) {
-          contextId = this.getContextId(dataOrContextHost, isTreeDurable);
-          args.shift();
-        } else {
-          const [data, reqCtx] = args;
-          const request = RequestContextHost.create(
-            pattern,
-            data,
-            reqCtx as BaseRpcContext,
-          );
-          contextId = this.getContextId(request, isTreeDurable);
-          dataOrContextHost = request;
-        }
-
-        const contextInstance = await this.injector.loadPerContext(
-          instance,
-          moduleRef,
-          collection,
-          contextId,
-        );
-        const proxy = this.contextCreator.create(
-          contextInstance,
-          contextInstance[methodKey],
-          moduleKey,
-          methodKey,
-          contextId,
-          wrapper.id,
-          defaultCallMetadata,
-        );
-
-        const returnValue = proxy(...args);
-        if (isEventHandler) {
-          return this.forkJoinHandlersIfAttached(
-            returnValue,
-            [dataOrContextHost, ...args],
-            requestScopedHandler,
-          );
-        }
-        return returnValue;
-      } catch (err) {
-        let exceptionFilter = this.exceptionFiltersCache.get(
-          instance[methodKey],
-        );
-        if (!exceptionFilter) {
-          exceptionFilter = this.exceptionFiltersContext.create(
-            instance,
-            instance[methodKey],
-            moduleKey,
-          );
-          this.exceptionFiltersCache.set(instance[methodKey], exceptionFilter);
-        }
-        const host = new ExecutionContextHost(args);
-        host.setType('rpc');
-        return exceptionFilter.handle(err, host);
-      }
+        throw new Error("STUB");
     };
     return requestScopedHandler;
   }
@@ -331,7 +201,7 @@ export class ListenersController {
   public transformToObservable(resultOrDeferred: any) {
     if (resultOrDeferred instanceof Promise) {
       return fromPromise(resultOrDeferred).pipe(
-        mergeMap(val => (isObservable(val) ? val : of(val))),
+        mergeMap(val => { throw new Error("STUB"); }),
       );
     }
 

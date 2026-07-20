@@ -24,27 +24,7 @@ export class InternalCoreModuleFactory {
     moduleOverrides?: ModuleOverride[],
   ) {
     const lazyModuleLoaderFactory = () => {
-      const logger = new Logger(LazyModuleLoader.name, {
-        timestamp: false,
-      });
-      const injector = new Injector({
-        preview: container.contextOptions?.preview!,
-        instanceDecorator:
-          container.contextOptions?.instrument?.instanceDecorator,
-      });
-      const instanceLoader = new InstanceLoader(
-        container,
-        injector,
-        graphInspector,
-        logger,
-      );
-      return new LazyModuleLoader(
-        scanner,
-        instanceLoader,
-        moduleCompiler,
-        container.getModules(),
-        moduleOverrides,
-      );
+        throw new Error("STUB");
     };
 
     InitializeOnPreviewAllowlist.add(InternalCoreModule);
@@ -52,15 +32,15 @@ export class InternalCoreModuleFactory {
     return InternalCoreModule.register([
       {
         provide: ExternalContextCreator,
-        useFactory: () => ExternalContextCreator.fromContainer(container),
+        useFactory: () => { throw new Error("STUB"); },
       },
       {
         provide: ModulesContainer,
-        useFactory: () => container.getModules(),
+        useFactory: () => { throw new Error("STUB"); },
       },
       {
         provide: HttpAdapterHost,
-        useFactory: () => httpAdapterHost,
+        useFactory: () => { throw new Error("STUB"); },
       },
       {
         provide: LazyModuleLoader,
@@ -68,7 +48,7 @@ export class InternalCoreModuleFactory {
       },
       {
         provide: SerializedGraph,
-        useFactory: () => container.serializedGraph,
+        useFactory: () => { throw new Error("STUB"); },
       },
     ]);
   }

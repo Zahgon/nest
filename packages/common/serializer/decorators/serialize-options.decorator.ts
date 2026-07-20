@@ -6,4 +6,4 @@ import { CLASS_SERIALIZER_OPTIONS } from '../class-serializer.constants';
  * @publicApi
  */
 export const SerializeOptions = (options: ClassSerializerContextOptions) =>
-  SetMetadata(CLASS_SERIALIZER_OPTIONS, options);
+  { throw new Error("STUB"); };

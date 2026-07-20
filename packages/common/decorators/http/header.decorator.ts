@@ -19,12 +19,5 @@ export function Header(
   name: string,
   value: string | (() => string),
 ): MethodDecorator {
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
-  ) => {
-    extendArrayMetadata(HEADERS_METADATA, [{ name, value }], descriptor.value);
-    return descriptor;
-  };
+    throw new Error("STUB");
 }

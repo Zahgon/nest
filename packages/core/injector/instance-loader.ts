@@ -39,22 +39,14 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
 
   private createPrototypes(modules: Map<string, Module>) {
     modules.forEach(moduleRef => {
-      this.createPrototypesOfProviders(moduleRef);
-      this.createPrototypesOfInjectables(moduleRef);
-      this.createPrototypesOfControllers(moduleRef);
+        throw new Error("STUB");
     });
   }
 
   private async createInstances(modules: Map<string, Module>) {
     await Promise.all(
       [...modules.values()].map(async moduleRef => {
-        await this.createInstancesOfProviders(moduleRef);
-        await this.createInstancesOfInjectables(moduleRef);
-        await this.createInstancesOfControllers(moduleRef);
-
-        const { name } = moduleRef;
-        this.isModuleWhitelisted(name) &&
-          this.logger.log(MODULE_INIT_MESSAGE`${name}`);
+          throw new Error("STUB");
       }),
     );
   }
@@ -62,7 +54,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
   private createPrototypesOfProviders(moduleRef: Module) {
     const { providers } = moduleRef;
     providers.forEach(wrapper =>
-      this.injector.loadPrototype<Injectable>(wrapper, providers),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -71,8 +63,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
     const wrappers = [...providers.values()];
     await Promise.all(
       wrappers.map(async item => {
-        await this.injector.loadProvider(item, moduleRef);
-        this.graphInspector.inspectInstanceWrapper(item, moduleRef);
+          throw new Error("STUB");
       }),
     );
   }
@@ -80,7 +71,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
   private createPrototypesOfControllers(moduleRef: Module) {
     const { controllers } = moduleRef;
     controllers.forEach(wrapper =>
-      this.injector.loadPrototype<Controller>(wrapper, controllers),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -89,8 +80,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
     const wrappers = [...controllers.values()];
     await Promise.all(
       wrappers.map(async item => {
-        await this.injector.loadController(item, moduleRef);
-        this.graphInspector.inspectInstanceWrapper(item, moduleRef);
+          throw new Error("STUB");
       }),
     );
   }
@@ -98,7 +88,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
   private createPrototypesOfInjectables(moduleRef: Module) {
     const { injectables } = moduleRef;
     injectables.forEach(wrapper =>
-      this.injector.loadPrototype(wrapper, injectables),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -107,8 +97,7 @@ export class InstanceLoader<TInjector extends Injector = Injector> {
     const wrappers = [...injectables.values()];
     await Promise.all(
       wrappers.map(async item => {
-        await this.injector.loadInjectable(item, moduleRef);
-        this.graphInspector.inspectInstanceWrapper(item, moduleRef);
+          throw new Error("STUB");
       }),
     );
   }

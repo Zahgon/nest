@@ -51,48 +51,19 @@ export class MiddlewareBuilder implements MiddlewareConsumer {
     ) {}
 
     public getExcludedRoutes(): RouteInfo[] {
-      return this.excludedRoutes;
+        throw new Error("STUB");
     }
 
     public exclude(
       ...routes: Array<string | RouteInfo>
     ): MiddlewareConfigProxy {
-      this.excludedRoutes = [
-        ...this.excludedRoutes,
-        ...this.getRoutesFlatList(routes).reduce((excludedRoutes, route) => {
-          for (const routePath of this.routeInfoPathExtractor.extractPathFrom(
-            route,
-          )) {
-            excludedRoutes.push({
-              ...route,
-              path: routePath,
-            });
-          }
-
-          return excludedRoutes;
-        }, [] as RouteInfo[]),
-      ];
-
-      return this;
+        throw new Error("STUB");
     }
 
     public forRoutes(
       ...routes: Array<string | Type<any> | RouteInfo>
     ): MiddlewareConsumer {
-      const { middlewareCollection } = this.builder;
-
-      const flattedRoutes = this.getRoutesFlatList(routes);
-      const forRoutes = this.removeOverlappedRoutes(flattedRoutes);
-      const configuration = {
-        middleware: filterMiddleware(
-          this.middleware,
-          this.excludedRoutes,
-          this.builder.getHttpAdapter(),
-        ),
-        forRoutes,
-      };
-      middlewareCollection.add(configuration);
-      return this.builder;
+        throw new Error("STUB");
     }
 
     private getRoutesFlatList(
@@ -101,7 +72,7 @@ export class MiddlewareBuilder implements MiddlewareConsumer {
       const { routesMapper } = this.builder;
 
       return iterate(routes)
-        .map(route => routesMapper.mapRouteToRouteInfo(route))
+        .map(route => { throw new Error("STUB"); })
         .flatten()
         .toArray();
     }
@@ -110,32 +81,11 @@ export class MiddlewareBuilder implements MiddlewareConsumer {
       const regexMatchParams = /(:[^/]*)/g;
       const wildcard = '([^/]*)';
       const routesWithRegex = routes
-        .filter(route => route.path.includes(':'))
-        .map(route => ({
-          method: route.method,
-          path: route.path,
-          // No `g` flag: each regex is reused across every route below, and a
-          // global regex advances `lastIndex` on a match, so the next `test()`
-          // would resume mid-string and fail the `^` anchor. The pattern is
-          // anchored and only used with `test()`, so `g` buys nothing anyway.
-          regex: new RegExp(
-            '^(' + route.path.replace(regexMatchParams, wildcard) + ')$',
-          ),
-        }));
+        .filter(route => { throw new Error("STUB"); })
+        .map(route => { throw new Error("STUB"); });
 
       return routes.filter(route => {
-        const isOverlapped = (item: { regex: RegExp } & RouteInfo): boolean => {
-          if (route.method !== item.method) {
-            return false;
-          }
-          const normalizedRoutePath = stripEndSlash(route.path);
-          return (
-            normalizedRoutePath !== item.path &&
-            item.regex.test(normalizedRoutePath)
-          );
-        };
-        const routeMatch = routesWithRegex.find(isOverlapped);
-        return routeMatch === undefined;
+          throw new Error("STUB");
       });
     }
   };

@@ -65,7 +65,7 @@ export abstract class Server<
     transportId: Transport | symbol,
     context: BaseRpcContext,
     done: () => Promise<any>,
-  ) => done();
+  ) => { throw new Error("STUB"); };
   protected onProcessingEndHook: (
     transportId: Transport | symbol,
     context: BaseRpcContext,
@@ -111,7 +111,7 @@ export abstract class Server<
    * @param transportId Unique transport identifier.
    */
   public setTransportId(transportId: Transport | symbol): void {
-    this.transportId = transportId;
+      throw new Error("STUB");
   }
 
   /**
@@ -124,7 +124,7 @@ export abstract class Server<
       done: () => Promise<any>,
     ) => void,
   ): void {
-    this.onProcessingStartHook = hook;
+      throw new Error("STUB");
   }
 
   /**
@@ -133,7 +133,7 @@ export abstract class Server<
   public setOnProcessingEndHook(
     hook: (transportId: Transport | symbol, context: unknown) => void,
   ): void {
-    this.onProcessingEndHook = hook;
+      throw new Error("STUB");
   }
 
   public addHandler(
@@ -184,25 +184,18 @@ export abstract class Server<
       if (!isProcessing) {
         isProcessing = true;
         process.nextTick(async () => {
-          while (dataQueue.length > 0) {
-            const packet = dataQueue.shift();
-            if (packet) {
-              await respond(packet);
-            }
-          }
-          isProcessing = false;
+            throw new Error("STUB");
         });
       }
     };
     return stream$
       .pipe(
         catchError((err: any) => {
-          scheduleOnNextTick({ err });
-          return EMPTY;
+            throw new Error("STUB");
         }),
-        finalize(() => scheduleOnNextTick({ isDisposed: true })),
+        finalize(() => { throw new Error("STUB"); }),
       )
-      .subscribe((response: any) => scheduleOnNextTick({ response }));
+      .subscribe((response: any) => { throw new Error("STUB"); });
   }
 
   public async handleEvent(
@@ -215,23 +208,7 @@ export abstract class Server<
       return this.logger.error(NO_EVENT_HANDLER`${pattern}`);
     }
     return this.onProcessingStartHook(this.transportId!, context, async () => {
-      const resultOrStream = await handler(packet.data, context);
-      if (isObservable(resultOrStream)) {
-        const connectableSource = connectable(
-          resultOrStream.pipe(
-            finalize(() =>
-              this.onProcessingEndHook?.(this.transportId!, context),
-            ),
-          ),
-          {
-            connector: () => new Subject(),
-            resetOnDisconnect: false,
-          },
-        );
-        connectableSource.connect();
-      } else {
-        this.onProcessingEndHook?.(this.transportId!, context);
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -246,7 +223,7 @@ export abstract class Server<
   public transformToObservable(resultOrDeferred: any) {
     if (resultOrDeferred instanceof Promise) {
       return fromPromise(resultOrDeferred).pipe(
-        mergeMap(val => (isObservable(val) ? val : of(val))),
+        mergeMap(val => { throw new Error("STUB"); }),
       );
     }
 
@@ -291,33 +268,15 @@ export abstract class Server<
     ctx: string,
     loader?: Function,
   ): T {
-    return loadPackage(name, ctx, loader);
+      throw new Error("STUB");
   }
 
   protected initializeSerializer(options: ClientOptions['options']) {
-    this.serializer =
-      (options &&
-        (options as
-          | RedisOptions['options']
-          | NatsOptions['options']
-          | MqttOptions['options']
-          | TcpOptions['options']
-          | RmqOptions['options']
-          | KafkaOptions['options'])!.serializer) ||
-      new IdentitySerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: ClientOptions['options']) {
-    this.deserializer =
-      (options! &&
-        (options as
-          | RedisOptions['options']
-          | NatsOptions['options']
-          | MqttOptions['options']
-          | TcpOptions['options']
-          | RmqOptions['options']
-          | KafkaOptions['options'])!.deserializer) ||
-      new IncomingRequestDeserializer();
+      throw new Error("STUB");
   }
 
   /**

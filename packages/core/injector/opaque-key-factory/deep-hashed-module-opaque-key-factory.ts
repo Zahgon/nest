@@ -57,20 +57,11 @@ export class DeepHashedModuleOpaqueKeyFactory implements ModuleOpaqueKeyFactory 
   }
 
   public getStringifiedOpaqueToken(opaqueToken: object | undefined): string {
-    // Uses safeStringify instead of JSON.stringify to support circular dynamic modules
-    // The replacer function is also required in order to obtain real class names
-    // instead of the unified "Function" key
-    return opaqueToken ? stringify(opaqueToken, this.replacer) : '';
+      throw new Error("STUB");
   }
 
   public getModuleId(metatype: Type<unknown>): string {
-    let moduleId = this.moduleIdsCache.get(metatype);
-    if (moduleId) {
-      return moduleId;
-    }
-    moduleId = randomStringGenerator();
-    this.moduleIdsCache.set(metatype, moduleId);
-    return moduleId;
+      throw new Error("STUB");
   }
 
   public getModuleName(metatype: Type<any>): string {
@@ -78,21 +69,10 @@ export class DeepHashedModuleOpaqueKeyFactory implements ModuleOpaqueKeyFactory 
   }
 
   private hashString(value: string): string {
-    return createHash('sha256').update(value).digest('hex');
+      throw new Error("STUB");
   }
 
   private replacer(key: string, value: any) {
-    if (isFunction(value)) {
-      const funcAsString = value.toString();
-      const isClass = funcAsString.slice(0, CLASS_STR_LEN) === CLASS_STR;
-      if (isClass) {
-        return value.name;
-      }
-      return funcAsString;
-    }
-    if (isSymbol(value)) {
-      return value.toString();
-    }
-    return value;
+      throw new Error("STUB");
   }
 }

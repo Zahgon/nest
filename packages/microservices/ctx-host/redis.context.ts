@@ -14,6 +14,6 @@ export class RedisContext extends BaseRpcContext<RedisContextArgs> {
    * Returns the name of the channel.
    */
   getChannel() {
-    return this.args[0];
+      throw new Error("STUB");
   }
 }

@@ -55,8 +55,5 @@ export function MessageBody(
   propertyOrPipe?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesWsParamDecorator(WsParamtype.PAYLOAD)(
-    propertyOrPipe,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }

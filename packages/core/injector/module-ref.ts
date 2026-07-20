@@ -28,22 +28,11 @@ export abstract class ModuleRef extends AbstractInstanceResolver {
   private _instanceLinksHost: InstanceLinksHost;
 
   protected get instanceLinksHost() {
-    if (!this._instanceLinksHost) {
-      this._instanceLinksHost = new InstanceLinksHost(this.container);
-    }
-    return this._instanceLinksHost;
+      throw new Error("STUB");
   }
 
   constructor(protected readonly container: NestContainer) {
-    super();
-
-    const contextOptions = container.contextOptions;
-
-    this.injector = new Injector({
-      preview: contextOptions?.preview ?? false,
-      snapshot: contextOptions?.snapshot,
-      instanceDecorator: contextOptions?.instrument?.instanceDecorator,
-    });
+      throw new Error("STUB");
   }
 
   /**
@@ -145,19 +134,11 @@ export abstract class ModuleRef extends AbstractInstanceResolver {
   public introspect<T = any>(
     token: Type<T> | string | symbol,
   ): IntrospectionResult {
-    const { wrapperRef } = this.instanceLinksHost.get(token);
-
-    let scope = Scope.DEFAULT;
-    if (!wrapperRef.isDependencyTreeStatic()) {
-      scope = Scope.REQUEST;
-    } else if (wrapperRef.isTransient) {
-      scope = Scope.TRANSIENT;
-    }
-    return { scope };
+      throw new Error("STUB");
   }
 
   public registerRequestByContextId<T = any>(request: T, contextId: ContextId) {
-    this.container.registerRequestProvider(request, contextId);
+      throw new Error("STUB");
   }
 
   protected async instantiateClass<T = any>(
@@ -183,34 +164,7 @@ export abstract class ModuleRef extends AbstractInstanceResolver {
     }
 
     return new Promise<T>(async (resolve, reject) => {
-      try {
-        const callback = async (instances: any[]) => {
-          const properties = await this.injector.resolveProperties(
-            wrapper,
-            moduleRef,
-            undefined,
-            {
-              contextId: contextId ?? STATIC_CONTEXT,
-              inquirer: wrapper,
-            },
-          );
-          const instance = new type(...instances);
-          this.injector.applyProperties(instance, properties);
-          resolve(instance);
-        };
-        await this.injector.resolveConstructorParams<T>(
-          wrapper,
-          moduleRef,
-          undefined,
-          callback,
-          {
-            contextId: contextId ?? STATIC_CONTEXT,
-            inquirer: wrapper,
-          },
-        );
-      } catch (err) {
-        reject(err);
-      }
+        throw new Error("STUB");
     });
   }
 }

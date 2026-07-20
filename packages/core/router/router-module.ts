@@ -22,8 +22,7 @@ export class RouterModule {
     private readonly modulesContainer: ModulesContainer,
     @Inject(ROUTES) private readonly routes: Routes,
   ) {
-    this.routes = this.deepCloneRoutes(routes) as Routes;
-    this.initialize();
+      throw new Error("STUB");
   }
 
   static register(routes: Routes): DynamicModule {
@@ -41,26 +40,13 @@ export class RouterModule {
   private deepCloneRoutes(
     routes: (RouteTree | Type<any>)[],
   ): (RouteTree | Type<any>)[] {
-    return routes.map((routeOrType: Type<any> | RouteTree) => {
-      if (typeof routeOrType === 'function') {
-        return routeOrType;
-      }
-      if (routeOrType.children) {
-        return {
-          ...routeOrType,
-          children: this.deepCloneRoutes(routeOrType.children),
-        };
-      }
-      return { ...routeOrType };
-    });
+      throw new Error("STUB");
   }
 
   private initialize() {
     const flattenedRoutes = flattenRoutePaths(this.routes);
     flattenedRoutes.forEach(route => {
-      const modulePath = normalizePath(route.path);
-      this.registerModulePathMetadata(route.module, modulePath);
-      this.updateTargetModulesCache(route.module);
+        throw new Error("STUB");
     });
   }
 
@@ -84,7 +70,7 @@ export class RouterModule {
       targetModulesByContainer.set(this.modulesContainer, moduleClassSet);
     }
     const moduleRef = Array.from(this.modulesContainer.values()).find(
-      item => item?.metatype === moduleCtor,
+      item => { throw new Error("STUB"); },
     );
     if (!moduleRef) {
       return;

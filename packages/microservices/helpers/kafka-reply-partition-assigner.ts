@@ -21,11 +21,7 @@ export class KafkaReplyPartitionAssigner {
       cluster: Cluster;
     },
   ) {
-    kafkaPackage = loadPackage(
-      'kafkajs',
-      KafkaReplyPartitionAssigner.name,
-      () => require('kafkajs'),
-    );
+      throw new Error("STUB");
   }
 
   /**
@@ -44,147 +40,55 @@ export class KafkaReplyPartitionAssigner {
 
     const membersCount = group.members.length;
     const decodedMembers = group.members.map(member =>
-      this.decodeMember(member),
+      { throw new Error("STUB"); },
     );
     const sortedMemberIds = decodedMembers
-      .map(member => member.memberId)
+      .map(member => { throw new Error("STUB"); })
       .sort();
 
     // build the previous assignment and an inverse map of topic > partition > memberId for lookup
     decodedMembers.forEach(member => {
-      if (
-        !previousAssignment[member.memberId] &&
-        Object.keys(member.previousAssignment).length > 0
-      ) {
-        previousAssignment[member.memberId] = member.previousAssignment;
-      }
+        throw new Error("STUB");
     });
 
     // build a collection of topics and partitions
     const topicsPartitions = group.topics
       .map(topic => {
-        const partitionMetadata =
-          this.config.cluster.findTopicPartitionMetadata(topic);
-        return partitionMetadata.map(m => {
-          return {
-            topic,
-            partitionId: m.partitionId,
-          };
-        });
+          throw new Error("STUB");
       })
-      .reduce((acc, val) => acc.concat(val), []);
+      .reduce((acc, val) => { throw new Error("STUB"); }, []);
 
     // create the new assignment by populating the members with the first partition of the topics
     sortedMemberIds.forEach(assignee => {
-      if (!assignment[assignee]) {
-        assignment[assignee] = {};
-      }
-
-      // add topics to each member
-      group.topics.forEach(topic => {
-        if (!assignment[assignee][topic]) {
-          assignment[assignee][topic] = [];
-        }
-
-        // see if the topic and partition belong to a previous assignment
-        if (
-          previousAssignment[assignee] &&
-          !isUndefined(previousAssignment[assignee][topic])
-        ) {
-          // take the minimum partition since replies will be sent to the minimum partition
-          const firstPartition = previousAssignment[assignee][topic];
-
-          // create the assignment with the first partition
-          assignment[assignee][topic].push(firstPartition);
-
-          // find and remove this topic and partition from the topicPartitions to be assigned later
-          const topicsPartitionsIndex = topicsPartitions.findIndex(
-            topicPartition => {
-              return (
-                topicPartition.topic === topic &&
-                topicPartition.partitionId === firstPartition
-              );
-            },
-          );
-
-          // only continue if we found a partition matching this topic
-          if (topicsPartitionsIndex !== -1) {
-            // remove inline
-            topicsPartitions.splice(topicsPartitionsIndex, 1);
-          }
-        }
-      });
+        throw new Error("STUB");
     });
 
     // check for member topics that have a partition length of 0
     sortedMemberIds.forEach(assignee => {
-      group.topics.forEach(topic => {
-        // only continue if there are no partitions for assignee's topic
-        if (assignment[assignee][topic].length === 0) {
-          // find the first partition for this topic
-          const topicsPartitionsIndex = topicsPartitions.findIndex(
-            topicPartition => {
-              return topicPartition.topic === topic;
-            },
-          );
-
-          if (topicsPartitionsIndex !== -1) {
-            // find and set the topic partition
-            const partition =
-              topicsPartitions[topicsPartitionsIndex].partitionId;
-
-            assignment[assignee][topic].push(partition);
-
-            // remove this partition from the topics partitions collection
-            topicsPartitions.splice(topicsPartitionsIndex, 1);
-          }
-        }
-      });
+        throw new Error("STUB");
     });
 
     // then balance out the rest of the topic partitions across the members
     const insertAssignmentsByTopic = (topicPartition, i) => {
-      const assignee = sortedMemberIds[i % membersCount];
-
-      assignment[assignee][topicPartition.topic].push(
-        topicPartition.partitionId,
-      );
+        throw new Error("STUB");
     };
 
     // build the assignments
     topicsPartitions.forEach(insertAssignmentsByTopic);
 
     // encode the end result
-    return Object.keys(assignment).map(memberId => ({
-      memberId,
-      memberAssignment: kafkaPackage.AssignerProtocol.MemberAssignment.encode({
-        version: this.version,
-        assignment: assignment[memberId],
-      }),
-    }));
+    return Object.keys(assignment).map(memberId => { throw new Error("STUB"); });
   }
 
   public protocol(subscription: {
     topics: string[];
     userData: Buffer;
   }): GroupState {
-    const stringifiedUserData = JSON.stringify({
-      previousAssignment: this.getPreviousAssignment(),
-    });
-    subscription.userData = Buffer.from(stringifiedUserData);
-
-    return {
-      name: this.name,
-      metadata: kafkaPackage.AssignerProtocol.MemberMetadata.encode({
-        version: this.version,
-        topics: subscription.topics,
-        userData: subscription.userData,
-      }),
-    };
+      throw new Error("STUB");
   }
 
   public getPreviousAssignment() {
-    return this.clientKafka.getConsumerAssignments();
+      throw new Error("STUB");
   }
 
   public decodeMember(member: GroupMember) {

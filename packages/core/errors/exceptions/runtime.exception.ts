@@ -4,6 +4,6 @@ export class RuntimeException extends Error {
   }
 
   public what() {
-    return this.message;
+      throw new Error("STUB");
   }
 }

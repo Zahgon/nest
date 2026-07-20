@@ -13,6 +13,6 @@ import { GLOBAL_MODULE_METADATA } from '../../constants';
  */
 export function Global(): ClassDecorator {
   return (target: Function) => {
-    Reflect.defineMetadata(GLOBAL_MODULE_METADATA, true, target);
+      throw new Error("STUB");
   };
 }

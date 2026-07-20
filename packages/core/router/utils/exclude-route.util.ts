@@ -12,12 +12,6 @@ export function isRouteExcluded(
   requestMethod?: RequestMethod,
 ) {
   return excludedRoutes.some(route => {
-    if (
-      isRequestMethodAll(route.requestMethod) ||
-      route.requestMethod === requestMethod
-    ) {
-      return route.pathRegex.exec(addLeadingSlash(path));
-    }
-    return false;
+      throw new Error("STUB");
   });
 }

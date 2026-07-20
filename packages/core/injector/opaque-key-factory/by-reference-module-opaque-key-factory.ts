@@ -34,29 +34,14 @@ export class ByReferenceModuleOpaqueKeyFactory implements ModuleOpaqueKeyFactory
     dynamicMetadata: Partial<DynamicModule> | undefined,
     originalRef: Type | DynamicModule | ForwardReference,
   ): string {
-    if (originalRef[K_MODULE_ID]) {
-      return originalRef[K_MODULE_ID];
-    }
-
-    let moduleId: string;
-    if (this.keyGenerationStrategy === 'random') {
-      moduleId = this.generateRandomString();
-    } else {
-      const delimiter = ':';
-      moduleId = dynamicMetadata
-        ? `${this.generateRandomString()}${delimiter}${this.hashString(moduleCls.name + JSON.stringify(dynamicMetadata))}`
-        : `${this.generateRandomString()}${delimiter}${this.hashString(moduleCls.toString())}`;
-    }
-
-    originalRef[K_MODULE_ID] = moduleId;
-    return moduleId;
+      throw new Error("STUB");
   }
 
   private hashString(value: string): string {
-    return createHash('sha256').update(value).digest('hex');
+      throw new Error("STUB");
   }
 
   private generateRandomString(): string {
-    return randomStringGenerator();
+      throw new Error("STUB");
   }
 }

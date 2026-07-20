@@ -88,15 +88,12 @@ export abstract class ClientProxy<
     data: TInput,
   ): Observable<TResult> {
     if (isNil(pattern) || isNil(data)) {
-      return _throw(() => new InvalidMessageException());
+      return _throw(() => { throw new Error("STUB"); });
     }
-    return defer(async () => this.connect()).pipe(
+    return defer(async () => { throw new Error("STUB"); }).pipe(
       mergeMap(
         () =>
-          new Observable((observer: Observer<TResult>) => {
-            const callback = this.createObserver(observer);
-            return this.publish({ pattern, data }, callback);
-          }),
+          { throw new Error("STUB"); },
       ),
     );
   }
@@ -113,13 +110,13 @@ export abstract class ClientProxy<
     data: TInput,
   ): Observable<TResult> {
     if (isNil(pattern) || isNil(data)) {
-      return _throw(() => new InvalidMessageException());
+      return _throw(() => { throw new Error("STUB"); });
     }
-    const source = defer(async () => this.connect()).pipe(
-      mergeMap(() => this.dispatchEvent({ pattern, data })),
+    const source = defer(async () => { throw new Error("STUB"); }).pipe(
+      mergeMap(() => { throw new Error("STUB"); }),
     );
     const connectableSource = connectable(source, {
-      connector: () => new Subject(),
+      connector: () => { throw new Error("STUB"); },
       resetOnDisconnect: false,
     });
     connectableSource.connect();
@@ -137,15 +134,7 @@ export abstract class ClientProxy<
     observer: Observer<T>,
   ): (packet: WritePacket) => void {
     return ({ err, response, isDisposed }: WritePacket) => {
-      if (err) {
-        return observer.error(this.serializeError(err));
-      } else if (response !== undefined && isDisposed) {
-        observer.next(this.serializeResponse(response));
-        return observer.complete();
-      } else if (isDisposed) {
-        return observer.complete();
-      }
-      observer.next(this.serializeResponse(response));
+        throw new Error("STUB");
     };
   }
 
@@ -169,7 +158,7 @@ export abstract class ClientProxy<
   ): Observable<any> {
     const error$ = fromEvent(instance, errorEvent).pipe(
       map((err: any) => {
-        throw err;
+          throw new Error("STUB");
       }),
     );
     const connect$ = fromEvent(instance, connectEvent);
@@ -206,28 +195,10 @@ export abstract class ClientProxy<
   }
 
   protected initializeSerializer(options: ClientOptions['options']) {
-    this.serializer =
-      (options &&
-        (options as
-          | RedisOptions['options']
-          | NatsOptions['options']
-          | MqttOptions['options']
-          | TcpClientOptions['options']
-          | RmqOptions['options']
-          | KafkaOptions['options'])!.serializer) ||
-      new IdentitySerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: ClientOptions['options']) {
-    this.deserializer =
-      (options &&
-        (options as
-          | RedisOptions['options']
-          | NatsOptions['options']
-          | MqttOptions['options']
-          | TcpClientOptions['options']
-          | RmqOptions['options']
-          | KafkaOptions['options'])!.deserializer) ||
-      new IncomingResponseDeserializer();
+      throw new Error("STUB");
   }
 }

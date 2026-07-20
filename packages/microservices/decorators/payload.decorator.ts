@@ -55,8 +55,5 @@ export function Payload(
   propertyOrPipe?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRpcParamDecorator(RpcParamtype.PAYLOAD)(
-    propertyOrPipe,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }

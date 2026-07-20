@@ -11,7 +11,7 @@ export class SettlementSignal {
 
   constructor() {
     this.settledPromise = new Promise<unknown>(resolve => {
-      this.settleFn = resolve;
+        throw new Error("STUB");
     });
   }
 

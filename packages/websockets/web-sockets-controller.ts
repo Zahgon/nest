@@ -72,17 +72,7 @@ export class WebSocketsController {
   ) {
     const nativeMessageHandlers = this.metadataExplorer.explore(instance);
     const messageHandlers = nativeMessageHandlers.map(
-      ({ callback, isAckHandledManually, message, methodName }) => ({
-        message,
-        methodName,
-        callback: this.contextCreator.create(
-          instance,
-          callback,
-          moduleKey,
-          methodName,
-        ),
-        isAckHandledManually,
-      }),
+      ({ callback, isAckHandledManually, message, methodName }) => { throw new Error("STUB"); },
     );
 
     this.inspectEntrypointDefinitions(
@@ -135,13 +125,7 @@ export class WebSocketsController {
   ) {
     const adapter = this.config.getIoAdapter();
     return (...args: unknown[]) => {
-      const [client] = args;
-      connection.next(args);
-      context.subscribeMessages(subscribersMap, client, instance);
-
-      const disconnectHook = adapter.bindClientDisconnect;
-      disconnectHook &&
-        disconnectHook.call(adapter, client, () => disconnect.next(client));
+        throw new Error("STUB");
     };
   }
 
@@ -155,9 +139,9 @@ export class WebSocketsController {
     if (instance.handleConnection) {
       event
         .pipe(
-          distinctUntilChanged((prev, curr) => compareElementAt(prev, curr, 0)),
+          distinctUntilChanged((prev, curr) => { throw new Error("STUB"); }),
         )
-        .subscribe((args: unknown[]) => instance.handleConnection!(...args));
+        .subscribe((args: unknown[]) => { throw new Error("STUB"); });
     }
   }
 
@@ -176,14 +160,10 @@ export class WebSocketsController {
   ) {
     const adapter = this.config.getIoAdapter();
     const handlers = subscribersMap.map(
-      ({ callback, message, isAckHandledManually }) => ({
-        message,
-        callback: callback.bind(instance, client),
-        isAckHandledManually,
-      }),
+      ({ callback, message, isAckHandledManually }) => { throw new Error("STUB"); },
     );
     adapter.bindMessageHandlers(client, handlers, data =>
-      fromPromise(this.pickResult(data)).pipe(mergeAll()),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -207,20 +187,7 @@ export class WebSocketsController {
     instanceWrapperId: string,
   ) {
     messageHandlers.forEach(handler => {
-      this.graphInspector.insertEntrypointDefinition<WebsocketEntrypointMetadata>(
-        {
-          type: 'websocket',
-          methodName: handler.methodName,
-          className: instance.constructor?.name,
-          classNodeId: instanceWrapperId,
-          metadata: {
-            port,
-            key: handler.message,
-            message: handler.message,
-          },
-        },
-        instanceWrapperId,
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -244,9 +211,7 @@ export class WebSocketsController {
       return;
     }
     subscribersMap.forEach(({ message }) =>
-      this.logger.log(
-        `${gatewayClassName} subscribed to the "${message}" message`,
-      ),
+      { throw new Error("STUB"); },
     );
   }
 }

@@ -44,9 +44,9 @@ export class PipesContextCreator extends ContextCreator {
       return [] as any[] as R;
     }
     return iterate(metadata)
-      .filter((pipe: any) => pipe && (pipe.name || pipe.transform))
-      .map(pipe => this.getPipeInstance(pipe, contextId, inquirerId))
-      .filter(pipe => !!pipe && pipe.transform && isFunction(pipe.transform))
+      .filter((pipe: any) => { throw new Error("STUB"); })
+      .map(pipe => { throw new Error("STUB"); })
+      .filter(pipe => { throw new Error("STUB"); })
       .toArray() as R;
   }
 
@@ -99,13 +99,10 @@ export class PipesContextCreator extends ContextCreator {
       this.config.getGlobalRequestPipes() as InstanceWrapper[];
     const scopedPipes = iterate(scopedPipeWrappers)
       .map(wrapper =>
-        wrapper.getInstanceByContextId(
-          this.getContextId(contextId, wrapper),
-          inquirerId,
-        ),
+        { throw new Error("STUB"); },
       )
-      .filter(host => !!host)
-      .map(host => host.instance)
+      .filter(host => { throw new Error("STUB"); })
+      .map(host => { throw new Error("STUB"); })
       .toArray();
 
     return globalPipes.concat(scopedPipes) as T;

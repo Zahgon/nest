@@ -37,17 +37,6 @@ export class NotAcceptableException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Not Acceptable',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.NOT_ACCEPTABLE,
-      ),
-      HttpStatus.NOT_ACCEPTABLE,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

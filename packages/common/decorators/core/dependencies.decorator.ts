@@ -17,8 +17,5 @@ export function flatten<T extends Array<unknown> = any>(
 export const Dependencies = (
   ...dependencies: Array<unknown>
 ): ClassDecorator => {
-  const flattenDeps = flatten(dependencies);
-  return (target: object) => {
-    Reflect.defineMetadata(PARAMTYPES_METADATA, flattenDeps, target);
-  };
+    throw new Error("STUB");
 };

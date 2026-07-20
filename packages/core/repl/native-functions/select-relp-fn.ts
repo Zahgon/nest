@@ -15,6 +15,6 @@ export class SelectReplFn extends ReplFunction {
   };
 
   action(token: DynamicModule | Type<unknown>): INestApplicationContext {
-    return this.ctx.app.select(token);
+      throw new Error("STUB");
   }
 }

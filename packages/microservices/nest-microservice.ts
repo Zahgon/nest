@@ -26,7 +26,7 @@ import { ServerFactory } from './server/server-factory';
 
 const { SocketModule } = optionalRequire(
   '@nestjs/websockets/socket-module',
-  () => require('@nestjs/websockets/socket-module'),
+  () => { throw new Error("STUB"); },
 );
 
 type CompleteMicroserviceOptions = NestMicroserviceOptions &
@@ -62,23 +62,7 @@ export class NestMicroservice
     private readonly graphInspector: GraphInspector,
     private readonly applicationConfig: ApplicationConfig,
   ) {
-    super(container, config);
-
-    this.injector = new Injector({
-      preview: config.preview!,
-      instanceDecorator: config.instrument?.instanceDecorator,
-    });
-    this.microservicesModule.register(
-      container,
-      this.graphInspector,
-      this.applicationConfig,
-      this.appOptions,
-    );
-    this.createServer(config);
-    this.selectContextModule();
-
-    const modulesContainer = this.container.getModules();
-    modulesContainer.addRpcTarget(this.serverInstance);
+      throw new Error("STUB");
   }
 
   public createServer(config: CompleteMicroserviceOptions) {
@@ -150,13 +134,7 @@ export class NestMicroservice
    * @returns {this}
    */
   public useWebSocketAdapter(adapter: WebSocketAdapter): this {
-    if (this.isInitialized) {
-      this.logger.warn(
-        'Cannot apply WebSocket adapter: registration must occur before initialization.',
-      );
-    }
-    this.applicationConfig.setIoAdapter(adapter);
-    return this;
+      throw new Error("STUB");
   }
 
   /**
@@ -165,23 +143,7 @@ export class NestMicroservice
    * @param {...ExceptionFilter} filters
    */
   public useGlobalFilters(...filters: ExceptionFilter[]): this {
-    if (this.isInitialized) {
-      this.logger.warn(
-        'Cannot apply global exception filters: registration must occur before initialization.',
-      );
-    }
-
-    filters = this.applyInstanceDecoratorIfRegistered<ExceptionFilter>(
-      ...filters,
-    );
-    this.applicationConfig.useGlobalFilters(...filters);
-    filters.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'filter',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   /**
@@ -190,23 +152,7 @@ export class NestMicroservice
    * @param {...PipeTransform} pipes
    */
   public useGlobalPipes(...pipes: PipeTransform<any>[]): this {
-    if (this.isInitialized) {
-      this.logger.warn(
-        'Global pipes registered after initialization will not be applied.',
-      );
-    }
-
-    pipes = this.applyInstanceDecoratorIfRegistered<PipeTransform<any>>(
-      ...pipes,
-    );
-    this.applicationConfig.useGlobalPipes(...pipes);
-    pipes.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'pipe',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   /**
@@ -215,41 +161,11 @@ export class NestMicroservice
    * @param {...NestInterceptor} interceptors
    */
   public useGlobalInterceptors(...interceptors: NestInterceptor[]): this {
-    if (this.isInitialized) {
-      this.logger.warn(
-        'Cannot apply global interceptors: registration must occur before initialization.',
-      );
-    }
-
-    interceptors = this.applyInstanceDecoratorIfRegistered<NestInterceptor>(
-      ...interceptors,
-    );
-    this.applicationConfig.useGlobalInterceptors(...interceptors);
-    interceptors.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'interceptor',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public useGlobalGuards(...guards: CanActivate[]): this {
-    if (this.isInitialized) {
-      this.logger.warn(
-        'Cannot apply global guards: registration must occur before initialization.',
-      );
-    }
-
-    guards = this.applyInstanceDecoratorIfRegistered<CanActivate>(...guards);
-    this.applicationConfig.useGlobalGuards(...guards);
-    guards.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'guard',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public async init(): Promise<this> {
@@ -271,16 +187,7 @@ export class NestMicroservice
     !this.isInitialized && (await this.registerModules());
 
     return new Promise<any>((resolve, reject) => {
-      this.serverInstance.listen((err, info) => {
-        if (this.microserviceConfig?.autoFlushLogs ?? true) {
-          this.flushLogs();
-        }
-        if (err) {
-          return reject(err as Error);
-        }
-        this.logger.log(MESSAGES.MICROSERVICE_READY);
-        resolve(info);
-      });
+        throw new Error("STUB");
     });
   }
 
@@ -319,7 +226,7 @@ export class NestMicroservice
    * @param isInitHookCalled Value to set
    */
   public setIsInitHookCalled(isInitHookCalled: boolean) {
-    this.wasInitHookCalled = isInitHookCalled;
+      throw new Error("STUB");
   }
 
   /**
@@ -339,10 +246,7 @@ export class NestMicroservice
    * or a group of servers if there are more than one.
    */
   public unwrap<T>(): T {
-    if ('unwrap' in this.serverInstance) {
-      return this.serverInstance.unwrap();
-    }
-    throw new Error('"unwrap" method not supported by the underlying server');
+      throw new Error("STUB");
   }
 
   protected async closeApplication(): Promise<any> {
@@ -364,18 +268,12 @@ export class NestMicroservice
 
   protected resolveAsyncOptions(config: AsyncMicroserviceOptions) {
     const args = config.inject?.map(token =>
-      this.get(token, { strict: false }),
+      { throw new Error("STUB"); },
     );
     return config.useFactory(...args);
   }
 
   private applyInstanceDecoratorIfRegistered<T>(...instances: T[]): T[] {
-    if (this.appOptions.instrument?.instanceDecorator) {
-      return instances.map(
-        instance =>
-          this.appOptions.instrument!.instanceDecorator(instance) as T,
-      );
-    }
-    return instances;
+      throw new Error("STUB");
   }
 }

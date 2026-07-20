@@ -25,12 +25,6 @@ export abstract class ReplFunction<
    * @returns A message displayed by calling `<fnName>.help`
    */
   public makeHelpMessage(): string {
-    const { description, name, signature } = this.fnDefinition;
-
-    const fnSignatureWithName = `${name}${signature}`;
-
-    return `${clc.yellow(description)}\n${clc.magentaBright(
-      'Interface:',
-    )} ${clc.bold(fnSignatureWithName)}\n`;
+      throw new Error("STUB");
   }
 }

@@ -40,21 +40,10 @@ export class MiddlewareContainer {
 
     const configurations = configList || [];
     const insertMiddleware = <T extends Type<unknown>>(metatype: T) => {
-      const token = metatype;
-      middleware.set(
-        token,
-        new InstanceWrapper({
-          scope: getClassScope(metatype),
-          durable: isDurable(metatype),
-          name: token?.name ?? token,
-          metatype,
-          token,
-        }),
-      );
+        throw new Error("STUB");
     };
     configurations.forEach(config => {
-      [].concat(config.middleware).map(insertMiddleware);
-      targetConfig.add(config);
+        throw new Error("STUB");
     });
   }
 

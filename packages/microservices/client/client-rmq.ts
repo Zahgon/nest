@@ -72,30 +72,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
   protected noAssert: boolean;
 
   constructor(protected readonly options: Required<RmqOptions>['options']) {
-    super();
-    this.queue = this.getOptionsProp(this.options, 'queue', RQM_DEFAULT_QUEUE);
-    this.queueOptions = this.getOptionsProp(
-      this.options,
-      'queueOptions',
-      RQM_DEFAULT_QUEUE_OPTIONS,
-    );
-    this.replyQueue = this.getOptionsProp(
-      this.options,
-      'replyQueue',
-      REPLY_QUEUE,
-    );
-    this.noAssert =
-      this.getOptionsProp(this.options, 'noAssert') ??
-      this.queueOptions.noAssert ??
-      RQM_DEFAULT_NO_ASSERT;
-
-    loadPackage('amqplib', ClientRMQ.name, () => require('amqplib'));
-    rmqPackage = loadPackage('amqp-connection-manager', ClientRMQ.name, () =>
-      require('amqp-connection-manager'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async close(): Promise<void> {
@@ -118,7 +95,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     this.registerBlockedListener(this.client);
     this.registerUnblockedListener(this.client);
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.client!.on(event, callback),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
 
@@ -129,7 +106,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     const withDisconnect$ = this.mergeDisconnectEvent(
       this.client,
       connect$,
-    ).pipe(switchMap(() => this.createChannel()));
+    ).pipe(switchMap(() => { throw new Error("STUB"); }));
 
     const withReconnect$ = fromEvent(this.client, RmqEventsMap.CONNECT).pipe(
       skip(1),
@@ -145,10 +122,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
 
   public createChannel(): Promise<void> {
     return new Promise(resolve => {
-      this.channel = this.client!.createChannel({
-        json: false,
-        setup: (channel: Channel) => this.setupChannel(channel, resolve),
-      });
+        throw new Error("STUB");
     });
   }
 
@@ -165,7 +139,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     const eventToError = (eventType: string) =>
       fromEvent(instance, eventType).pipe(
         map((err: unknown) => {
-          throw err;
+            throw new Error("STUB");
         }),
       );
     const disconnect$ = eventToError(RmqEventsMap.DISCONNECT);
@@ -174,14 +148,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     const connectFailedEventKey = 'connectFailed';
     const connectFailed$ = eventToError(connectFailedEventKey).pipe(
       retryWhen(e =>
-        e.pipe(
-          scan((errorCount, error: any) => {
-            if (urls.indexOf(error.url) >= urls.length - 1) {
-              throw error;
-            }
-            return errorCount + 1;
-          }, 0),
-        ),
+        { throw new Error("STUB"); },
       ),
     );
     // If we ever decide to propagate all disconnect errors & re-emit them through
@@ -247,7 +214,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     await channel.consume(
       this.replyQueue,
       (msg: ConsumeMessage | null) =>
-        this.responseEmitter.emit(msg!.properties.correlationId, msg),
+        { throw new Error("STUB"); },
       {
         noAck,
       },
@@ -256,42 +223,19 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
 
   public registerErrorListener(client: AmqpConnectionManager): void {
     client.addListener(RmqEventsMap.ERROR, (err: any) =>
-      this.logger.error(err),
+      { throw new Error("STUB"); },
     );
   }
 
   public registerDisconnectListener(client: AmqpConnectionManager): void {
     client.addListener(RmqEventsMap.DISCONNECT, (err: any) => {
-      this._status$.next(RmqStatus.DISCONNECTED);
-
-      if (!this.isInitialConnect) {
-        this.connectionPromise = Promise.reject(
-          'Error: Connection lost. Trying to reconnect...',
-        );
-
-        // Prevent unhandled promise rejection
-        this.connectionPromise.catch(() => {});
-      }
-
-      this.logger.error(DISCONNECTED_RMQ_MESSAGE);
-      this.logger.error(err);
+        throw new Error("STUB");
     });
   }
 
   private registerConnectListener(client: AmqpConnectionManager): void {
     client.addListener(RmqEventsMap.CONNECT, () => {
-      this._status$.next(RmqStatus.CONNECTED);
-      this.logger.log('Successfully connected to RMQ broker');
-
-      if (this.isInitialConnect) {
-        this.isInitialConnect = false;
-
-        if (!this.channel) {
-          this.connectionPromise = this.createChannel();
-        }
-      } else {
-        this.connectionPromise = Promise.resolve();
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -299,16 +243,14 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     client.addListener(
       RmqEventsMap.BLOCKED,
       ({ reason }: { reason: string }) => {
-        this._status$.next(RmqStatus.BLOCKED);
-        this.logger.warn(BLOCKED_RMQ_MESSAGE(reason));
+          throw new Error("STUB");
       },
     );
   }
 
   public registerUnblockedListener(client: AmqpConnectionManager): void {
     client.addListener(RmqEventsMap.UNBLOCKED, () => {
-      this._status$.next(RmqStatus.UNBLOCKED);
-      this.logger.log(UNBLOCKED_RMQ_MESSAGE);
+        throw new Error("STUB");
     });
   }
 
@@ -324,12 +266,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.client) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return this.client as T;
+      throw new Error("STUB");
   }
 
   public async handleMessage(
@@ -384,11 +321,7 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
         content: Buffer;
         options: Record<string, unknown>;
       }) =>
-        this.handleMessage(
-          this.parseMessageContent(content),
-          options,
-          callback,
-        );
+        { throw new Error("STUB"); };
 
       Object.assign(message, { id: correlationId });
       const serializedPacket: ReadPacket & Partial<RmqRecord> =
@@ -430,16 +363,18 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
           stringifiedPattern,
           content,
           sendOptions,
-        ).catch(err => callback({ err }));
+        ).catch(err => { throw new Error("STUB"); });
       } else {
         this.channel!.sendToQueue(this.queue, content, sendOptions).catch(err =>
-          callback({ err }),
+          { throw new Error("STUB"); },
         );
       }
-      return () => this.responseEmitter.removeListener(correlationId, listener);
+      return () => { throw new Error("STUB"); };
     } catch (err) {
       callback({ err });
-      return () => {};
+      return () => {
+          throw new Error("STUB");
+      };
     }
   }
 
@@ -451,42 +386,12 @@ export class ClientRMQ extends ClientProxy<RmqEvents, RmqStatus> {
     delete serializedPacket.options;
 
     return new Promise<void>((resolve, reject) => {
-      const content = Buffer.from(JSON.stringify(serializedPacket));
-      const sendOptions = {
-        persistent: this.getOptionsProp(
-          this.options,
-          'persistent',
-          RQM_DEFAULT_PERSISTENT,
-        ),
-        ...options,
-        headers: this.mergeHeaders(options?.headers),
-      };
-      const errorCallback = (err: unknown) =>
-        err ? reject(err as Error) : resolve();
-
-      return this.options.wildcards || this.options.exchangeType === 'fanout'
-        ? this.channel!.publish(
-            // The exchange is the same as the queue when wildcards are enabled
-            // and the exchange is not explicitly set
-            this.getOptionsProp(this.options, 'exchange', this.queue),
-            isString(packet.pattern)
-              ? packet.pattern
-              : JSON.stringify(packet.pattern),
-            content,
-            sendOptions,
-            errorCallback,
-          )
-        : this.channel!.sendToQueue(
-            this.queue,
-            content,
-            sendOptions,
-            errorCallback,
-          );
+        throw new Error("STUB");
     });
   }
 
   protected initializeSerializer(options: RmqOptions['options']) {
-    this.serializer = options?.serializer ?? new RmqRecordSerializer();
+      throw new Error("STUB");
   }
 
   protected mergeHeaders(

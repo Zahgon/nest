@@ -48,24 +48,7 @@ export class IoAdapter extends AbstractWsAdapter {
     }
 
     handlers.forEach(({ message, callback, isAckHandledManually }) => {
-      const source$ = fromEvent(socket, message).pipe(
-        mergeMap((payload: any) => {
-          const { data, ack } = this.mapPayload(payload);
-          return transform(callback(data, ack)).pipe(
-            filter((response: any) => !isNil(response)),
-            map((response: any) => [response, ack, isAckHandledManually]),
-          );
-        }),
-        takeUntil(disconnect$),
-      );
-      source$.subscribe(([response, ack, isAckHandledManually]) => {
-        if (response.event) {
-          return socket.emit(response.event, response.data);
-        }
-        if (!isAckHandledManually && isFunction(ack)) {
-          ack(response);
-        }
-      });
+        throw new Error("STUB");
     });
   }
 

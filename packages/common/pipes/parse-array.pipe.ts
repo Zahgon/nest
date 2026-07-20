@@ -61,17 +61,7 @@ export class ParseArrayPipe implements PipeTransform {
   constructor(
     @Optional() protected readonly options: ParseArrayPipeOptions = {},
   ) {
-    this.validationPipe = new ValidationPipe({
-      transform: true,
-      validateCustomDecorators: true,
-      ...options,
-    });
-
-    const { exceptionFactory, errorHttpStatusCode = HttpStatus.BAD_REQUEST } =
-      options;
-    this.exceptionFactory =
-      exceptionFactory ||
-      (error => new HttpErrorByCode[errorHttpStatusCode](error));
+      throw new Error("STUB");
   }
 
   /**
@@ -136,7 +126,7 @@ export class ParseArrayPipe implements PipeTransform {
               const response = err.getResponse();
               if (Array.isArray(response.message)) {
                 message = response.message.map(
-                  (item: string) => `[${i}] ${item}`,
+                  (item: string) => { throw new Error("STUB"); },
                 );
               } else {
                 message = `[${i}] ${response.message}`;

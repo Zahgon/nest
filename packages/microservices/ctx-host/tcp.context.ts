@@ -15,13 +15,13 @@ export class TcpContext extends BaseRpcContext<TcpContextArgs> {
    * Returns the underlying JSON socket.
    */
   getSocketRef() {
-    return this.args[0];
+      throw new Error("STUB");
   }
 
   /**
    * Returns the name of the pattern.
    */
   getPattern() {
-    return this.args[1];
+      throw new Error("STUB");
   }
 }

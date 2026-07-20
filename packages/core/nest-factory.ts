@@ -130,33 +130,7 @@ export class NestFactoryStatic {
     moduleCls: IEntryNestModule,
     options?: NestMicroserviceOptions & T,
   ): Promise<INestMicroservice> {
-    const { NestMicroservice } = loadPackage(
-      '@nestjs/microservices',
-      'NestFactory',
-      () => require('@nestjs/microservices'),
-    );
-    const applicationConfig = new ApplicationConfig();
-    const container = new NestContainer(applicationConfig, options);
-    const graphInspector = this.createGraphInspector(options!, container);
-
-    this.setAbortOnError(options);
-    this.registerLoggerConfiguration(options);
-
-    await this.initialize(
-      moduleCls,
-      container,
-      graphInspector,
-      applicationConfig,
-      options,
-    );
-    return this.createNestInstance<INestMicroservice>(
-      new NestMicroservice(
-        container,
-        options,
-        graphInspector,
-        applicationConfig,
-      ),
-    );
+      throw new Error("STUB");
   }
 
   /**
@@ -172,31 +146,7 @@ export class NestFactoryStatic {
     moduleCls: IEntryNestModule,
     options?: NestApplicationContextOptions,
   ): Promise<INestApplicationContext> {
-    const applicationConfig = new ApplicationConfig();
-    const container = new NestContainer(applicationConfig, options);
-    const graphInspector = this.createGraphInspector(options!, container);
-
-    this.setAbortOnError(options);
-    this.registerLoggerConfiguration(options);
-
-    await this.initialize(
-      moduleCls,
-      container,
-      graphInspector,
-      applicationConfig,
-      options,
-    );
-
-    const modules = container.getModules().values();
-    const root = modules.next().value;
-
-    const context = this.createNestInstance<NestApplicationContext>(
-      new NestApplicationContext(container, options, root),
-    );
-    if (this.autoFlushLogs) {
-      context.flushLogsOnOverride();
-    }
-    return context.init();
+      throw new Error("STUB");
   }
 
   private createNestInstance<T>(instance: T): T {
@@ -241,10 +191,8 @@ export class NestFactoryStatic {
 
       await ExceptionsZone.asyncRun(
         async () => {
-          await dependenciesScanner.scan(module);
-          await instanceLoader.createInstancesOfDependencies();
-          dependenciesScanner.applyApplicationProviders();
-        },
+              throw new Error("STUB");
+          },
         teardown,
         this.autoFlushLogs,
       );
@@ -270,13 +218,7 @@ export class NestFactoryStatic {
 
   private createExceptionProxy() {
     return (receiver: Record<string, any>, prop: string) => {
-      if (!(prop in receiver)) {
-        return;
-      }
-      if (isFunction(receiver[prop])) {
-        return this.createExceptionZone(receiver, prop);
-      }
-      return receiver[prop];
+        throw new Error("STUB");
     };
   }
 
@@ -287,16 +229,7 @@ export class NestFactoryStatic {
     const teardown = this.abortOnError === false ? rethrow : undefined;
 
     return (...args: unknown[]) => {
-      let result: unknown;
-      ExceptionsZone.run(
-        () => {
-          result = receiver[prop](...args);
-        },
-        teardown,
-        this.autoFlushLogs,
-      );
-
-      return result;
+        throw new Error("STUB");
     };
   }
 
@@ -325,7 +258,7 @@ export class NestFactoryStatic {
     const { ExpressAdapter } = loadAdapter(
       '@nestjs/platform-express',
       'HTTP',
-      () => require('@nestjs/platform-express'),
+      () => { throw new Error("STUB"); },
     );
     return new ExpressAdapter(httpServer);
   }
@@ -350,28 +283,8 @@ export class NestFactoryStatic {
   private createAdapterProxy<T>(app: NestApplication, adapter: HttpServer): T {
     const proxy = new Proxy(app, {
       get: (receiver: Record<string, any>, prop: string) => {
-        const mapToProxy = (result: unknown) => {
-          return result instanceof Promise
-            ? result.then(mapToProxy)
-            : result instanceof NestApplication
-              ? proxy
-              : result;
-        };
-
-        if (!(prop in receiver) && prop in adapter) {
-          return (...args: unknown[]) => {
-            const result = this.createExceptionZone(adapter, prop)(...args);
-            return mapToProxy(result);
-          };
-        }
-        if (isFunction(receiver[prop])) {
-          return (...args: unknown[]) => {
-            const result = receiver[prop](...args);
-            return mapToProxy(result);
-          };
-        }
-        return receiver[prop];
-      },
+            throw new Error("STUB");
+        },
     });
     return proxy as unknown as T;
   }

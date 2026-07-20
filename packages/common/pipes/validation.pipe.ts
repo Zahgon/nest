@@ -61,53 +61,19 @@ export class ValidationPipe implements PipeTransform<any> {
   protected validateCustomDecorators: boolean;
 
   constructor(@Optional() options?: ValidationPipeOptions) {
-    options = options || {};
-    const {
-      transform,
-      disableErrorMessages,
-      errorHttpStatusCode,
-      expectedType,
-      transformOptions,
-      validateCustomDecorators,
-      ...validatorOptions
-    } = options;
-
-    // @see [https://github.com/nestjs/nest/issues/10683#issuecomment-1413690508](https://github.com/nestjs/nest/issues/10683#issuecomment-1413690508)
-    this.validatorOptions = { forbidUnknownValues: false, ...validatorOptions };
-
-    this.isTransformEnabled = !!transform;
-    this.transformOptions = transformOptions;
-    this.isDetailedOutputDisabled = disableErrorMessages;
-    this.validateCustomDecorators = validateCustomDecorators || false;
-    this.errorHttpStatusCode = errorHttpStatusCode || HttpStatus.BAD_REQUEST;
-    this.expectedType = expectedType;
-    this.exceptionFactory =
-      options.exceptionFactory || this.createExceptionFactory();
-
-    classValidator = this.loadValidator(options.validatorPackage);
-    classTransformer = this.loadTransformer(options.transformerPackage);
+      throw new Error("STUB");
   }
 
   protected loadValidator(
     validatorPackage?: ValidatorPackage,
   ): ValidatorPackage {
-    return (
-      validatorPackage ??
-      loadPackage('class-validator', 'ValidationPipe', () =>
-        require('class-validator'),
-      )
-    );
+      throw new Error("STUB");
   }
 
   protected loadTransformer(
     transformerPackage?: TransformerPackage,
   ): TransformerPackage {
-    return (
-      transformerPackage ??
-      loadPackage('class-transformer', 'ValidationPipe', () =>
-        require('class-transformer'),
-      )
-    );
+      throw new Error("STUB");
   }
 
   public async transform(value: any, metadata: ArgumentMetadata) {
@@ -179,13 +145,7 @@ export class ValidationPipe implements PipeTransform<any> {
   }
 
   public createExceptionFactory() {
-    return (validationErrors: ValidationError[] = []) => {
-      if (this.isDetailedOutputDisabled) {
-        return new HttpErrorByCode[this.errorHttpStatusCode]();
-      }
-      const errors = this.flattenValidationErrors(validationErrors);
-      return new HttpErrorByCode[this.errorHttpStatusCode](errors);
-    };
+      throw new Error("STUB");
   }
 
   protected toValidate(metadata: ArgumentMetadata): boolean {
@@ -194,7 +154,7 @@ export class ValidationPipe implements PipeTransform<any> {
       return false;
     }
     const types = [String, Boolean, Number, Array, Object, Buffer, Date];
-    return !types.some(t => metatype === t) && !isNil(metatype);
+    return !types.some(t => { throw new Error("STUB"); }) && !isNil(metatype);
   }
 
   protected transformPrimitive(value: any, metadata: ArgumentMetadata) {
@@ -261,7 +221,7 @@ export class ValidationPipe implements PipeTransform<any> {
     }
 
     // Skip built-in JavaScript primitives to avoid Jest useFakeTimers conflicts
-    if (BUILT_IN_TYPES.some(type => value instanceof type)) {
+    if (BUILT_IN_TYPES.some(type => { throw new Error("STUB"); })) {
       return;
     }
 
@@ -301,50 +261,20 @@ export class ValidationPipe implements PipeTransform<any> {
   protected flattenValidationErrors(
     validationErrors: ValidationError[],
   ): string[] {
-    return iterate(validationErrors)
-      .map(error => this.mapChildrenToValidationErrors(error))
-      .flatten()
-      .filter(item => !!item.constraints)
-      .map(item => Object.values(item.constraints!))
-      .flatten()
-      .toArray();
+      throw new Error("STUB");
   }
 
   protected mapChildrenToValidationErrors(
     error: ValidationError,
     parentPath?: string,
   ): ValidationError[] {
-    if (!(error.children && error.children.length)) {
-      return [error];
-    }
-    const validationErrors: ValidationError[] = [];
-    parentPath = parentPath
-      ? `${parentPath}.${error.property}`
-      : error.property;
-    for (const item of error.children) {
-      if (item.children && item.children.length) {
-        validationErrors.push(
-          ...this.mapChildrenToValidationErrors(item, parentPath),
-        );
-      }
-      validationErrors.push(
-        this.prependConstraintsWithParentProp(parentPath, item),
-      );
-    }
-    return validationErrors;
+      throw new Error("STUB");
   }
 
   protected prependConstraintsWithParentProp(
     parentPath: string,
     error: ValidationError,
   ): ValidationError {
-    const constraints = {};
-    for (const key in error.constraints) {
-      constraints[key] = `${parentPath}.${error.constraints[key]}`;
-    }
-    return {
-      ...error,
-      constraints,
-    };
+      throw new Error("STUB");
   }
 }

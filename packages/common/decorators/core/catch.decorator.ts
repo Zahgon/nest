@@ -21,8 +21,5 @@ import { Type, Abstract } from '../../interfaces';
 export function Catch(
   ...exceptions: Array<Type<any> | Abstract<any>>
 ): ClassDecorator {
-  return (target: object) => {
-    Reflect.defineMetadata(CATCH_WATERMARK, true, target);
-    Reflect.defineMetadata(FILTER_CATCH_EXCEPTIONS, exceptions, target);
-  };
+    throw new Error("STUB");
 }

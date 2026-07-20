@@ -98,17 +98,7 @@ export class Logger implements LoggerService {
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    const originalFn = descriptor.value;
-    descriptor.value = function (...args: unknown[]) {
-      if (Logger.isBufferAttached) {
-        Logger.logBuffer.push({
-          methodRef: originalFn.bind(this),
-          arguments: args,
-        });
-        return;
-      }
-      return originalFn.call(this, ...args);
-    };
+      throw new Error("STUB");
   };
 
   constructor();
@@ -120,15 +110,7 @@ export class Logger implements LoggerService {
   ) {}
 
   get localInstance(): LoggerService {
-    if (Logger.staticInstanceRef === DEFAULT_LOGGER) {
-      return this.registerLocalInstanceRef();
-    } else if (Logger.staticInstanceRef instanceof Logger) {
-      const prototype = Object.getPrototypeOf(Logger.staticInstanceRef);
-      if (prototype.constructor === Logger) {
-        return this.registerLocalInstanceRef();
-      }
-    }
-    return Logger.staticInstanceRef!;
+      throw new Error("STUB");
   }
 
   /**
@@ -193,10 +175,7 @@ export class Logger implements LoggerService {
   verbose(message: any, ...optionalParams: [...any, string?]): void;
   @Logger.WrapBuffer
   verbose(message: any, ...optionalParams: any[]) {
-    optionalParams = this.context
-      ? optionalParams.concat(this.context)
-      : optionalParams;
-    this.localInstance?.verbose?.(message, ...optionalParams);
+      throw new Error("STUB");
   }
 
   /**
@@ -206,10 +185,7 @@ export class Logger implements LoggerService {
   fatal(message: any, ...optionalParams: [...any, string?]): void;
   @Logger.WrapBuffer
   fatal(message: any, ...optionalParams: any[]) {
-    optionalParams = this.context
-      ? optionalParams.concat(this.context)
-      : optionalParams;
-    this.localInstance?.fatal?.(message, ...optionalParams);
+      throw new Error("STUB");
   }
 
   /**
@@ -265,7 +241,7 @@ export class Logger implements LoggerService {
   static verbose(message: any, ...optionalParams: [...any, string?]): void;
   @Logger.WrapBuffer
   static verbose(message: any, ...optionalParams: any[]) {
-    this.staticInstanceRef?.verbose?.(message, ...optionalParams);
+      throw new Error("STUB");
   }
 
   /**
@@ -275,7 +251,7 @@ export class Logger implements LoggerService {
   static fatal(message: any, ...optionalParams: [...any, string?]): void;
   @Logger.WrapBuffer
   static fatal(message: any, ...optionalParams: any[]) {
-    this.staticInstanceRef?.fatal?.(message, ...optionalParams);
+      throw new Error("STUB");
   }
 
   /**
@@ -284,7 +260,7 @@ export class Logger implements LoggerService {
   static flush() {
     this.isBufferAttached = false;
     this.logBuffer.forEach(item =>
-      item.methodRef(...(item.arguments as [string])),
+      { throw new Error("STUB"); },
     );
     this.logBuffer = [];
   }
@@ -302,7 +278,7 @@ export class Logger implements LoggerService {
    * Turns off initialization logs buffering.
    */
   static detachBuffer() {
-    this.isBufferAttached = false;
+      throw new Error("STUB");
   }
 
   static getTimestamp() {
@@ -332,13 +308,6 @@ export class Logger implements LoggerService {
   }
 
   private registerLocalInstanceRef() {
-    if (this.localInstanceRef) {
-      return this.localInstanceRef;
-    }
-    this.localInstanceRef = new ConsoleLogger(this.context!, {
-      timestamp: this.options?.timestamp,
-      logLevels: Logger.logLevels,
-    });
-    return this.localInstanceRef;
+      throw new Error("STUB");
   }
 }

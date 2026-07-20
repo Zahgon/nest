@@ -44,16 +44,16 @@ export const RQM_NO_EVENT_HANDLER = (
   text: TemplateStringsArray,
   pattern: string,
 ) =>
-  `An unsupported event was received. It has been negative acknowledged, so it will not be re-delivered. Pattern: ${pattern}`;
+  { throw new Error("STUB"); };
 export const RQM_NO_MESSAGE_HANDLER = (
   text: TemplateStringsArray,
   pattern: string,
 ) =>
-  `An unsupported message was received. It has been negative acknowledged, so it will not be re-delivered. Pattern: ${pattern}`;
+  { throw new Error("STUB"); };
 export const GRPC_DEFAULT_PROTO_LOADER = '@grpc/proto-loader';
 
 export const NO_EVENT_HANDLER = (text: TemplateStringsArray, pattern: string) =>
-  `There is no matching event handler defined in the remote service. Event pattern: ${pattern}`;
+  { throw new Error("STUB"); };
 export const NO_MESSAGE_HANDLER = `There is no matching message handler defined in the remote service.`;
 export const DISCONNECTED_RMQ_MESSAGE = `Disconnected from RMQ. Trying to reconnect.`;
 export const CONNECTION_FAILED_MESSAGE =

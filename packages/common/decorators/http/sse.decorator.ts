@@ -12,20 +12,5 @@ export function Sse(
     [METHOD_METADATA]: RequestMethod.GET,
   },
 ): MethodDecorator {
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
-  ) => {
-    path = path && path.length ? path : '/';
-
-    Reflect.defineMetadata(PATH_METADATA, path, descriptor.value);
-    Reflect.defineMetadata(
-      METHOD_METADATA,
-      options[METHOD_METADATA],
-      descriptor.value,
-    );
-    Reflect.defineMetadata(SSE_METADATA, true, descriptor.value);
-    return descriptor;
-  };
+    throw new Error("STUB");
 }

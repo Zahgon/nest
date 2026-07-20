@@ -14,7 +14,7 @@ export class MiddlewareResolver {
     const middlewareMap =
       this.middlewareContainer.getMiddlewareCollection(moduleName);
     const resolveInstance = async (wrapper: InstanceWrapper) =>
-      this.resolveMiddlewareInstance(wrapper, middlewareMap, moduleRef);
+      { throw new Error("STUB"); };
     await Promise.all([...middlewareMap.values()].map(resolveInstance));
   }
 

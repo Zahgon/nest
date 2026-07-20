@@ -115,25 +115,11 @@ export class RpcContextCreator {
     );
 
     const handler = (initialArgs: unknown[], args: unknown[]) => async () => {
-      if (fnApplyPipes) {
-        await fnApplyPipes(initialArgs, ...args);
-        return callback.apply(instance, initialArgs);
-      }
-      return callback.apply(instance, args);
+        throw new Error("STUB");
     };
 
     return this.rpcProxy.create(async (...args: unknown[]) => {
-      const initialArgs = this.contextUtils.createNullArray(argsLength);
-      fnCanActivate && (await fnCanActivate(args));
-
-      return this.interceptorsConsumer.intercept(
-        interceptors,
-        args,
-        instance,
-        callback,
-        handler(initialArgs, args),
-        contextType,
-      ) as Promise<Observable<unknown>>;
+        throw new Error("STUB");
     }, exceptionHandler);
   }
 
@@ -151,16 +137,7 @@ export class RpcContextCreator {
     contextType?: TContext,
   ): Function | null {
     const canActivateFn = async (args: any[]) => {
-      const canActivate = await this.guardsConsumer.tryActivate<TContext>(
-        guards,
-        args,
-        instance,
-        callback,
-        contextType,
-      );
-      if (!canActivate) {
-        throw new RpcException(FORBIDDEN_MESSAGE);
-      }
+        throw new Error("STUB");
     };
     return guards.length ? canActivateFn : null;
   }
@@ -220,25 +197,7 @@ export class RpcContextCreator {
     this.pipesContextCreator.setModuleContext(moduleContext);
 
     return keys.map(key => {
-      const { index, data, pipes: pipesCollection } = metadata[key];
-      const pipes =
-        this.pipesContextCreator.createConcreteContext(pipesCollection);
-      const type = this.contextUtils.mapParamType(key);
-
-      if (key.includes(CUSTOM_ROUTE_ARGS_METADATA)) {
-        const { factory } = metadata[key];
-        const customExtractValue = this.contextUtils.getCustomFactory(
-          factory,
-          data,
-          contextFactory,
-        );
-        return { index, extractValue: customExtractValue, type, data, pipes };
-      }
-      const numericType = Number(type);
-      const extractValue = (...args: unknown[]) =>
-        paramsFactory.exchangeKeyForValue(numericType, data, args);
-
-      return { index, extractValue, type: numericType, data, pipes };
+        throw new Error("STUB");
     });
   }
 
@@ -247,26 +206,7 @@ export class RpcContextCreator {
     paramsOptions: (ParamProperties & { metatype?: unknown })[],
   ) {
     const pipesFn = async (args: unknown[], ...params: unknown[]) => {
-      const resolveParamValue = async (
-        param: ParamProperties & { metatype?: unknown },
-      ) => {
-        const {
-          index,
-          extractValue,
-          type,
-          data,
-          metatype,
-          pipes: paramPipes,
-        } = param;
-        const value = extractValue(...params);
-
-        args[index] = await this.getParamValue(
-          value,
-          { metatype, type, data },
-          pipes.concat(paramPipes),
-        );
-      };
-      await Promise.all(paramsOptions.map(resolveParamValue));
+        throw new Error("STUB");
     };
     return paramsOptions.length ? pipesFn : null;
   }

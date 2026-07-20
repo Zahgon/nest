@@ -24,5 +24,5 @@ import { createPipesWsParamDecorator } from '../utils/param.utils';
  * @publicApi
  */
 export function Ack(): ParameterDecorator {
-  return createPipesWsParamDecorator(WsParamtype.ACK)();
+    throw new Error("STUB");
 }

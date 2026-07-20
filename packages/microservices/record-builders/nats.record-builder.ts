@@ -22,8 +22,7 @@ export class NatsRecordBuilder<TData> {
   }
 
   public setData(data: TData): this {
-    this.data = data;
-    return this;
+      throw new Error("STUB");
   }
 
   public build(): NatsRecord {

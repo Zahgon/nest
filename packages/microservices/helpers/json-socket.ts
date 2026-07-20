@@ -28,59 +28,7 @@ export class JsonSocket extends TcpSocket {
   }
 
   protected handleData(dataRaw: Buffer | string) {
-    const data = Buffer.isBuffer(dataRaw)
-      ? this.stringDecoder.write(dataRaw)
-      : dataRaw;
-    this.buffer += data;
-
-    // Iterative loop replaces recursion to prevent stack overflow on pipelined
-    // TCP messages (e.g. many small frames arriving in one read event).
-    while (true) {
-      if (this.buffer.length > this.maxBufferSize) {
-        const bufferLength = this.buffer.length;
-        this.buffer = '';
-        throw new MaxPacketLengthExceededException(bufferLength);
-      }
-
-      if (this.contentLength === null) {
-        const i = this.buffer.indexOf(this.delimiter);
-        /**
-         * Check if the buffer has the delimiter (#),
-         * if not, the end of the buffer string might be in the middle of a content length string
-         */
-        if (i === -1) {
-          break;
-        }
-        const rawContentLength = this.buffer.substring(0, i);
-        this.contentLength = parseInt(rawContentLength, 10);
-
-        if (isNaN(this.contentLength)) {
-          this.contentLength = null;
-          this.buffer = '';
-          throw new CorruptedPacketLengthException(rawContentLength);
-        }
-        this.buffer = this.buffer.substring(i + 1);
-      }
-
-      if (this.contentLength !== null) {
-        const length = this.buffer.length;
-        if (length === this.contentLength) {
-          this.handleMessage(this.buffer);
-          // handleMessage resets contentLength and buffer; next iteration will break
-        } else if (length > this.contentLength) {
-          const message = this.buffer.substring(0, this.contentLength);
-          const rest = this.buffer.substring(this.contentLength);
-          this.handleMessage(message); // resets this.buffer to ''
-          this.buffer = rest; // restore remaining data for next iteration
-          continue;
-        } else {
-          // Incomplete message — wait for more data
-          break;
-        }
-      } else {
-        break;
-      }
-    }
+      throw new Error("STUB");
   }
 
   private handleMessage(message: any) {

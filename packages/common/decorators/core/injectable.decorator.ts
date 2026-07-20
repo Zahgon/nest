@@ -42,8 +42,7 @@ export type InjectableOptions = ScopeOptions;
  */
 export function Injectable(options?: InjectableOptions): ClassDecorator {
   return (target: object) => {
-    Reflect.defineMetadata(INJECTABLE_WATERMARK, true, target);
-    Reflect.defineMetadata(SCOPE_OPTIONS_METADATA, options, target);
+      throw new Error("STUB");
   };
 }
 
@@ -51,9 +50,5 @@ export function Injectable(options?: InjectableOptions): ClassDecorator {
  * @publicApi
  */
 export function mixin<T>(mixinClass: Type<T>) {
-  Object.defineProperty(mixinClass, 'name', {
-    value: uid(21),
-  });
-  Injectable()(mixinClass);
-  return mixinClass;
+    throw new Error("STUB");
 }

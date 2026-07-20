@@ -35,7 +35,7 @@ export class InternalCoreModule {
     return {
       module: InternalCoreModule,
       providers: [...providers],
-      exports: [...providers.map(item => item.provide)],
+      exports: [...providers.map(item => { throw new Error("STUB"); })],
     };
   }
 }

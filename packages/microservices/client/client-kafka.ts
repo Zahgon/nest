@@ -73,64 +73,19 @@ export class ClientKafka
   protected _producer: Producer | null = null;
 
   get consumer(): Consumer {
-    if (!this._consumer) {
-      throw new Error(
-        'No consumer initialized. Please, call the "connect" method first.',
-      );
-    }
-    return this._consumer;
+      throw new Error("STUB");
   }
 
   get producer(): Producer {
-    if (!this._producer) {
-      throw new Error(
-        'No producer initialized. Please, call the "connect" method first.',
-      );
-    }
-    return this._producer;
+      throw new Error("STUB");
   }
 
   constructor(protected readonly options: Required<KafkaOptions>['options']) {
-    super();
-
-    const clientOptions = this.getOptionsProp(
-      this.options,
-      'client',
-      {} as KafkaConfig,
-    );
-    const consumerOptions = this.getOptionsProp(
-      this.options,
-      'consumer',
-      {} as ConsumerConfig,
-    );
-    const postfixId = this.getOptionsProp(this.options, 'postfixId', '-client');
-    this.producerOnlyMode = this.getOptionsProp(
-      this.options,
-      'producerOnlyMode',
-      false,
-    );
-
-    this.brokers = clientOptions.brokers || [KAFKA_DEFAULT_BROKER];
-
-    // Append a unique id to the clientId and groupId
-    // so they don't collide with a microservices client
-    this.clientId =
-      (clientOptions.clientId || KAFKA_DEFAULT_CLIENT) + postfixId;
-    this.groupId = (consumerOptions.groupId || KAFKA_DEFAULT_GROUP) + postfixId;
-
-    kafkaPackage = loadPackage('kafkajs', ClientKafka.name, () =>
-      require('kafkajs'),
-    );
-
-    this.parser = new KafkaParser((options && options.parser) || undefined);
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public subscribeToResponseOf(pattern: unknown): void {
-    const request = this.normalizePattern(pattern as MsPattern);
-    this.responsePatterns.push(this.getResponsePatternName(request));
+      throw new Error("STUB");
   }
 
   public async close(): Promise<void> {
@@ -144,53 +99,13 @@ export class ClientKafka
 
   public async connect(): Promise<Producer> {
     if (this.initialized) {
-      return this.initialized.then(() => this._producer!);
+      return this.initialized.then(() => { throw new Error("STUB"); });
     }
     /* eslint-disable-next-line no-async-promise-executor */
     this.initialized = new Promise(async (resolve, reject) => {
-      try {
-        this.client = this.createClient();
-        if (!this.producerOnlyMode) {
-          const partitionAssigners = [
-            (
-              config: ConstructorParameters<
-                typeof KafkaReplyPartitionAssigner
-              >[1],
-            ) => new KafkaReplyPartitionAssigner(this, config),
-          ];
-
-          const consumerOptions = Object.assign(
-            {
-              partitionAssigners,
-            },
-            this.options.consumer || {},
-            {
-              groupId: this.groupId,
-            },
-          );
-
-          this._consumer = this.client!.consumer(consumerOptions);
-          this.registerConsumerEventListeners();
-
-          // Set member assignments on join and rebalance
-          this._consumer.on(
-            this._consumer.events.GROUP_JOIN,
-            this.setConsumerAssignments.bind(this),
-          );
-          await this._consumer.connect();
-          await this.bindTopics();
-        }
-
-        this._producer = this.client!.producer(this.options.producer || {});
-        this.registerProducerEventListeners();
-        await this._producer.connect();
-
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
+        throw new Error("STUB");
     });
-    return this.initialized.then(() => this._producer!);
+    return this.initialized.then(() => { throw new Error("STUB"); });
   }
 
   public async bindTopics(): Promise<void> {
@@ -226,74 +141,29 @@ export class ClientKafka
 
   public createResponseCallback(): (payload: EachMessagePayload) => any {
     return async (payload: EachMessagePayload) => {
-      const rawMessage = this.parser!.parse<KafkaMessage>(
-        Object.assign(payload.message, {
-          topic: payload.topic,
-          partition: payload.partition,
-        }),
-      );
-      if (isUndefined(rawMessage.headers![KafkaHeaders.CORRELATION_ID])) {
-        return;
-      }
-      const { err, response, isDisposed, id } =
-        await this.deserializer.deserialize(rawMessage);
-      const callback = this.routingMap.get(id);
-      if (!callback) {
-        return;
-      }
-      if (err || isDisposed) {
-        return callback({
-          err,
-          response,
-          isDisposed,
-        });
-      }
-      callback({
-        err,
-        response,
-      });
+        throw new Error("STUB");
     };
   }
 
   public getConsumerAssignments() {
-    return this.consumerAssignments;
+      throw new Error("STUB");
   }
 
   public emitBatch<TResult = any, TInput = any>(
     pattern: any,
     data: { messages: TInput[] },
   ): Observable<TResult> {
-    if (isNil(pattern) || isNil(data)) {
-      return _throw(() => new InvalidMessageException());
-    }
-    const source = defer(async () => this.connect()).pipe(
-      mergeMap(() => this.dispatchBatchEvent({ pattern, data })),
-    );
-    const connectableSource = connectable(source, {
-      connector: () => new Subject(),
-      resetOnDisconnect: false,
-    });
-    connectableSource.connect();
-    return connectableSource;
+      throw new Error("STUB");
   }
 
   public commitOffsets(
     topicPartitions: TopicPartitionOffsetAndMetadata[],
   ): Promise<void> {
-    if (this._consumer) {
-      return this._consumer.commitOffsets(topicPartitions);
-    } else {
-      throw new Error('No consumer initialized');
-    }
+      throw new Error("STUB");
   }
 
   public unwrap<T>(): T {
-    if (!this.client) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return this.client as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -308,19 +178,19 @@ export class ClientKafka
       return;
     }
     this._consumer.on(this._consumer.events.CONNECT, () =>
-      this._status$.next(KafkaStatus.CONNECTED),
+      { throw new Error("STUB"); },
     );
     this._consumer.on(this._consumer.events.DISCONNECT, () =>
-      this._status$.next(KafkaStatus.DISCONNECTED),
+      { throw new Error("STUB"); },
     );
     this._consumer.on(this._consumer.events.REBALANCING, () =>
-      this._status$.next(KafkaStatus.REBALANCING),
+      { throw new Error("STUB"); },
     );
     this._consumer.on(this._consumer.events.STOP, () =>
-      this._status$.next(KafkaStatus.STOPPED),
+      { throw new Error("STUB"); },
     );
     this._consumer.on(this._consumer.events.CRASH, () =>
-      this._status$.next(KafkaStatus.CRASHED),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -329,35 +199,17 @@ export class ClientKafka
       return;
     }
     this._producer.on(this._producer.events.CONNECT, () =>
-      this._status$.next(KafkaStatus.CONNECTED),
+      { throw new Error("STUB"); },
     );
     this._producer.on(this._producer.events.DISCONNECT, () =>
-      this._status$.next(KafkaStatus.DISCONNECTED),
+      { throw new Error("STUB"); },
     );
   }
 
   protected async dispatchBatchEvent<TInput = any>(
     packets: ReadPacket<{ messages: TInput[] }>,
   ): Promise<any> {
-    if (packets.data.messages.length === 0) {
-      return;
-    }
-    const pattern = this.normalizePattern(packets.pattern);
-    const outgoingEvents = await Promise.all(
-      packets.data.messages.map(message => {
-        return this.serializer.serialize(message as any, { pattern });
-      }),
-    );
-
-    const message = Object.assign(
-      {
-        topic: pattern,
-        messages: outgoingEvents,
-      },
-      this.options.send || {},
-    );
-
-    return this.producer.send(message);
+      throw new Error("STUB");
   }
 
   protected async dispatchEvent(packet: OutgoingEvent): Promise<any> {
@@ -406,27 +258,14 @@ export class ClientKafka
 
       Promise.resolve(this.serializer.serialize(packet.data, { pattern }))
         .then((serializedPacket: KafkaRequest) => {
-          serializedPacket.headers[KafkaHeaders.CORRELATION_ID] = packet.id;
-          serializedPacket.headers[KafkaHeaders.REPLY_TOPIC] = replyTopic;
-          serializedPacket.headers[KafkaHeaders.REPLY_PARTITION] =
-            replyPartition;
-
-          const message = Object.assign(
-            {
-              topic: pattern,
-              messages: [serializedPacket],
-            },
-            this.options.send || {},
-          );
-
-          return this._producer!.send(message);
+            throw new Error("STUB");
         })
-        .catch(err => errorCallback(err));
+        .catch(err => { throw new Error("STUB"); });
 
       return cleanup;
     } catch (err) {
       errorCallback(err);
-      return () => null;
+      return () => { throw new Error("STUB"); };
     }
   }
 
@@ -435,27 +274,14 @@ export class ClientKafka
   }
 
   protected setConsumerAssignments(data: ConsumerGroupJoinEvent): void {
-    const consumerAssignments: { [key: string]: number } = {};
-
-    // Only need to set the minimum
-    Object.keys(data.payload.memberAssignment).forEach(topic => {
-      const memberPartitions = data.payload.memberAssignment[topic];
-
-      if (memberPartitions.length) {
-        consumerAssignments[topic] = Math.min(...memberPartitions);
-      }
-    });
-
-    this.consumerAssignments = consumerAssignments;
+      throw new Error("STUB");
   }
 
   protected initializeSerializer(options: KafkaOptions['options']) {
-    this.serializer =
-      (options && options.serializer) || new KafkaRequestSerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: KafkaOptions['options']) {
-    this.deserializer =
-      (options && options.deserializer) || new KafkaResponseDeserializer();
+      throw new Error("STUB");
   }
 }

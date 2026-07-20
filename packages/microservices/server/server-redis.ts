@@ -40,14 +40,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
   }> = [];
 
   constructor(protected readonly options: Required<RedisOptions>['options']) {
-    super();
-
-    redisPackage = this.loadPackage('ioredis', ServerRedis.name, () =>
-      require('ioredis'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public listen(
@@ -58,14 +51,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
       this.pubClient = this.createRedisClient();
 
       [this.subClient, this.pubClient].forEach((client, index) => {
-        const type = index === 0 ? 'sub' : 'pub';
-        this.registerErrorListener(client);
-        this.registerReconnectListener(client);
-        this.registerReadyListener(client);
-        this.registerEndListener(client);
-        this.pendingEventListeners.forEach(({ event, callback }) =>
-          client.on(event, (...args: [any]) => callback(type, ...args)),
-        );
+          throw new Error("STUB");
       });
       this.pendingEventListeners = [];
 
@@ -78,8 +64,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
   public start(callback?: () => void) {
     void Promise.all([this.subClient.connect(), this.pubClient.connect()])
       .then(() => {
-        this.bindEvents(this.subClient, this.pubClient);
-        callback?.();
+          throw new Error("STUB");
       })
       .catch(callback);
   }
@@ -91,17 +76,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
     );
     const subscribePatterns = [...this.messageHandlers.keys()];
     subscribePatterns.forEach(pattern => {
-      const { isEventHandler } = this.messageHandlers.get(pattern)!;
-
-      const channel = isEventHandler
-        ? pattern
-        : this.getRequestPattern(pattern);
-
-      if (this.options?.wildcards) {
-        subClient.psubscribe(channel);
-      } else {
-        subClient.subscribe(channel);
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -126,9 +101,9 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
   public getMessageHandler(pub: Redis) {
     return this.options?.wildcards
       ? (channel: string, pattern: string, buffer: string) =>
-          this.handleMessage(channel, buffer, pub, pattern)
+          { throw new Error("STUB"); }
       : (channel: string, buffer: string) =>
-          this.handleMessage(channel, buffer, pub, channel);
+          { throw new Error("STUB"); };
   }
 
   public async handleMessage(
@@ -165,24 +140,14 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
       this.transportId,
       redisCtx,
       async () => {
-        const response$ = this.transformToObservable(
-          await handler(packet.data, redisCtx),
-        );
-        response$ && this.send(response$, publish);
+          throw new Error("STUB");
       },
     );
   }
 
   public getPublisher(pub: Redis, pattern: any, id: string, ctx: RedisContext) {
     return (response: any) => {
-      Object.assign(response, { id });
-      const outgoingResponse = this.serializer.serialize(response);
-
-      this.onProcessingEndHook?.(this.transportId, ctx);
-      return pub.publish(
-        this.getReplyPattern(pattern),
-        JSON.stringify(outgoingResponse),
-      );
+        throw new Error("STUB");
     };
   }
 
@@ -203,21 +168,14 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
   }
 
   public registerErrorListener(client: any) {
-    client.on(RedisEventsMap.ERROR, (err: any) => this.logger.error(err));
+    client.on(RedisEventsMap.ERROR, (err: any) => { throw new Error("STUB"); });
   }
 
   public registerReconnectListener(client: {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on(RedisEventsMap.RECONNECTING, () => {
-      if (this.isManuallyClosed) {
-        return;
-      }
-      this._status$.next(RedisStatus.RECONNECTING);
-
-      if (this.wasInitialConnectionSuccessful) {
-        this.logger.log('Reconnecting to Redis...');
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -225,13 +183,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on(RedisEventsMap.READY, () => {
-      this._status$.next(RedisStatus.CONNECTED);
-
-      this.logger.log('Connected to Redis. Subscribing to channels...');
-
-      if (!this.wasInitialConnectionSuccessful) {
-        this.wasInitialConnectionSuccessful = true;
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -239,19 +191,12 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on('end', () => {
-      if (this.isManuallyClosed) {
-        return;
-      }
-      this._status$.next(RedisStatus.DISCONNECTED);
-
-      this.logger.error(
-        'Disconnected from Redis. No further reconnection attempts will be made.',
-      );
+        throw new Error("STUB");
     });
   }
 
   public getClientOptions(): Partial<RedisOptions['options']> {
-    const retryStrategy = (times: number) => this.createRetryStrategy(times);
+    const retryStrategy = (times: number) => { throw new Error("STUB"); };
 
     return {
       ...(this.options || {}),
@@ -277,12 +222,7 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.pubClient || !this.subClient) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return [this.pubClient, this.subClient] as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -290,8 +230,8 @@ export class ServerRedis extends Server<RedisEvents, RedisStatus> {
     EventCallback extends RedisEvents[EventKey] = RedisEvents[EventKey],
   >(event: EventKey, callback: EventCallback) {
     if (this.subClient && this.pubClient) {
-      this.subClient.on(event, (...args: [any]) => callback('sub', ...args));
-      this.pubClient.on(event, (...args: [any]) => callback('pub', ...args));
+      this.subClient.on(event, (...args: [any]) => { throw new Error("STUB"); });
+      this.pubClient.on(event, (...args: [any]) => { throw new Error("STUB"); });
     } else {
       this.pendingEventListeners.push({ event, callback });
     }

@@ -46,14 +46,14 @@ export class InterceptorsContextCreator extends ContextCreator {
     return iterate(metadata)
       .filter(
         interceptor =>
-          interceptor && (interceptor.name || interceptor.intercept),
+          { throw new Error("STUB"); },
       )
       .map(
         interceptor =>
-          this.getInterceptorInstance(interceptor, contextId, inquirerId)!,
+          { throw new Error("STUB"); },
       )
       .filter((interceptor: NestInterceptor) =>
-        interceptor ? isFunction(interceptor.intercept) : false,
+        { throw new Error("STUB"); },
       )
       .toArray() as R;
   }
@@ -109,13 +109,10 @@ export class InterceptorsContextCreator extends ContextCreator {
       this.config.getGlobalRequestInterceptors() as InstanceWrapper[];
     const scopedInterceptors = iterate(scopedInterceptorWrappers)
       .map(wrapper =>
-        wrapper.getInstanceByContextId(
-          this.getContextId(contextId, wrapper),
-          inquirerId,
-        ),
+        { throw new Error("STUB"); },
       )
-      .filter(host => !!host)
-      .map(host => host.instance)
+      .filter(host => { throw new Error("STUB"); })
+      .map(host => { throw new Error("STUB"); })
       .toArray();
 
     return globalInterceptors.concat(scopedInterceptors) as T;

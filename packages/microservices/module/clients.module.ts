@@ -19,10 +19,7 @@ export class ClientsModule {
   static register(options: ClientsModuleOptions): DynamicModule {
     const clientsOptions = !Array.isArray(options) ? options.clients : options;
     const clients = (clientsOptions || []).map(item => {
-      return {
-        provide: item.name,
-        useValue: this.assignOnAppShutdownHook(ClientProxyFactory.create(item)),
-      };
+        throw new Error("STUB");
     });
     return {
       module: ClientsModule,
@@ -33,35 +30,7 @@ export class ClientsModule {
   }
 
   static registerAsync(options: ClientsModuleAsyncOptions): DynamicModule {
-    const clientsOptions = !Array.isArray(options) ? options.clients : options;
-    const providers: Provider[] = clientsOptions.reduce(
-      (accProviders: Provider[], item) =>
-        accProviders
-          .concat(this.createAsyncProviders(item))
-          .concat(item.extraProviders || []),
-      [],
-    );
-    const imports = clientsOptions.reduce(
-      (accImports, option) => {
-        if (!option.imports) {
-          return accImports;
-        }
-        const toInsert = option.imports.filter(
-          item => !accImports.includes(item),
-        );
-        return accImports.concat(toInsert);
-      },
-      [] as Array<
-        DynamicModule | Promise<DynamicModule> | ForwardReference | Type
-      >,
-    );
-    return {
-      module: ClientsModule,
-      global: !Array.isArray(options) && options.isGlobal,
-      imports,
-      providers: providers,
-      exports: providers,
-    };
+      throw new Error("STUB");
   }
 
   private static createAsyncProviders(
@@ -93,7 +62,7 @@ export class ClientsModule {
       provide: options.name,
       useFactory: this.createFactoryWrapper(
         (optionsFactory: ClientsModuleOptionsFactory) =>
-          optionsFactory.createClientOptions(),
+          { throw new Error("STUB"); },
       ),
       inject: [options.useExisting || options.useClass!],
     };
@@ -103,9 +72,7 @@ export class ClientsModule {
     useFactory: ClientsProviderAsyncOptions['useFactory'],
   ) {
     return async (...args: any[]) => {
-      const clientOptions = await useFactory!(...args);
-      const clientProxyRef = ClientProxyFactory.create(clientOptions);
-      return this.assignOnAppShutdownHook(clientProxyRef);
+        throw new Error("STUB");
     };
   }
 

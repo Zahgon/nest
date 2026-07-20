@@ -12,7 +12,7 @@ export class Barrier {
     this.targetCount = targetCount;
 
     this.promise = new Promise<void>(resolve => {
-      this.resolve = resolve;
+        throw new Error("STUB");
     });
   }
 

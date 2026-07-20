@@ -251,8 +251,7 @@ export class DependenciesScanner {
       )!,
     ];
     providers.forEach(provider => {
-      this.insertProvider(provider, token);
-      this.reflectDynamicMetadata(provider, token);
+        throw new Error("STUB");
     });
   }
 
@@ -265,8 +264,7 @@ export class DependenciesScanner {
       )!,
     ];
     controllers.forEach(item => {
-      this.insertController(item, token);
-      this.reflectDynamicMetadata(item, token);
+        throw new Error("STUB");
     });
   }
 
@@ -290,7 +288,7 @@ export class DependenciesScanner {
       )!,
     ];
     exports.forEach(exportedProvider =>
-      this.insertExportedProviderOrModule(exportedProvider, token),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -307,18 +305,8 @@ export class DependenciesScanner {
       .getAllMethodNames(component.prototype)
       .reduce(
         (acc, method) => {
-          const methodInjectable = this.reflectKeyMetadata(
-            component,
-            metadataKey,
-            method,
-          );
-
-          if (methodInjectable) {
-            acc.push(methodInjectable);
-          }
-
-          return acc;
-        },
+              throw new Error("STUB");
+          },
         [] as Array<{
           methodKey: string;
           metadata: Type<Injectable>[];
@@ -326,23 +314,10 @@ export class DependenciesScanner {
       );
 
     controllerInjectables.forEach(injectable =>
-      this.insertInjectable(
-        injectable,
-        token,
-        component,
-        ENHANCER_KEY_TO_SUBTYPE_MAP[metadataKey],
-      ),
+      { throw new Error("STUB"); },
     );
     methodInjectables.forEach(methodInjectable => {
-      methodInjectable.metadata.forEach(injectable =>
-        this.insertInjectable(
-          injectable,
-          token,
-          component,
-          ENHANCER_KEY_TO_SUBTYPE_MAP[metadataKey],
-          methodInjectable.methodKey,
-        ),
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -356,32 +331,7 @@ export class DependenciesScanner {
     );
 
     paramsMethods.forEach(methodKey => {
-      const metadata: Record<
-        string,
-        {
-          index: number;
-          data: unknown;
-          pipes: Array<Type<PipeTransform> | PipeTransform>;
-        }
-      > = Reflect.getMetadata(metadataKey, component, methodKey);
-
-      if (!metadata) {
-        return;
-      }
-
-      const params = Object.values(metadata);
-      params
-        .map(item => item.pipes)
-        .flat(1)
-        .forEach(injectable =>
-          this.insertInjectable(
-            injectable,
-            token,
-            component,
-            'pipe',
-            methodKey,
-          ),
-        );
+        throw new Error("STUB");
     });
   }
 
@@ -423,10 +373,7 @@ export class DependenciesScanner {
     // Convert modules to an acyclic connected graph
     const tree = new TopologyTree(rootModule);
     tree.walk((moduleRef, depth) => {
-      if (moduleRef.isGlobal) {
-        return;
-      }
-      moduleRef.distance = depth;
+        throw new Error("STUB");
     });
   }
 
@@ -580,17 +527,12 @@ export class DependenciesScanner {
   ): ModuleOverride | undefined {
     if (this.isForwardReference(module)) {
       return overrides.find(moduleToOverride => {
-        return (
-          moduleToOverride.moduleToReplace === module.forwardRef() ||
-          (
-            moduleToOverride.moduleToReplace as ForwardReference
-          ).forwardRef?.() === module.forwardRef()
-        );
+          throw new Error("STUB");
       });
     }
 
     return overrides.find(
-      moduleToOverride => moduleToOverride.moduleToReplace === module,
+      moduleToOverride => { throw new Error("STUB"); },
     );
   }
 
@@ -643,23 +585,9 @@ export class DependenciesScanner {
    */
   public addScopedEnhancersMetadata() {
     iterate(this.applicationProvidersApplyMap)
-      .filter(wrapper => this.isRequestOrTransient(wrapper.scope!))
+      .filter(wrapper => { throw new Error("STUB"); })
       .forEach(({ moduleKey, providerKey }) => {
-        const modulesContainer = this.container.getModules();
-        const { injectables } = modulesContainer.get(moduleKey)!;
-        const instanceWrapper = injectables.get(providerKey);
-
-        const iterableIterator = modulesContainer.values();
-        iterate(iterableIterator)
-          .map(moduleRef =>
-            Array.from<InstanceWrapper>(moduleRef.controllers.values()).concat(
-              moduleRef.entryProviders,
-            ),
-          )
-          .flatten()
-          .forEach(controllerOrEntryProvider =>
-            controllerOrEntryProvider.addEnhancerMetadata(instanceWrapper!),
-          );
+          throw new Error("STUB");
       });
   }
 
@@ -680,51 +608,34 @@ export class DependenciesScanner {
     // Add global enhancers to the application config
     this.applicationProvidersApplyMap.forEach(
       ({ moduleKey, providerKey, type, scope }) => {
-        let instanceWrapper: InstanceWrapper;
-        if (this.isRequestOrTransient(scope!)) {
-          instanceWrapper = getInstanceWrapper(
-            moduleKey,
-            providerKey,
-            'injectables',
-          )!;
-
-          this.graphInspector.insertAttachedEnhancer(instanceWrapper);
-          return applyRequestProvidersMap[type as string](instanceWrapper);
-        }
-        instanceWrapper = getInstanceWrapper(
-          moduleKey,
-          providerKey,
-          'providers',
-        )!;
-        this.graphInspector.insertAttachedEnhancer(instanceWrapper);
-        applyProvidersMap[type as string](instanceWrapper.instance);
-      },
+            throw new Error("STUB");
+        },
     );
   }
 
   public getApplyProvidersMap(): { [type: string]: Function } {
     return {
       [APP_INTERCEPTOR]: (interceptor: NestInterceptor) =>
-        this.applicationConfig.addGlobalInterceptor(interceptor),
+        { throw new Error("STUB"); },
       [APP_PIPE]: (pipe: PipeTransform) =>
-        this.applicationConfig.addGlobalPipe(pipe),
+        { throw new Error("STUB"); },
       [APP_GUARD]: (guard: CanActivate) =>
-        this.applicationConfig.addGlobalGuard(guard),
+        { throw new Error("STUB"); },
       [APP_FILTER]: (filter: ExceptionFilter) =>
-        this.applicationConfig.addGlobalFilter(filter),
+        { throw new Error("STUB"); },
     };
   }
 
   public getApplyRequestProvidersMap(): { [type: string]: Function } {
     return {
       [APP_INTERCEPTOR]: (interceptor: InstanceWrapper<NestInterceptor>) =>
-        this.applicationConfig.addGlobalRequestInterceptor(interceptor),
+        { throw new Error("STUB"); },
       [APP_PIPE]: (pipe: InstanceWrapper<PipeTransform>) =>
-        this.applicationConfig.addGlobalRequestPipe(pipe),
+        { throw new Error("STUB"); },
       [APP_GUARD]: (guard: InstanceWrapper<CanActivate>) =>
-        this.applicationConfig.addGlobalRequestGuard(guard),
+        { throw new Error("STUB"); },
       [APP_FILTER]: (filter: InstanceWrapper<ExceptionFilter>) =>
-        this.applicationConfig.addGlobalRequestFilter(filter),
+        { throw new Error("STUB"); },
     };
   }
 

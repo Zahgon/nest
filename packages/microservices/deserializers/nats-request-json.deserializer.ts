@@ -12,12 +12,7 @@ export class NatsRequestJSONDeserializer extends IncomingRequestDeserializer {
   private readonly jsonCodec: NatsCodec<unknown>;
 
   constructor() {
-    super();
-
-    natsPackage = loadPackage('nats', NatsRequestJSONDeserializer.name, () =>
-      require('nats'),
-    );
-    this.jsonCodec = natsPackage.JSONCodec();
+      throw new Error("STUB");
   }
 
   deserialize(

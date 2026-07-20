@@ -72,7 +72,7 @@ export class MicroservicesModule<
     }
     const modules = container.getModules();
     modules.forEach(({ controllers }, moduleRef) =>
-      this.bindListeners(controllers, serverInstance, moduleRef),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -85,8 +85,7 @@ export class MicroservicesModule<
     }
     const modules = container.getModules();
     modules.forEach(({ controllers, providers }) => {
-      this.bindClients(controllers);
-      this.bindClients(providers);
+        throw new Error("STUB");
     });
   }
 
@@ -96,11 +95,7 @@ export class MicroservicesModule<
     moduleName: string,
   ) {
     controllers.forEach(wrapper =>
-      this.listenersController.registerPatternHandlers(
-        wrapper,
-        serverInstance,
-        moduleName,
-      ),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -108,14 +103,13 @@ export class MicroservicesModule<
     items: Map<string | symbol | Function, InstanceWrapper<unknown>>,
   ) {
     items.forEach(({ instance, isNotMetatype }) => {
-      !isNotMetatype &&
-        this.listenersController.assignClientsToProperties(instance as object);
+        throw new Error("STUB");
     });
   }
 
   public async close() {
     const clients = this.clientsContainer.getAllClients();
-    await Promise.all(clients.map(client => client.close()));
+    await Promise.all(clients.map(client => { throw new Error("STUB"); }));
     this.clientsContainer.clear();
   }
 }

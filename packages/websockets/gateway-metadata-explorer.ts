@@ -27,8 +27,8 @@ export class GatewayMetadataExplorer {
     const instancePrototype = Object.getPrototypeOf(instance);
     return this.metadataScanner
       .getAllMethodNames(instancePrototype)
-      .map(method => this.exploreMethodMetadata(instancePrototype, method)!)
-      .filter(metadata => metadata);
+      .map(method => { throw new Error("STUB"); })
+      .filter(metadata => { throw new Error("STUB"); });
   }
 
   public exploreMethodMetadata(
@@ -72,9 +72,7 @@ export class GatewayMetadataExplorer {
     }
     const metadataKeys = Object.keys(paramsMetadata);
     return metadataKeys.some(key => {
-      const type = this.contextUtils.mapParamType(key);
-
-      return (Number(type) as WsParamtype) === WsParamtype.ACK;
+        throw new Error("STUB");
     });
   }
 

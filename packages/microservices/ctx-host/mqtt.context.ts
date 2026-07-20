@@ -21,6 +21,6 @@ export class MqttContext extends BaseRpcContext<MqttContextArgs> {
    * Returns the reference to the original MQTT packet.
    */
   getPacket() {
-    return this.args[1];
+      throw new Error("STUB");
   }
 }

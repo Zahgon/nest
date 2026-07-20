@@ -13,28 +13,5 @@ export async function repl(
   module: Type | DynamicModule,
   replOptions: ReplOptions = {},
 ) {
-  const app = await NestFactory.createApplicationContext(module, {
-    abortOnError: false,
-    logger: new ReplLogger(),
-  });
-  await app.init();
-
-  const replContext = new ReplContext(app);
-  Logger.log(REPL_INITIALIZED_MESSAGE);
-
-  const _repl = await import('repl');
-  const replServer = _repl.start({
-    prompt: clc.green('> '),
-    ignoreUndefined: true,
-    ...replOptions,
-  });
-  assignToObject(replServer.context, replContext.globalScope);
-
-  defineDefaultCommandsOnRepl(replServer);
-
-  replServer.on('exit', async () => {
-    await app.close();
-  });
-
-  return replServer;
+    throw new Error("STUB");
 }

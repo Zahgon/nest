@@ -37,17 +37,6 @@ export class NotImplementedException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Not Implemented',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.NOT_IMPLEMENTED,
-      ),
-      HttpStatus.NOT_IMPLEMENTED,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

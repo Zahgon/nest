@@ -39,17 +39,6 @@ export class UnprocessableEntityException extends HttpException {
       | string
       | HttpExceptionOptions = 'Unprocessable Entity',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      ),
-      HttpStatus.UNPROCESSABLE_ENTITY,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

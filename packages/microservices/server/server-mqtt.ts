@@ -45,15 +45,7 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
   }> = [];
 
   constructor(private readonly options: Required<MqttOptions>['options']) {
-    super();
-    this.url = this.getOptionsProp(options, 'url', MQTT_DEFAULT_URL);
-
-    mqttPackage = this.loadPackage('mqtt', ServerMqtt.name, () =>
-      require('mqtt'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async listen(
@@ -77,12 +69,12 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
     this.registerConnectListener(this.mqttClient);
 
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.mqttClient.on(event, callback),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
     this.bindEvents(this.mqttClient);
 
-    this.mqttClient.on(MqttEventsMap.CONNECT, () => callback());
+    this.mqttClient.on(MqttEventsMap.CONNECT, () => { throw new Error("STUB"); });
   }
 
   public bindEvents(mqttClient: MqttClient) {
@@ -90,22 +82,7 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
 
     const registeredPatterns = [...this.messageHandlers.keys()];
     registeredPatterns.forEach(pattern => {
-      const handler = this.messageHandlers.get(pattern)!;
-      const { isEventHandler, extras } = handler;
-
-      const globalSubscribeOptions = this.getOptionsProp(
-        this.options,
-        'subscribeOptions',
-      );
-      const subscribeOptions =
-        extras?.qos !== undefined
-          ? { ...globalSubscribeOptions, qos: extras.qos }
-          : globalSubscribeOptions;
-
-      mqttClient.subscribe(
-        isEventHandler ? pattern : this.getRequestPattern(pattern),
-        subscribeOptions,
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -123,7 +100,7 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
       channel: string,
       buffer: Buffer,
       originalPacket?: Record<string, any>,
-    ) => this.handleMessage(channel, buffer, pub, originalPacket);
+    ) => { throw new Error("STUB"); };
   }
 
   public async handleMessage(
@@ -158,10 +135,7 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
       this.transportId,
       mqttContext,
       async () => {
-        const response$ = this.transformToObservable(
-          await handler(packet.data, mqttContext),
-        );
-        response$ && this.send(response$, publish);
+          throw new Error("STUB");
       },
     );
   }
@@ -172,23 +146,7 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
     id: string,
   ): any {
     return (response: any) => {
-      Object.assign(response, { id });
-
-      const options =
-        isObject(response?.data) && response.data instanceof MqttRecord
-          ? (response.data as MqttRecord)?.options
-          : {};
-      delete response?.data?.options;
-
-      const outgoingResponse: string | Buffer =
-        this.serializer.serialize(response);
-
-      this.onProcessingEndHook?.(this.transportId, context);
-      return client.publish(
-        this.getReplyPattern(context.getTopic()),
-        outgoingResponse,
-        options,
-      );
+        throw new Error("STUB");
     };
   }
 
@@ -262,42 +220,35 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
   }
 
   public registerErrorListener(client: MqttClient) {
-    client.on(MqttEventsMap.ERROR, (err: unknown) => this.logger.error(err));
+    client.on(MqttEventsMap.ERROR, (err: unknown) => { throw new Error("STUB"); });
   }
 
   public registerReconnectListener(client: MqttClient) {
     client.on(MqttEventsMap.RECONNECT, () => {
-      this._status$.next(MqttStatus.RECONNECTING);
-
-      this.logger.log('MQTT connection lost. Trying to reconnect...');
+        throw new Error("STUB");
     });
   }
 
   public registerDisconnectListener(client: MqttClient) {
     client.on(MqttEventsMap.DISCONNECT, () => {
-      this._status$.next(MqttStatus.DISCONNECTED);
+        throw new Error("STUB");
     });
   }
 
   public registerCloseListener(client: MqttClient) {
     client.on(MqttEventsMap.CLOSE, () => {
-      this._status$.next(MqttStatus.CLOSED);
+        throw new Error("STUB");
     });
   }
 
   public registerConnectListener(client: MqttClient) {
     client.on(MqttEventsMap.CONNECT, () => {
-      this._status$.next(MqttStatus.CONNECTED);
+        throw new Error("STUB");
     });
   }
 
   public unwrap<T>(): T {
-    if (!this.mqttClient) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return this.mqttClient as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -312,6 +263,6 @@ export class ServerMqtt extends Server<MqttEvents, MqttStatus> {
   }
 
   protected initializeSerializer(options: MqttOptions['options']) {
-    this.serializer = options?.serializer ?? new MqttRecordSerializer();
+      throw new Error("STUB");
   }
 }

@@ -79,7 +79,7 @@ export abstract class AbstractInstanceResolver {
 
     if (Array.isArray(instanceLinkOrArray)) {
       return Promise.all(
-        instanceLinkOrArray.map(instanceLink => pluckInstance(instanceLink)),
+        instanceLinkOrArray.map(instanceLink => { throw new Error("STUB"); }),
       );
     }
     return pluckInstance(instanceLinkOrArray);

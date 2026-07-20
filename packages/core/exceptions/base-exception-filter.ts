@@ -75,7 +75,7 @@ export class BaseExceptionFilter<T = any> implements ExceptionFilter<T> {
   }
 
   public isExceptionObject(err: any): err is Error {
-    return isObject(err) && !!(err as Error).message;
+      throw new Error("STUB");
   }
 
   /**

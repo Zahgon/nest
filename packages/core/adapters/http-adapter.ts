@@ -32,13 +32,13 @@ export abstract class AbstractHttpAdapter<
   public post(handler: RequestHandler);
   public post(path: any, handler: RequestHandler);
   public post(...args: any[]) {
-    return this.instance.post(...args);
+      throw new Error("STUB");
   }
 
   public head(handler: RequestHandler);
   public head(path: any, handler: RequestHandler);
   public head(...args: any[]) {
-    return this.instance.head(...args);
+      throw new Error("STUB");
   }
 
   public delete(handler: RequestHandler);
@@ -50,55 +50,55 @@ export abstract class AbstractHttpAdapter<
   public put(handler: RequestHandler);
   public put(path: any, handler: RequestHandler);
   public put(...args: any[]) {
-    return this.instance.put(...args);
+      throw new Error("STUB");
   }
 
   public patch(handler: RequestHandler);
   public patch(path: any, handler: RequestHandler);
   public patch(...args: any[]) {
-    return this.instance.patch(...args);
+      throw new Error("STUB");
   }
 
   public propfind(handler: RequestHandler);
   public propfind(path: any, handler: RequestHandler);
   public propfind(...args: any[]) {
-    return this.instance.propfind(...args);
+      throw new Error("STUB");
   }
 
   public proppatch(handler: RequestHandler);
   public proppatch(path: any, handler: RequestHandler);
   public proppatch(...args: any[]) {
-    return this.instance.proppatch(...args);
+      throw new Error("STUB");
   }
 
   public mkcol(handler: RequestHandler);
   public mkcol(path: any, handler: RequestHandler);
   public mkcol(...args: any[]) {
-    return this.instance.mkcol(...args);
+      throw new Error("STUB");
   }
 
   public copy(handler: RequestHandler);
   public copy(path: any, handler: RequestHandler);
   public copy(...args: any[]) {
-    return this.instance.copy(...args);
+      throw new Error("STUB");
   }
 
   public move(handler: RequestHandler);
   public move(path: any, handler: RequestHandler);
   public move(...args: any[]) {
-    return this.instance.move(...args);
+      throw new Error("STUB");
   }
 
   public lock(handler: RequestHandler);
   public lock(path: any, handler: RequestHandler);
   public lock(...args: any[]) {
-    return this.instance.lock(...args);
+      throw new Error("STUB");
   }
 
   public unlock(handler: RequestHandler);
   public unlock(path: any, handler: RequestHandler);
   public unlock(...args: any[]) {
-    return this.instance.unlock(...args);
+      throw new Error("STUB");
   }
 
   public all(handler: RequestHandler);
@@ -110,13 +110,13 @@ export abstract class AbstractHttpAdapter<
   public search(handler: RequestHandler);
   public search(path: any, handler: RequestHandler);
   public search(...args: any[]) {
-    return this.instance.search(...args);
+      throw new Error("STUB");
   }
 
   public options(handler: RequestHandler);
   public options(path: any, handler: RequestHandler);
   public options(...args: any[]) {
-    return this.instance.options(...args);
+      throw new Error("STUB");
   }
 
   public listen(port: string | number, callback?: () => void);
@@ -130,11 +130,11 @@ export abstract class AbstractHttpAdapter<
   }
 
   public setHttpServer(httpServer: TServer) {
-    this.httpServer = httpServer;
+      throw new Error("STUB");
   }
 
   public setInstance<T = any>(instance: T) {
-    this.instance = instance;
+      throw new Error("STUB");
   }
 
   public getInstance<T = any>(): T {
@@ -148,16 +148,20 @@ export abstract class AbstractHttpAdapter<
   public setOnRouteTriggered(
     onRouteTriggered: (requestMethod: RequestMethod, path: string) => void,
   ) {
-    this.onRouteTriggered = onRouteTriggered;
+      throw new Error("STUB");
   }
 
   public getOnRouteTriggered() {
     return this.onRouteTriggered;
   }
 
-  public setOnRequestHook(onRequestHook: Function): void {}
+  public setOnRequestHook(onRequestHook: Function): void {
+      throw new Error("STUB");
+  }
 
-  public setOnResponseHook(onResponseHook: Function): void {}
+  public setOnResponseHook(onResponseHook: Function): void {
+      throw new Error("STUB");
+  }
 
   abstract close();
   abstract initHttpServer(options: NestApplicationOptions);

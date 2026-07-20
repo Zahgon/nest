@@ -27,15 +27,15 @@ export class InterceptorsConsumer {
 
     const nextFn = async (i = 0) => {
       if (i >= interceptors.length) {
-        return defer(AsyncResource.bind(() => this.transformDeferred(next)));
+        return defer(AsyncResource.bind(() => { throw new Error("STUB"); }));
       }
       const handler: CallHandler = {
         handle: () =>
-          defer(AsyncResource.bind(() => nextFn(i + 1))).pipe(mergeAll()),
+          { throw new Error("STUB"); },
       };
       return interceptors[i].intercept(context, handler);
     };
-    return defer(() => nextFn()).pipe(mergeAll());
+    return defer(() => { throw new Error("STUB"); }).pipe(mergeAll());
   }
 
   public createContext(
@@ -57,35 +57,7 @@ export class InterceptorsConsumer {
     // lose that context because the subscriber is called outside the bound scope.
     const nextPromise = next();
     return new Observable(subscriber => {
-      let innerSub: { unsubscribe(): void } | undefined;
-
-      nextPromise
-        .then(res => {
-          if (subscriber.closed) {
-            // The outer subscription was torn down (e.g. an SSE client disconnect)
-            // before the async handler resolved. Subscribe-and-immediately-unsubscribe
-            // so the producer Observable's teardown/cleanup logic still runs.
-            if (res instanceof Observable) {
-              const sub = res.subscribe({ error: () => {} });
-              sub.unsubscribe();
-            }
-            return;
-          }
-          const isDeferred =
-            res instanceof Promise || res instanceof Observable;
-          innerSub = from(isDeferred ? res : Promise.resolve(res)).subscribe(
-            subscriber,
-          );
-        })
-        .catch(err => {
-          if (!subscriber.closed) {
-            subscriber.error(err);
-          }
-        });
-
-      return () => {
-        innerSub?.unsubscribe();
-      };
+        throw new Error("STUB");
     });
   }
 }

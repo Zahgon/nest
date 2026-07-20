@@ -25,33 +25,7 @@ export class LazyModuleLoader {
       | DynamicModule,
     loadOpts?: LazyModuleLoaderLoadOptions,
   ): Promise<ModuleRef> {
-    this.registerLoggerConfiguration(loadOpts);
-
-    const moduleClassOrDynamicDefinition = await loaderFn();
-    const moduleInstances = await this.dependenciesScanner.scanForModules({
-      moduleDefinition: moduleClassOrDynamicDefinition,
-      overrides: this.moduleOverrides,
-      lazy: true,
-    });
-    if (moduleInstances.length === 0) {
-      // The module has been loaded already. In this case, we must
-      // retrieve a module reference from the existing container.
-      const { token } = await this.moduleCompiler.compile(
-        moduleClassOrDynamicDefinition,
-      );
-      const moduleInstance = this.modulesContainer.get(token)!;
-      return moduleInstance && this.getTargetModuleRef(moduleInstance);
-    }
-    const lazyModulesContainer =
-      this.createLazyModulesContainer(moduleInstances);
-    await this.dependenciesScanner.scanModulesForDependencies(
-      lazyModulesContainer,
-    );
-    await this.instanceLoader.createInstancesOfDependencies(
-      lazyModulesContainer,
-    );
-    const [targetModule] = moduleInstances;
-    return this.getTargetModuleRef(targetModule);
+      throw new Error("STUB");
   }
 
   private registerLoggerConfiguration(loadOpts?: LazyModuleLoaderLoadOptions) {
@@ -63,12 +37,10 @@ export class LazyModuleLoader {
   private createLazyModulesContainer(
     moduleInstances: Module[],
   ): Map<string, Module> {
-    moduleInstances = Array.from(new Set(moduleInstances));
-    return new Map(moduleInstances.map(ref => [ref.token, ref]));
+      throw new Error("STUB");
   }
 
   private getTargetModuleRef(moduleInstance: Module): ModuleRef {
-    const moduleRefInstanceWrapper = moduleInstance.getProviderByKey(ModuleRef);
-    return moduleRefInstanceWrapper.instance;
+      throw new Error("STUB");
   }
 }

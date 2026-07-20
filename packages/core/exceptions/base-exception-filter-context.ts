@@ -25,14 +25,11 @@ export class BaseExceptionFilterContext extends ContextCreator {
     }
     return iterate(metadata)
       .filter(
-        instance => instance && (isFunction(instance.catch) || instance.name),
+        instance => { throw new Error("STUB"); },
       )
-      .map(filter => this.getFilterInstance(filter, contextId, inquirerId))
-      .filter(item => !!item)
-      .map(instance => ({
-        func: instance!.catch.bind(instance),
-        exceptionMetatypes: this.reflectCatchExceptions(instance!),
-      }))
+      .map(filter => { throw new Error("STUB"); })
+      .filter(item => { throw new Error("STUB"); })
+      .map(instance => { throw new Error("STUB"); })
       .toArray() as R;
   }
 

@@ -169,10 +169,6 @@ export function Controller(
         ];
 
   return (target: object) => {
-    Reflect.defineMetadata(CONTROLLER_WATERMARK, true, target);
-    Reflect.defineMetadata(PATH_METADATA, path, target);
-    Reflect.defineMetadata(HOST_METADATA, host, target);
-    Reflect.defineMetadata(SCOPE_OPTIONS_METADATA, scopeOptions, target);
-    Reflect.defineMetadata(VERSION_METADATA, versionOptions, target);
+      throw new Error("STUB");
   };
 }

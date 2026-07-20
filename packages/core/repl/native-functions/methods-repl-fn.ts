@@ -15,18 +15,6 @@ export class MethodsReplFn extends ReplFunction {
   private readonly metadataScanner = new MetadataScanner();
 
   action(token: Type<unknown> | string): void {
-    const proto =
-      typeof token !== 'function'
-        ? Object.getPrototypeOf(this.ctx.app.get(token))
-        : token?.prototype;
-
-    const methods = this.metadataScanner.getAllMethodNames(proto);
-
-    this.ctx.writeToStdout('\n');
-    this.ctx.writeToStdout(`${clc.green('Methods')}:\n`);
-    methods.forEach(methodName =>
-      this.ctx.writeToStdout(` ${clc.yellow('◻')} ${methodName}\n`),
-    );
-    this.ctx.writeToStdout('\n');
+      throw new Error("STUB");
   }
 }

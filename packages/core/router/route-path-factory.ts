@@ -34,19 +34,14 @@ export class RoutePathFactory {
       if (Array.isArray(versionOrVersions)) {
         paths = flatten(
           paths.map(path =>
-            versionOrVersions.map(version =>
-              // Version Neutral - Do not include version in URL
-              version === VERSION_NEUTRAL
-                ? path
-                : `${path}/${versionPrefix}${version}`,
-            ),
+            { throw new Error("STUB"); },
           ),
         );
       } else {
         // Version Neutral - Do not include version in URL
         if (versionOrVersions !== VERSION_NEUTRAL) {
           paths = paths.map(
-            path => `${path}/${versionPrefix}${versionOrVersions}`,
+            path => { throw new Error("STUB"); },
           );
         }
       }
@@ -58,23 +53,13 @@ export class RoutePathFactory {
 
     if (metadata.globalPrefix) {
       paths = paths.map(path => {
-        if (
-          this.isExcludedFromGlobalPrefix(
-            path,
-            requestMethod,
-            versionOrVersions,
-            metadata.versioningOptions,
-          )
-        ) {
-          return path;
-        }
-        return stripEndSlash(metadata.globalPrefix || '') + path;
+          throw new Error("STUB");
       });
     }
 
     return paths
-      .map(path => addLeadingSlash(path || '/'))
-      .map(path => (path !== '/' ? stripEndSlash(path) : path));
+      .map(path => { throw new Error("STUB"); })
+      .map(path => { throw new Error("STUB"); });
   }
 
   public getVersion(metadata: RoutePathMetadata) {
@@ -107,11 +92,11 @@ export class RoutePathFactory {
 
     if (Array.isArray(fragmentToAppend)) {
       const paths2dArray = paths.map(path =>
-        fragmentToAppend.map(fragment => concatPaths(path, fragment)),
+        { throw new Error("STUB"); },
       );
       return flatten(paths2dArray);
     }
-    return paths.map(path => concatPaths(path, fragmentToAppend));
+    return paths.map(path => { throw new Error("STUB"); });
   }
 
   public isExcludedFromGlobalPrefix(
@@ -150,13 +135,7 @@ export class RoutePathFactory {
   ) {
     if (typeof versionValue !== 'string') {
       versionValue.forEach(version => {
-        if (typeof version === 'string') {
-          path = this.truncateVersionPrefixFromPath(
-            path,
-            version,
-            versioningOptions,
-          );
-        }
+          throw new Error("STUB");
       });
       return path;
     }

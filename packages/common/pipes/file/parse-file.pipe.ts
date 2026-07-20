@@ -23,19 +23,7 @@ export class ParseFilePipe implements PipeTransform<any> {
   private readonly fileIsRequired: boolean;
 
   constructor(@Optional() options: ParseFileOptions = {}) {
-    const {
-      exceptionFactory,
-      errorHttpStatusCode = HttpStatus.BAD_REQUEST,
-      validators = [],
-      fileIsRequired,
-    } = options;
-
-    this.exceptionFactory =
-      exceptionFactory ||
-      (error => new HttpErrorByCode[errorHttpStatusCode](error));
-
-    this.validators = validators;
-    this.fileIsRequired = fileIsRequired ?? true;
+      throw new Error("STUB");
   }
 
   async transform(value: any): Promise<any> {
@@ -53,7 +41,7 @@ export class ParseFilePipe implements PipeTransform<any> {
 
   private async validateFilesOrFile(value: any): Promise<void> {
     if (Array.isArray(value)) {
-      await Promise.all(value.map(f => this.validate(f)));
+      await Promise.all(value.map(f => { throw new Error("STUB"); }));
     } else {
       await this.validate(value);
     }
@@ -85,6 +73,6 @@ export class ParseFilePipe implements PipeTransform<any> {
    * @returns list of validators used in this pipe.
    */
   getValidators() {
-    return this.validators;
+      throw new Error("STUB");
   }
 }

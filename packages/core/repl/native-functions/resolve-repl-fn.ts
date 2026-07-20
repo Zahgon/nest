@@ -14,6 +14,6 @@ export class ResolveReplFn extends ReplFunction {
     token: string | symbol | Function | Type<any>,
     contextId: any,
   ): Promise<any> {
-    return this.ctx.app.resolve(token, contextId);
+      throw new Error("STUB");
   }
 }

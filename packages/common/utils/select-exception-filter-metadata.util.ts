@@ -6,8 +6,5 @@ export const selectExceptionFilterMetadata = <T = any>(
 ): ExceptionFilterMetadata | undefined =>
   filters.find(
     ({ exceptionMetatypes }) =>
-      !exceptionMetatypes.length ||
-      exceptionMetatypes.some(
-        ExceptionMetaType => exception instanceof ExceptionMetaType,
-      ),
+      { throw new Error("STUB"); },
   );

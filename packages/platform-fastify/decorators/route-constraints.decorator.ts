@@ -9,4 +9,4 @@ import { RouteShorthandOptions } from 'fastify';
  */
 export const RouteConstraints = (
   config: RouteShorthandOptions['constraints'],
-) => SetMetadata(FASTIFY_ROUTE_CONSTRAINTS_METADATA, config);
+) => { throw new Error("STUB"); };

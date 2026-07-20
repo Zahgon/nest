@@ -9,57 +9,22 @@ export class TreeNode<T> {
   }
 
   addChild(child: TreeNode<T>) {
-    this.children.add(child);
+      throw new Error("STUB");
   }
 
   removeChild(child: TreeNode<T>) {
-    this.children.delete(child);
+      throw new Error("STUB");
   }
 
   relink(parent: TreeNode<T>) {
-    this.parent?.removeChild(this);
-
-    this.parent = parent;
-    this.parent.addChild(this);
+      throw new Error("STUB");
   }
 
   getDepth() {
-    const visited = new Set<TreeNode<T>>();
-
-    let depth = 0;
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let current: TreeNode<T> | null = this;
-
-    while (current) {
-      depth++;
-      current = current.parent;
-
-      // Stop on cycle
-      if (visited.has(current!)) {
-        return -1;
-      }
-      visited.add(current!);
-    }
-    return depth;
+      throw new Error("STUB");
   }
 
   hasCycleWith(target: T) {
-    const visited = new Set<TreeNode<T>>();
-
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    let current: TreeNode<T> | null = this;
-
-    while (current) {
-      if (current.value === target) {
-        return true;
-      }
-      current = current.parent;
-
-      if (visited.has(current!)) {
-        return false;
-      }
-      visited.add(current!);
-    }
-    return false;
+      throw new Error("STUB");
   }
 }

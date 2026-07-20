@@ -27,10 +27,7 @@ export class HttpAdapterHost<
    * @param httpAdapter reference to the `HttpAdapter` to be set
    */
   set httpAdapter(httpAdapter: T) {
-    this._httpAdapter = httpAdapter;
-
-    this._init$.next();
-    this._init$.complete();
+      throw new Error("STUB");
   }
 
   /**
@@ -40,7 +37,7 @@ export class HttpAdapterHost<
    * `const httpAdapter = adapterHost.httpAdapter;`
    */
   get httpAdapter(): T {
-    return this._httpAdapter as T;
+      throw new Error("STUB");
   }
 
   /**
@@ -48,7 +45,7 @@ export class HttpAdapterHost<
    * This event is emitted when the HTTP application is listening for incoming requests.
    */
   get listen$(): Observable<void> {
-    return this._listen$.asObservable();
+      throw new Error("STUB");
   }
 
   /**
@@ -56,25 +53,20 @@ export class HttpAdapterHost<
    * This event is emitted when the HTTP application is initialized.
    */
   get init$(): Observable<void> {
-    return this._init$.asObservable();
+      throw new Error("STUB");
   }
 
   /**
    * Sets the listening state of the application.
    */
   set listening(listening: boolean) {
-    this.isListening = listening;
-
-    if (listening) {
-      this._listen$.next();
-      this._listen$.complete();
-    }
+      throw new Error("STUB");
   }
 
   /**
    * Returns a boolean indicating whether the application is listening for incoming requests.
    */
   get listening(): boolean {
-    return this.isListening;
+      throw new Error("STUB");
   }
 }

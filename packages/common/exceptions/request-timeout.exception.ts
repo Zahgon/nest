@@ -37,17 +37,6 @@ export class RequestTimeoutException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Request Timeout',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.REQUEST_TIMEOUT,
-      ),
-      HttpStatus.REQUEST_TIMEOUT,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

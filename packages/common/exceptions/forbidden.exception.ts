@@ -37,17 +37,6 @@ export class ForbiddenException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Forbidden',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.FORBIDDEN,
-      ),
-      HttpStatus.FORBIDDEN,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

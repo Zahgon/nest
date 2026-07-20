@@ -53,36 +53,7 @@ export class ServerKafka extends Server<never, KafkaStatus> {
   protected groupId: string;
 
   constructor(protected readonly options: Required<KafkaOptions>['options']) {
-    super();
-
-    const clientOptions = this.getOptionsProp(
-      this.options,
-      'client',
-      {} as KafkaConfig,
-    );
-    const consumerOptions = this.getOptionsProp(
-      this.options,
-      'consumer',
-      {} as ConsumerConfig,
-    );
-    const postfixId = this.getOptionsProp(this.options, 'postfixId', '-server');
-
-    this.brokers = clientOptions.brokers || [KAFKA_DEFAULT_BROKER];
-
-    // Append a unique id to the clientId and groupId
-    // so they don't collide with a microservices client
-    this.clientId =
-      (clientOptions.clientId || KAFKA_DEFAULT_CLIENT) + postfixId;
-    this.groupId = (consumerOptions.groupId || KAFKA_DEFAULT_GROUP) + postfixId;
-
-    kafkaPackage = this.loadPackage('kafkajs', ServerKafka.name, () =>
-      require('kafkajs'),
-    );
-
-    this.parser = new KafkaParser((options && options.parser) || undefined);
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async listen(
@@ -124,19 +95,19 @@ export class ServerKafka extends Server<never, KafkaStatus> {
       return;
     }
     this.consumer.on(this.consumer.events.CONNECT, () =>
-      this._status$.next(KafkaStatus.CONNECTED),
+      { throw new Error("STUB"); },
     );
     this.consumer.on(this.consumer.events.DISCONNECT, () =>
-      this._status$.next(KafkaStatus.DISCONNECTED),
+      { throw new Error("STUB"); },
     );
     this.consumer.on(this.consumer.events.REBALANCING, () =>
-      this._status$.next(KafkaStatus.REBALANCING),
+      { throw new Error("STUB"); },
     );
     this.consumer.on(this.consumer.events.STOP, () =>
-      this._status$.next(KafkaStatus.STOPPED),
+      { throw new Error("STUB"); },
     );
     this.consumer.on(this.consumer.events.CRASH, () =>
-      this._status$.next(KafkaStatus.CRASHED),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -145,10 +116,10 @@ export class ServerKafka extends Server<never, KafkaStatus> {
       return;
     }
     this.producer.on(this.producer.events.CONNECT, () =>
-      this._status$.next(KafkaStatus.CONNECTED),
+      { throw new Error("STUB"); },
     );
     this.producer.on(this.producer.events.DISCONNECT, () =>
-      this._status$.next(KafkaStatus.DISCONNECTED),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -180,7 +151,7 @@ export class ServerKafka extends Server<never, KafkaStatus> {
   }
 
   public getMessageHandler() {
-    return async (payload: EachMessagePayload) => this.handleMessage(payload);
+    return async (payload: EachMessagePayload) => { throw new Error("STUB"); };
   }
 
   public getPublisher(
@@ -190,13 +161,7 @@ export class ServerKafka extends Server<never, KafkaStatus> {
     context: KafkaContext,
   ): (data: any) => Promise<RecordMetadata[]> {
     return (data: any) =>
-      this.sendMessage(
-        data,
-        replyTopic,
-        replyPartition,
-        correlationId,
-        context,
-      );
+      { throw new Error("STUB"); };
   }
 
   public async handleMessage(payload: EachMessagePayload) {
@@ -245,25 +210,13 @@ export class ServerKafka extends Server<never, KafkaStatus> {
       this.transportId,
       kafkaContext,
       async () => {
-        const response$ = this.transformToObservable(
-          handler(packet.data, kafkaContext),
-        );
-
-        const replayStream$ = new ReplaySubject();
-        await this.combineStreamsAndThrowIfRetriable(response$, replayStream$);
-
-        this.send(replayStream$, publish);
+          throw new Error("STUB");
       },
     );
   }
 
   public unwrap<T>(): T {
-    if (!this.client) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return [this.client, this.consumer, this.producer] as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -278,26 +231,7 @@ export class ServerKafka extends Server<never, KafkaStatus> {
     replayStream$: ReplaySubject<unknown>,
   ) {
     return new Promise<void>((resolve, reject) => {
-      let isPromiseResolved = false;
-      response$.subscribe({
-        next: val => {
-          replayStream$.next(val);
-          if (!isPromiseResolved) {
-            isPromiseResolved = true;
-            resolve();
-          }
-        },
-        error: err => {
-          if (err instanceof KafkaRetriableException && !isPromiseResolved) {
-            isPromiseResolved = true;
-            reject(err);
-          } else {
-            resolve();
-          }
-          replayStream$.error(err);
-        },
-        complete: () => replayStream$.complete(),
-      });
+        throw new Error("STUB");
     });
   }
 
@@ -322,7 +256,7 @@ export class ServerKafka extends Server<never, KafkaStatus> {
       this.options.send || {},
     );
     return this.producer!.send(replyMessage).finally(() => {
-      this.onProcessingEndHook?.(this.transportId, context);
+        throw new Error("STUB");
     });
   }
 
@@ -380,20 +314,15 @@ export class ServerKafka extends Server<never, KafkaStatus> {
     }
 
     return this.onProcessingStartHook(this.transportId, context, async () => {
-      const resultOrStream = await handler(packet.data, context);
-      if (isObservable(resultOrStream)) {
-        await lastValueFrom(resultOrStream);
-        this.onProcessingEndHook?.(this.transportId, context);
-      }
+        throw new Error("STUB");
     });
   }
 
   protected initializeSerializer(options: KafkaOptions['options']) {
-    this.serializer =
-      (options && options.serializer) || new KafkaRequestSerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: KafkaOptions['options']) {
-    this.deserializer = options?.deserializer ?? new KafkaRequestDeserializer();
+      throw new Error("STUB");
   }
 }

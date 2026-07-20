@@ -41,11 +41,11 @@ import { RoutesResolver } from './router/routes-resolver';
 
 const { SocketModule } = optionalRequire(
   '@nestjs/websockets/socket-module',
-  () => require('@nestjs/websockets/socket-module'),
+  () => { throw new Error("STUB"); },
 );
 const { MicroservicesModule } = optionalRequire(
   '@nestjs/microservices/microservices-module',
-  () => require('@nestjs/microservices/microservices-module'),
+  () => { throw new Error("STUB"); },
 );
 
 /**
@@ -78,21 +78,7 @@ export class NestApplication
     private readonly graphInspector: GraphInspector,
     appOptions: NestApplicationOptions = {},
   ) {
-    super(container, appOptions);
-
-    this.selectContextModule();
-    this.registerHttpServer();
-    this.injector = new Injector({
-      preview: this.appOptions.preview!,
-      instanceDecorator: appOptions.instrument?.instanceDecorator,
-    });
-    this.middlewareModule = new MiddlewareModule();
-    this.routesResolver = new RoutesResolver(
-      this.container,
-      this.config,
-      this.injector,
-      this.graphInspector,
-    );
+      throw new Error("STUB");
   }
 
   protected async dispose(): Promise<void> {
@@ -102,8 +88,7 @@ export class NestApplication
 
     await Promise.all(
       iterate(this.microservices).map(async microservice => {
-        microservice.setIsTerminated(true);
-        await microservice.close();
+          throw new Error("STUB");
       }),
     );
   }
@@ -113,11 +98,11 @@ export class NestApplication
   }
 
   public registerHttpServer() {
-    this.httpServer = this.createServer();
+      throw new Error("STUB");
   }
 
   public getUnderlyingHttpServer<T>(): T {
-    return this.httpAdapter.getHttpServer();
+      throw new Error("STUB");
   }
 
   public applyOptions() {
@@ -221,35 +206,11 @@ export class NestApplication
     microserviceOptions: T,
     hybridAppOptions: NestHybridApplicationOptions = {},
   ): INestMicroservice {
-    const { NestMicroservice } = loadPackage(
-      '@nestjs/microservices',
-      'NestFactory',
-      () => require('@nestjs/microservices'),
-    );
-    const { inheritAppConfig } = hybridAppOptions;
-    const applicationConfig = inheritAppConfig
-      ? this.config
-      : new ApplicationConfig();
-
-    const instance = new NestMicroservice(
-      this.container,
-      microserviceOptions,
-      this.graphInspector,
-      applicationConfig,
-    );
-
-    if (!hybridAppOptions.deferInitialization) {
-      instance.registerListeners();
-      instance.setIsInitialized(true);
-      instance.setIsInitHookCalled(true);
-    }
-
-    this.microservices.push(instance);
-    return instance;
+      throw new Error("STUB");
   }
 
   public getMicroservices(): INestMicroservice[] {
-    return this.microservices;
+      throw new Error("STUB");
   }
 
   public getHttpServer() {
@@ -257,9 +218,7 @@ export class NestApplication
   }
 
   public async startAllMicroservices(): Promise<this> {
-    this.assertNotInPreviewMode('startAllMicroservices');
-    await Promise.all(this.microservices.map(msvc => msvc.listen()));
-    return this;
+      throw new Error("STUB");
   }
 
   public use(...args: [any, any?]): this {
@@ -288,8 +247,7 @@ export class NestApplication
   public enableVersioning(
     options: VersioningOptions = { type: VersioningType.URI },
   ): this {
-    this.config.enableVersioning(options);
-    return this;
+      throw new Error("STUB");
   }
 
   public async listen(port: number | string): Promise<any>;
@@ -303,186 +261,62 @@ export class NestApplication
 
     const httpAdapterHost = this.container.getHttpAdapterHostRef();
     return new Promise((resolve, reject) => {
-      const errorHandler = (e: any) => {
-        this.logger.error(e?.toString?.());
-        reject(e);
-      };
-      this.httpServer.once('error', errorHandler);
-
-      const isCallbackInOriginalArgs = isFunction(args[args.length - 1]);
-      const listenFnArgs = isCallbackInOriginalArgs
-        ? args.slice(0, args.length - 1)
-        : args;
-
-      this.httpAdapter.listen(
-        port,
-        ...listenFnArgs,
-        (...originalCallbackArgs: unknown[]) => {
-          if (this.appOptions?.autoFlushLogs ?? true) {
-            this.flushLogs();
-          }
-          if (originalCallbackArgs[0] instanceof Error) {
-            return reject(originalCallbackArgs[0]);
-          }
-
-          const address = this.httpServer.address();
-          if (address) {
-            this.httpServer.removeListener('error', errorHandler);
-            this.isListening = true;
-
-            httpAdapterHost.listening = true;
-            resolve(this.httpServer);
-          }
-          if (isCallbackInOriginalArgs) {
-            args[args.length - 1](...originalCallbackArgs);
-          }
-        },
-      );
+        throw new Error("STUB");
     });
   }
 
   public async getUrl(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      if (!this.isListening) {
-        this.logger.error(MESSAGES.CALL_LISTEN_FIRST);
-        reject(MESSAGES.CALL_LISTEN_FIRST);
-        return;
-      }
-      const address = this.httpServer.address();
-      resolve(this.formatAddress(address));
-    });
+      throw new Error("STUB");
   }
 
   private formatAddress(address: any): string {
-    if (isString(address)) {
-      if (platform() === 'win32') {
-        return address;
-      }
-      const basePath = encodeURIComponent(address);
-      return `${this.getProtocol()}+unix://${basePath}`;
-    }
-
-    let host = this.host();
-    if (address && address.family === 'IPv6') {
-      if (host === '::') {
-        host = '[::1]';
-      } else {
-        host = `[${host}]`;
-      }
-    } else if (host === '0.0.0.0') {
-      host = '127.0.0.1';
-    }
-
-    return `${this.getProtocol()}://${host}:${address.port}`;
+      throw new Error("STUB");
   }
 
   public setGlobalPrefix(prefix: string, options?: GlobalPrefixOptions): this {
-    this.config.setGlobalPrefix(prefix);
-    if (options) {
-      const exclude = options?.exclude
-        ? mapToExcludeRoute(options.exclude)
-        : [];
-      this.config.setGlobalPrefixOptions({
-        ...options,
-        exclude,
-      });
-    }
-    return this;
+      throw new Error("STUB");
   }
 
   public useWebSocketAdapter(adapter: WebSocketAdapter): this {
-    if (this.isWsModuleRegistered) {
-      this.logger.warn(
-        'useWebSocketAdapter() was called after WebSocket gateways were already initialized. The provided adapter will be stored but will NOT be applied to existing gateways — they remain bound to the previously installed adapter. To install a custom adapter, call app.useWebSocketAdapter(...) BEFORE app.init() (or app.listen()).',
-      );
-    }
-    this.config.setIoAdapter(adapter);
-    return this;
+      throw new Error("STUB");
   }
 
   public useGlobalFilters(...filters: ExceptionFilter[]): this {
-    filters = this.applyInstanceDecoratorIfRegistered<ExceptionFilter>(
-      ...filters,
-    );
-    this.config.useGlobalFilters(...filters);
-    filters.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'filter',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public useGlobalPipes(...pipes: PipeTransform<any>[]): this {
-    pipes = this.applyInstanceDecoratorIfRegistered<PipeTransform<any>>(
-      ...pipes,
-    );
-    this.config.useGlobalPipes(...pipes);
-    pipes.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'pipe',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public useGlobalInterceptors(...interceptors: NestInterceptor[]): this {
-    interceptors = this.applyInstanceDecoratorIfRegistered<NestInterceptor>(
-      ...interceptors,
-    );
-    this.config.useGlobalInterceptors(...interceptors);
-    interceptors.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'interceptor',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public useGlobalGuards(...guards: CanActivate[]): this {
-    guards = this.applyInstanceDecoratorIfRegistered<CanActivate>(...guards);
-    this.config.useGlobalGuards(...guards);
-    guards.forEach(item =>
-      this.graphInspector.insertOrphanedEnhancer({
-        subtype: 'guard',
-        ref: item,
-      }),
-    );
-    return this;
+      throw new Error("STUB");
   }
 
   public useStaticAssets(options: any): this;
   public useStaticAssets(path: string, options?: any): this;
   public useStaticAssets(pathOrOptions: any, options?: any): this {
-    this.httpAdapter.useStaticAssets &&
-      this.httpAdapter.useStaticAssets(pathOrOptions, options);
-    return this;
+      throw new Error("STUB");
   }
 
   public setBaseViewsDir(path: string | string[]): this {
-    this.httpAdapter.setBaseViewsDir && this.httpAdapter.setBaseViewsDir(path);
-    return this;
+      throw new Error("STUB");
   }
 
   public setViewEngine(engineOrOptions: any): this {
-    this.httpAdapter.setViewEngine &&
-      this.httpAdapter.setViewEngine(engineOrOptions);
-    return this;
+      throw new Error("STUB");
   }
 
   private host(): string | undefined {
-    const address = this.httpServer.address();
-    if (isString(address)) {
-      return undefined;
-    }
-    return address && address.address;
+      throw new Error("STUB");
   }
 
   private getProtocol(): 'http' | 'https' {
-    return this.appOptions && this.appOptions.httpsOptions ? 'https' : 'http';
+      throw new Error("STUB");
   }
 
   private async registerMiddleware(instance: any) {
@@ -493,12 +327,6 @@ export class NestApplication
   }
 
   private applyInstanceDecoratorIfRegistered<T>(...instances: T[]): T[] {
-    if (this.appOptions.instrument?.instanceDecorator) {
-      return instances.map(
-        instance =>
-          this.appOptions.instrument!.instanceDecorator(instance) as T,
-      );
-    }
-    return instances;
+      throw new Error("STUB");
   }
 }

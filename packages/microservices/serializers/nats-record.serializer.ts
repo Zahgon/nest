@@ -14,10 +14,7 @@ export class NatsRecordSerializer implements Serializer<
   private readonly jsonCodec: NatsCodec<unknown>;
 
   constructor() {
-    natsPackage = loadPackage('nats', NatsRecordSerializer.name, () =>
-      require('nats'),
-    );
-    this.jsonCodec = natsPackage.JSONCodec();
+      throw new Error("STUB");
   }
 
   serialize(packet: any): NatsRecord {

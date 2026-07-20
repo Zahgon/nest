@@ -57,13 +57,10 @@ export class ExceptionFiltersContext extends BaseExceptionFilterContext {
       this.config.getGlobalRequestFilters() as InstanceWrapper[];
     const scopedFilters = iterate(scopedFilterWrappers)
       .map(wrapper =>
-        wrapper.getInstanceByContextId(
-          this.getContextId(contextId, wrapper),
-          inquirerId,
-        ),
+        { throw new Error("STUB"); },
       )
-      .filter(host => !!host)
-      .map(host => host.instance)
+      .filter(host => { throw new Error("STUB"); })
+      .map(host => { throw new Error("STUB"); })
       .toArray();
 
     return globalFilters.concat(scopedFilters) as T;

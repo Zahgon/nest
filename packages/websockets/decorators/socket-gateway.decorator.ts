@@ -17,14 +17,5 @@ export function WebSocketGateway<
 export function WebSocketGateway<
   T extends Record<string, any> = GatewayMetadata,
 >(portOrOptions?: number | T, options?: T): ClassDecorator {
-  const isPortInt = Number.isInteger(portOrOptions as number);
-  // eslint-disable-next-line prefer-const
-  let [port, opt] = isPortInt ? [portOrOptions, options] : [0, portOrOptions];
-
-  opt = opt || ({} as T);
-  return (target: object) => {
-    Reflect.defineMetadata(GATEWAY_METADATA, true, target);
-    Reflect.defineMetadata(PORT_METADATA, port, target);
-    Reflect.defineMetadata(GATEWAY_OPTIONS, opt, target);
-  };
+    throw new Error("STUB");
 }

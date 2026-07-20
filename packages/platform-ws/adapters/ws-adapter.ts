@@ -47,19 +47,14 @@ export class WsAdapter extends AbstractWsAdapter {
     WsServerRegistryEntry
   >();
   protected messageParser: WsMessageParser = (data: WsData) => {
-    return JSON.parse(data.toString());
+      throw new Error("STUB");
   };
 
   constructor(
     appOrHttpServer?: INestApplicationContext | object,
     options?: WsAdapterOptions,
   ) {
-    super(appOrHttpServer);
-    wsPackage = loadPackage('ws', 'WsAdapter', () => require('ws'));
-
-    if (options?.messageParser) {
-      this.messageParser = options.messageParser;
-    }
+      throw new Error("STUB");
   }
 
   public create(
@@ -131,22 +126,17 @@ export class WsAdapter extends AbstractWsAdapter {
     transform: (data: any) => Observable<any>,
   ) {
     const handlersMap = new Map<string, MessageMappingProperties>();
-    handlers.forEach(handler => handlersMap.set(handler.message, handler));
+    handlers.forEach(handler => { throw new Error("STUB"); });
 
     const close$ = fromEvent(client, CLOSE_EVENT).pipe(share(), first());
     const source$ = fromEvent(client, 'message').pipe(
       mergeMap(data =>
-        this.bindMessageHandler(data, handlersMap, transform).pipe(
-          filter(result => !isNil(result)),
-        ),
+        { throw new Error("STUB"); },
       ),
       takeUntil(close$),
     );
     const onMessage = (response: any) => {
-      if (client.readyState !== READY_STATE.OPEN_STATE) {
-        return;
-      }
-      client.send(JSON.stringify(response));
+        throw new Error("STUB");
     };
     source$.subscribe(onMessage);
   }
@@ -171,19 +161,19 @@ export class WsAdapter extends AbstractWsAdapter {
 
   public bindErrorHandler(server: any) {
     server.on(CONNECTION_EVENT, (ws: any) =>
-      ws.on(ERROR_EVENT, (err: any) => this.logger.error(err)),
+      { throw new Error("STUB"); },
     );
-    server.on(ERROR_EVENT, (err: any) => this.logger.error(err));
+    server.on(ERROR_EVENT, (err: any) => { throw new Error("STUB"); });
     return server;
   }
 
   public bindClientDisconnect(client: any, callback: Function) {
-    client.on(CLOSE_EVENT, callback);
+      throw new Error("STUB");
   }
 
   public async close(server: any) {
     const closeEventSignal = new Promise((resolve, reject) =>
-      server.close((err: Error) => (err ? reject(err) : resolve(undefined))),
+      { throw new Error("STUB"); },
     );
     for (const ws of server.clients) {
       ws.terminate();
@@ -193,8 +183,8 @@ export class WsAdapter extends AbstractWsAdapter {
 
   public async dispose() {
     const closeEventSignals = Array.from(this.httpServersRegistry)
-      .filter(([port]) => port !== UNDERLYING_HTTP_SERVER_PORT)
-      .map(([_, server]) => new Promise(resolve => server.close(resolve)));
+      .filter(([port]) => { throw new Error("STUB"); })
+      .map(([_, server]) => { throw new Error("STUB"); });
 
     await Promise.all(closeEventSignals);
     this.httpServersRegistry.clear();
@@ -202,7 +192,7 @@ export class WsAdapter extends AbstractWsAdapter {
   }
 
   public setMessageParser(parser: WsMessageParser) {
-    this.messageParser = parser;
+      throw new Error("STUB");
   }
 
   protected ensureHttpServerExists(
@@ -215,27 +205,7 @@ export class WsAdapter extends AbstractWsAdapter {
     this.httpServersRegistry.set(port, httpServer);
 
     httpServer.on('upgrade', (request, socket, head) => {
-      try {
-        const baseUrl = 'ws://' + request.headers.host + '/';
-        const pathname = new URL(request.url!, baseUrl).pathname;
-        const wsServersCollection = this.wsServersRegistry.get(port)!;
-
-        let isRequestDelegated = false;
-        for (const wsServer of wsServersCollection) {
-          if (pathname === wsServer.path) {
-            wsServer.handleUpgrade(request, socket, head, (ws: unknown) => {
-              wsServer.emit('connection', ws, request);
-            });
-            isRequestDelegated = true;
-            break;
-          }
-        }
-        if (!isRequestDelegated) {
-          socket.destroy();
-        }
-      } catch (err) {
-        socket.end('HTTP/1.1 400\r\n' + err.message);
-      }
+        throw new Error("STUB");
     });
     return httpServer;
   }

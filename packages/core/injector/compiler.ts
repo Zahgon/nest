@@ -17,7 +17,7 @@ export class ModuleCompiler {
   ) {}
 
   get moduleOpaqueKeyFactory(): ModuleOpaqueKeyFactory {
-    return this._moduleOpaqueKeyFactory;
+      throw new Error("STUB");
   }
 
   public async compile(

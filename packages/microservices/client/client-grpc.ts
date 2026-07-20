@@ -44,81 +44,19 @@ export class ClientGrpcProxy
   }
 
   constructor(protected readonly options: Required<GrpcOptions>['options']) {
-    super();
-    this.url = this.getOptionsProp(options, 'url') || GRPC_DEFAULT_URL;
-
-    const protoLoader =
-      this.getOptionsProp(options, 'protoLoader') || GRPC_DEFAULT_PROTO_LOADER;
-
-    grpcPackage = loadPackage('@grpc/grpc-js', ClientGrpcProxy.name, () =>
-      require('@grpc/grpc-js'),
-    );
-
-    grpcProtoLoaderPackage = loadPackage(
-      protoLoader,
-      ClientGrpcProxy.name,
-      () =>
-        protoLoader === GRPC_DEFAULT_PROTO_LOADER
-          ? require('@grpc/proto-loader')
-          : require(protoLoader),
-    );
-    this.grpcClients = this.createClients();
+      throw new Error("STUB");
   }
 
   public getService<T extends object>(name: string): T {
-    const grpcClient = this.getClientByServiceName(name);
-    const clientRef = this.getClient(name);
-    if (!clientRef) {
-      throw new InvalidGrpcServiceException(name);
-    }
-
-    const protoMethods = Object.keys(clientRef[name].prototype);
-    const grpcService = {} as T;
-
-    protoMethods.forEach(m => {
-      grpcService[m] = this.createServiceMethod(grpcClient, m);
-    });
-    return grpcService;
+      throw new Error("STUB");
   }
 
   public getClientByServiceName<T = unknown>(name: string): T {
-    return this.clients.get(name) || this.createClientByServiceName(name);
+      throw new Error("STUB");
   }
 
   public createClientByServiceName(name: string) {
-    const clientRef = this.getClient(name);
-    if (!clientRef) {
-      throw new InvalidGrpcServiceException(name);
-    }
-
-    const channelOptions: ChannelOptions =
-      this.options && this.options.channelOptions
-        ? this.options.channelOptions
-        : {};
-    if (this.options && this.options.maxSendMessageLength) {
-      channelOptions['grpc.max_send_message_length'] =
-        this.options.maxSendMessageLength;
-    }
-    if (this.options && this.options.maxReceiveMessageLength) {
-      channelOptions['grpc.max_receive_message_length'] =
-        this.options.maxReceiveMessageLength;
-    }
-    if (this.options && this.options.maxMetadataSize) {
-      channelOptions['grpc.max_metadata_size'] = this.options.maxMetadataSize;
-    }
-
-    const keepaliveOptions = this.getKeepaliveOptions();
-    const options: Record<string, string | number> = {
-      ...channelOptions,
-      ...keepaliveOptions,
-    };
-
-    const credentials =
-      this.options.credentials || grpcPackage.credentials.createInsecure();
-
-    const grpcClient = new clientRef[name](this.url, credentials, options);
-    this.clients.set(name, grpcClient);
-    return grpcClient;
+      throw new Error("STUB");
   }
 
   public getKeepaliveOptions() {
@@ -166,61 +104,7 @@ export class ClientGrpcProxy
     methodName: string,
   ): (...args: any[]) => Observable<any> {
     return (...args: any[]) => {
-      const isRequestStream = client![methodName].requestStream;
-      const stream = new Observable(observer => {
-        let isClientCanceled = false;
-        let upstreamSubscription: Subscription | null = null;
-
-        const upstreamSubjectOrData = args[0];
-        const maybeMetadata = args[1];
-
-        const isUpstreamSubject =
-          upstreamSubjectOrData && isFunction(upstreamSubjectOrData.subscribe);
-
-        const call =
-          isRequestStream && isUpstreamSubject
-            ? client![methodName](maybeMetadata)
-            : client![methodName](...args);
-
-        if (isRequestStream && isUpstreamSubject) {
-          upstreamSubscription = upstreamSubjectOrData.subscribe(
-            (val: unknown) => call.write(val),
-            (err: unknown) => call.emit('error', err),
-            () => call.end(),
-          );
-        }
-        call.on('data', (data: any) => observer.next(data));
-        call.on('error', (error: any) => {
-          if (error.details === GRPC_CANCELLED) {
-            call.destroy();
-            if (isClientCanceled) {
-              return;
-            }
-          }
-          observer.error(this.serializeError(error));
-        });
-        call.on('end', () => {
-          if (upstreamSubscription) {
-            upstreamSubscription.unsubscribe();
-            upstreamSubscription = null;
-          }
-          call.removeAllListeners();
-          observer.complete();
-        });
-        return () => {
-          if (upstreamSubscription) {
-            upstreamSubscription.unsubscribe();
-            upstreamSubscription = null;
-          }
-
-          if (call.finished) {
-            return undefined;
-          }
-          isClientCanceled = true;
-          call.cancel();
-        };
-      });
-      return stream;
+        throw new Error("STUB");
     };
   }
 
@@ -229,93 +113,12 @@ export class ClientGrpcProxy
     methodName: string,
   ): (...args: any[]) => Observable<any> {
     return (...args: any[]) => {
-      const isRequestStream = client[methodName].requestStream;
-      const upstreamSubjectOrData = args[0];
-      const isUpstreamSubject =
-        upstreamSubjectOrData && isFunction(upstreamSubjectOrData.subscribe);
-
-      if (isRequestStream && isUpstreamSubject) {
-        return new Observable(observer => {
-          let isClientCanceled = false;
-          const callArgs = [
-            (error: any, data: unknown) => {
-              if (error) {
-                if (error.details === GRPC_CANCELLED || error.code === 1) {
-                  call.destroy();
-                  if (isClientCanceled) {
-                    return;
-                  }
-                }
-                return observer.error(this.serializeError(error));
-              }
-              observer.next(data);
-              observer.complete();
-            },
-          ];
-          const maybeMetadata = args[1];
-          if (maybeMetadata) {
-            callArgs.unshift(maybeMetadata);
-          }
-          const call = client[methodName](...callArgs);
-
-          const upstreamSubscription: Subscription =
-            upstreamSubjectOrData.subscribe(
-              (val: unknown) => call.write(val),
-              (err: unknown) => call.emit('error', err),
-              () => call.end(),
-            );
-
-          return () => {
-            upstreamSubscription.unsubscribe();
-            if (!call.finished) {
-              isClientCanceled = true;
-              call.cancel();
-            }
-          };
-        });
-      }
-      return new Observable(observer => {
-        const call = client[methodName](...args, (error: any, data: any) => {
-          if (error) {
-            return observer.error(this.serializeError(error));
-          }
-          observer.next(data);
-          observer.complete();
-        });
-
-        return () => {
-          if (!call.finished) {
-            call.cancel();
-          }
-        };
-      });
+        throw new Error("STUB");
     };
   }
 
   public createClients(): any[] {
-    const grpcContext = this.loadProto();
-    const packageOption = this.getOptionsProp(this.options, 'package');
-    const grpcPackages: any[] = [];
-    const packageNames = Array.isArray(packageOption)
-      ? packageOption
-      : [packageOption];
-
-    for (const packageName of packageNames) {
-      const grpcPkg = this.lookupPackage(grpcContext, packageName);
-
-      if (!grpcPkg) {
-        const invalidPackageError = new InvalidGrpcPackageException(
-          packageName,
-        );
-        this.logger.error(
-          invalidPackageError.message,
-          invalidPackageError.stack,
-        );
-        throw invalidPackageError;
-      }
-      grpcPackages.push(grpcPkg);
-    }
-    return grpcPackages;
+      throw new Error("STUB");
   }
 
   public loadProto(): any {
@@ -350,9 +153,7 @@ export class ClientGrpcProxy
 
   public close() {
     this.clients.forEach(client => {
-      if (client && isFunction(client.close)) {
-        client.close();
-      }
+        throw new Error("STUB");
     });
     this.clients.clear();
     this.grpcClients = [];
@@ -372,9 +173,7 @@ export class ClientGrpcProxy
   }
 
   protected getClient(name: string): any {
-    return this.grpcClients.find(client =>
-      Object.hasOwnProperty.call(client, name),
-    );
+      throw new Error("STUB");
   }
 
   protected publish(packet: any, callback: (packet: any) => any): any {
@@ -397,6 +196,6 @@ export class ClientGrpcProxy
   }
 
   public unwrap<T>(): T {
-    throw new Error('Method is not supported in gRPC mode.');
+      throw new Error("STUB");
   }
 }

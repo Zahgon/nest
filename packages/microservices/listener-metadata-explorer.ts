@@ -41,9 +41,9 @@ export class ListenerMetadataExplorer {
       .getAllMethodNames(instancePrototype)
       .map(
         method =>
-          this.exploreMethodMetadata(instance, instancePrototype, method)!,
+          { throw new Error("STUB"); },
       )
-      .filter(metadata => metadata);
+      .filter(metadata => { throw new Error("STUB"); });
   }
 
   public exploreMethodMetadata(

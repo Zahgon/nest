@@ -73,29 +73,7 @@ export class RouterExplorer {
     private readonly routePathFactory: RoutePathFactory,
     private readonly graphInspector: GraphInspector,
   ) {
-    this.pathsExplorer = new PathsExplorer(metadataScanner);
-
-    const routeParamsFactory = new RouteParamsFactory();
-    const pipesContextCreator = new PipesContextCreator(container, config);
-    const pipesConsumer = new PipesConsumer();
-    const guardsContextCreator = new GuardsContextCreator(container, config);
-    const guardsConsumer = new GuardsConsumer();
-    const interceptorsContextCreator = new InterceptorsContextCreator(
-      container,
-      config,
-    );
-    const interceptorsConsumer = new InterceptorsConsumer();
-
-    this.executionContextCreator = new RouterExecutionContext(
-      routeParamsFactory,
-      pipesContextCreator,
-      pipesConsumer,
-      guardsContextCreator,
-      guardsConsumer,
-      interceptorsContextCreator,
-      interceptorsConsumer,
-      container.getHttpAdapterRef(),
-    );
+      throw new Error("STUB");
   }
 
   public explore<T extends HttpServer = any>(
@@ -124,7 +102,7 @@ export class RouterExplorer {
       throw new UnknownRequestMappingException(metatype);
     }
     if (Array.isArray(path)) {
-      return path.map(p => addLeadingSlash(p));
+      return path.map(p => { throw new Error("STUB"); });
     }
     return [addLeadingSlash(path)];
   }
@@ -138,17 +116,7 @@ export class RouterExplorer {
     host: string | RegExp | Array<string | RegExp>,
   ) {
     (routeDefinitions || []).forEach(routeDefinition => {
-      const { version: methodVersion } = routeDefinition;
-      routePathMetadata.methodVersion = methodVersion;
-
-      this.applyCallbackToRouter(
-        router,
-        routeDefinition,
-        instanceWrapper,
-        moduleKey,
-        routePathMetadata,
-        host,
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -196,79 +164,7 @@ export class RouterExplorer {
     let routeHandler = this.applyHostFilter(host, proxy);
 
     paths.forEach(path => {
-      if (
-        isVersioned &&
-        routePathMetadata.versioningOptions!.type !== VersioningType.URI
-      ) {
-        // All versioning (except for URI Versioning) is done via the "Version Filter"
-        routeHandler = this.applyVersionFilter(
-          router,
-          routePathMetadata,
-          routeHandler,
-        );
-      }
-
-      routePathMetadata.methodPath = path;
-      const pathsToRegister = this.routePathFactory.create(
-        routePathMetadata,
-        requestMethod,
-      );
-      pathsToRegister.forEach(path => {
-        const entrypointDefinition: Entrypoint<HttpEntrypointMetadata> = {
-          type: 'http-endpoint',
-          methodName,
-          className: instanceWrapper.name,
-          classNodeId: instanceWrapper.id,
-          metadata: {
-            key: path,
-            path,
-            requestMethod: RequestMethod[
-              requestMethod
-            ] as keyof typeof RequestMethod,
-            methodVersion: routePathMetadata.methodVersion,
-            controllerVersion: routePathMetadata.controllerVersion,
-          },
-        };
-
-        this.copyMetadataToCallback(targetCallback, routeHandler);
-        const normalizedPath = router.normalizePath
-          ? router.normalizePath(path)
-          : path;
-
-        const httpAdapter = this.container.getHttpAdapterRef();
-        const onRouteTriggered = httpAdapter.getOnRouteTriggered?.();
-        if (onRouteTriggered) {
-          routerMethodRef(normalizedPath, (...args: unknown[]) => {
-            onRouteTriggered(requestMethod, path);
-            return routeHandler(...args);
-          });
-        } else {
-          routerMethodRef(normalizedPath, routeHandler);
-        }
-
-        this.graphInspector.insertEntrypointDefinition<HttpEntrypointMetadata>(
-          entrypointDefinition,
-          instanceWrapper.id,
-        );
-      });
-
-      const pathsToLog = this.routePathFactory.create(
-        {
-          ...routePathMetadata,
-          versioningOptions: undefined,
-        },
-        requestMethod,
-      );
-      pathsToLog.forEach(path => {
-        if (isVersioned) {
-          const version = this.routePathFactory.getVersion(routePathMetadata);
-          this.logger.log(
-            VERSIONED_ROUTE_MAPPED_MESSAGE(path, requestMethod, version!),
-          );
-        } else {
-          this.logger.log(ROUTE_MAPPED_MESSAGE(path, requestMethod));
-        }
-      });
+        throw new Error("STUB");
     });
   }
 
@@ -283,19 +179,7 @@ export class RouterExplorer {
     const httpAdapterRef = this.container.getHttpAdapterRef();
     const hosts = Array.isArray(host) ? host : [host];
     const hostRegExps = hosts.map((host: string | RegExp) => {
-      if (typeof host === 'string') {
-        try {
-          return pathToRegexp(host);
-        } catch (e) {
-          if (e instanceof TypeError) {
-            this.logger.error(
-              `Unsupported host "${host}" syntax. In past releases, ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/*path. Please see the migration guide for more information.`,
-            );
-          }
-          throw e;
-        }
-      }
-      return { regexp: host, keys: [] };
+        throw new Error("STUB");
     });
 
     const unsupportedFilteringErrorMessage = Array.isArray(host)
@@ -309,28 +193,7 @@ export class RouterExplorer {
       res: TResponse,
       next: () => void,
     ) => {
-      (req as Record<string, any>).hosts = {};
-      const hostname = httpAdapterRef.getRequestHostname(req) || '';
-
-      for (const exp of hostRegExps) {
-        const match = hostname.match(exp.regexp);
-        if (match) {
-          if (exp.keys.length > 0) {
-            exp.keys.forEach((key, i) => (req.hosts[key.name] = match[i + 1]));
-          } else if (exp.regexp && match.groups) {
-            for (const groupName in match.groups) {
-              req.hosts[groupName] = match.groups[groupName];
-            }
-          }
-          return handler(req, res, next);
-        }
-      }
-      if (!next) {
-        throw new InternalServerErrorException(
-          unsupportedFilteringErrorMessage,
-        );
-      }
-      return next();
+        throw new Error("STUB");
     };
   }
 
@@ -392,38 +255,7 @@ export class RouterExplorer {
       res: TResponse,
       next: () => void,
     ) => {
-      try {
-        const contextId = this.getContextId(req, isTreeDurable);
-        const contextInstance = await this.injector.loadPerContext(
-          instance,
-          moduleRef,
-          collection,
-          contextId,
-        );
-        await this.createCallbackProxy(
-          contextInstance,
-          contextInstance[methodName],
-          methodName,
-          moduleKey,
-          requestMethod,
-          contextId,
-          instanceWrapper.id,
-        )(req, res, next);
-      } catch (err) {
-        let exceptionFilter = this.exceptionFiltersCache.get(
-          instance[methodName],
-        );
-        if (!exceptionFilter) {
-          exceptionFilter = this.exceptionsFilter.create(
-            instance,
-            instance[methodName],
-            moduleKey,
-          );
-          this.exceptionFiltersCache.set(instance[methodName], exceptionFilter);
-        }
-        const host = new ExecutionContextHost([req, res, next]);
-        exceptionFilter.next(err, host);
-      }
+        throw new Error("STUB");
     };
   }
 

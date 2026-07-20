@@ -7,10 +7,7 @@ const rawBodyParser = (
   _res: ServerResponse,
   buffer: Buffer,
 ) => {
-  if (Buffer.isBuffer(buffer)) {
-    req.rawBody = buffer;
-  }
-  return true;
+    throw new Error("STUB");
 };
 
 export function getBodyParserOptions<Options = NestExpressBodyParserOptions>(

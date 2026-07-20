@@ -10,7 +10,7 @@ export class ModulesContainer extends Map<string, Module> {
    * Unique identifier of the application instance.
    */
   get applicationId(): string {
-    return this._applicationId;
+      throw new Error("STUB");
   }
 
   /**
@@ -19,7 +19,7 @@ export class ModulesContainer extends Map<string, Module> {
    * @returns The module instance if found, otherwise undefined.
    */
   public getById(id: string): Module | undefined {
-    return Array.from(this.values()).find(moduleRef => moduleRef.id === id);
+      throw new Error("STUB");
   }
 
   /**
@@ -28,7 +28,7 @@ export class ModulesContainer extends Map<string, Module> {
    * @returns An observable that emits the RPC target registry.
    */
   public getRpcTargetRegistry<T>(): Observable<T> {
-    return this._rpcTargetRegistry$.asObservable();
+      throw new Error("STUB");
   }
 
   /**
@@ -36,6 +36,6 @@ export class ModulesContainer extends Map<string, Module> {
    * @param target The RPC target to add.
    */
   public addRpcTarget<T>(target: T): void {
-    this._rpcTargetRegistry$.next(target);
+      throw new Error("STUB");
   }
 }

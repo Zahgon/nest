@@ -37,17 +37,6 @@ export class ConflictException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Conflict',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.CONFLICT,
-      ),
-      HttpStatus.CONFLICT,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

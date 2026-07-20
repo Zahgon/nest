@@ -54,7 +54,7 @@ export class SerializedGraph {
   }
 
   set metadata(metadata: SerializedGraphMetadata) {
-    this._metadata = metadata;
+      throw new Error("STUB");
   }
 
   public insertNode(nodeDefinition: Node) {
@@ -109,7 +109,7 @@ export class SerializedGraph {
   }
 
   public insertOrphanedEnhancer(entry: OrphanedEnhancerDefinition) {
-    this.extras.orphanedEnhancers.push(entry);
+      throw new Error("STUB");
   }
 
   public insertAttachedEnhancer(nodeId: string) {
@@ -141,10 +141,7 @@ export class SerializedGraph {
 
   public toString() {
     const replacer = (key: string, value: unknown) => {
-      if (typeof value === 'symbol') {
-        return value.toString();
-      }
-      return typeof value === 'function' ? (value.name ?? 'Function') : value;
+        throw new Error("STUB");
     };
     return JSON.stringify(this.toJSON(), replacer, 2);
   }

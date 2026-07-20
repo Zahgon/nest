@@ -43,18 +43,7 @@ export class ParseEnumPipe<T = any> implements PipeTransform<T> {
     protected readonly enumType: T,
     @Optional() protected readonly options?: ParseEnumPipeOptions,
   ) {
-    if (!enumType) {
-      throw new Error(
-        `"ParseEnumPipe" requires "enumType" argument specified (to validate input values).`,
-      );
-    }
-    options = options || {};
-    const { exceptionFactory, errorHttpStatusCode = HttpStatus.BAD_REQUEST } =
-      options;
-
-    this.exceptionFactory =
-      exceptionFactory ||
-      (error => new HttpErrorByCode[errorHttpStatusCode](error));
+      throw new Error("STUB");
   }
 
   /**
@@ -78,7 +67,7 @@ export class ParseEnumPipe<T = any> implements PipeTransform<T> {
 
   protected isEnum(value: T): boolean {
     const enumValues = Object.keys(this.enumType as object).map(
-      item => this.enumType[item],
+      item => { throw new Error("STUB"); },
     );
     return enumValues.includes(value);
   }

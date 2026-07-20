@@ -18,7 +18,7 @@ export class InstanceLinksHost {
   private readonly instanceLinks = new Map<InjectionToken, InstanceLink[]>();
 
   constructor(private readonly container: NestContainer) {
-    this.initialize();
+      throw new Error("STUB");
   }
 
   get<T = any>(token: InjectionToken): InstanceLink<T>;
@@ -42,7 +42,7 @@ export class InstanceLinksHost {
 
     const instanceLink = options.moduleId
       ? instanceLinksForGivenToken.find(
-          item => item.moduleId === options.moduleId,
+          item => { throw new Error("STUB"); },
         )
       : instanceLinksForGivenToken[instanceLinksForGivenToken.length - 1];
 
@@ -55,16 +55,7 @@ export class InstanceLinksHost {
   private initialize() {
     const modules = this.container.getModules();
     modules.forEach(moduleRef => {
-      const { providers, injectables, controllers } = moduleRef;
-      providers.forEach((wrapper, token) =>
-        this.addLink(wrapper, token, moduleRef, 'providers'),
-      );
-      injectables.forEach((wrapper, token) =>
-        this.addLink(wrapper, token, moduleRef, 'injectables'),
-      );
-      controllers.forEach((wrapper, token) =>
-        this.addLink(wrapper, token, moduleRef, 'controllers'),
-      );
+        throw new Error("STUB");
     });
   }
 

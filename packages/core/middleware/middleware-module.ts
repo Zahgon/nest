@@ -88,8 +88,7 @@ export class MiddlewareModule<
       string,
       Module,
     ]) => {
-      await this.loadConfiguration(middlewareContainer, moduleRef, moduleName);
-      await this.resolver.resolveInstances(moduleRef, moduleName);
+        throw new Error("STUB");
     };
     await Promise.all(moduleEntries.map(loadMiddlewareConfiguration));
   }
@@ -148,21 +147,8 @@ export class MiddlewareModule<
 
     const entriesSortedByDistance = [...configs.entries()].sort(
       ([moduleA], [moduleB]) => {
-        const moduleARef = this.container.getModuleByKey(moduleA)!;
-        const moduleBRef = this.container.getModuleByKey(moduleB)!;
-        const isModuleAGlobal = moduleARef.distance === Number.MAX_VALUE;
-        const isModuleBGlobal = moduleBRef.distance === Number.MAX_VALUE;
-        if (isModuleAGlobal && isModuleBGlobal) {
-          return 0;
-        }
-        if (isModuleAGlobal) {
-          return -1;
-        }
-        if (isModuleBGlobal) {
-          return 1;
-        }
-        return moduleARef.distance - moduleBRef.distance;
-      },
+            throw new Error("STUB");
+        },
     );
     for (const [moduleRef, moduleConfigurations] of entriesSortedByDistance) {
       await registerAllConfigs(moduleRef, [...moduleConfigurations]);
@@ -270,32 +256,7 @@ export class MiddlewareModule<
         res: TResponse,
         next: () => void,
       ) => {
-        try {
-          const contextId = this.getContextId(req, isTreeDurable);
-          const contextInstance = await this.injector.loadPerContext(
-            instance,
-            moduleRef,
-            collection,
-            contextId,
-          );
-          const proxy = await this.createProxy<TRequest, TResponse>(
-            contextInstance,
-            contextId,
-          );
-          return proxy(req, res, next);
-        } catch (err) {
-          let exceptionsHandler = this.exceptionFiltersCache.get(instance.use);
-          if (!exceptionsHandler) {
-            exceptionsHandler = this.routerExceptionFilter.create(
-              instance,
-              instance.use,
-              undefined,
-            );
-            this.exceptionFiltersCache.set(instance.use, exceptionsHandler);
-          }
-          const host = new ExecutionContextHost([req, res, next]);
-          exceptionsHandler.next(err, host);
-        }
+          throw new Error("STUB");
       },
     );
   }
@@ -335,21 +296,13 @@ export class MiddlewareModule<
           res: TResponse,
           next: () => void,
         ) => {
-          const actualRequestMethod = applicationRef.getRequestMethod?.(req);
-          if (
-            actualRequestMethod === requestMethod ||
-            (actualRequestMethod === RequestMethod[RequestMethod.HEAD] &&
-              requestMethod === RequestMethod[RequestMethod.GET])
-          ) {
-            return proxy(req, res, next);
-          }
-          return next();
-        };
+          throw new Error("STUB");
+      };
     const pathsToApplyMiddleware = [] as string[];
-    paths.some(path => path.match(/^\/?$/))
+    paths.some(path => { throw new Error("STUB"); })
       ? pathsToApplyMiddleware.push('/')
       : pathsToApplyMiddleware.push(...paths);
-    pathsToApplyMiddleware.forEach(path => router(path, middlewareFunction));
+    pathsToApplyMiddleware.forEach(path => { throw new Error("STUB"); });
   }
 
   private getContextId(request: unknown, isTreeDurable: boolean): ContextId {

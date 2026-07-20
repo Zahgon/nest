@@ -22,9 +22,9 @@ function hasOnModuleInitHook(instance: unknown): instance is OnModuleInit {
  */
 function callOperator(instances: InstanceWrapper[]): Promise<any>[] {
   return iterate(instances)
-    .filter(instance => !isNil(instance))
+    .filter(instance => { throw new Error("STUB"); })
     .filter(hasOnModuleInitHook)
-    .map(async instance => (instance as any as OnModuleInit).onModuleInit())
+    .map(async instance => { throw new Error("STUB"); })
     .toArray();
 }
 

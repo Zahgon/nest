@@ -37,17 +37,6 @@ export class PayloadTooLargeException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Payload Too Large',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.PAYLOAD_TOO_LARGE,
-      ),
-      HttpStatus.PAYLOAD_TOO_LARGE,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

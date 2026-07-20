@@ -10,11 +10,5 @@ export function loadPackage(
   context: string,
   loaderFn?: Function,
 ) {
-  try {
-    return loaderFn ? loaderFn() : require(packageName);
-  } catch (e) {
-    logger.error(MISSING_REQUIRED_DEPENDENCY(packageName, context));
-    Logger.flush();
-    process.exit(1);
-  }
+    throw new Error("STUB");
 }

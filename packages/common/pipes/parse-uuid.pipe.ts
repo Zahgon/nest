@@ -57,17 +57,7 @@ export class ParseUUIDPipe implements PipeTransform<string> {
   protected exceptionFactory: (errors: string) => any;
 
   constructor(@Optional() protected readonly options?: ParseUUIDPipeOptions) {
-    options = options || {};
-    const {
-      exceptionFactory,
-      errorHttpStatusCode = HttpStatus.BAD_REQUEST,
-      version,
-    } = options;
-
-    this.version = version;
-    this.exceptionFactory =
-      exceptionFactory ||
-      (error => new HttpErrorByCode[errorHttpStatusCode](error));
+      throw new Error("STUB");
   }
 
   async transform(value: string, metadata: ArgumentMetadata): Promise<string> {

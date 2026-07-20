@@ -23,19 +23,14 @@ export const RequestMapping = (
     key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    Reflect.defineMetadata(PATH_METADATA, path, descriptor.value);
-    Reflect.defineMetadata(METHOD_METADATA, requestMethod, descriptor.value);
-    return descriptor;
+      throw new Error("STUB");
   };
 };
 
 const createMappingDecorator =
   (method: RequestMethod) =>
   (path?: string | string[]): MethodDecorator => {
-    return RequestMapping({
-      [PATH_METADATA]: path,
-      [METHOD_METADATA]: method,
-    });
+      throw new Error("STUB");
   };
 
 /**

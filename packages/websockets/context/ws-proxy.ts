@@ -10,20 +10,7 @@ export class WsProxy {
     targetPattern?: string,
   ): (...args: unknown[]) => Promise<any> {
     return async (...args: unknown[]) => {
-      args = [...args, targetPattern ?? 'unknown'];
-      try {
-        const result = await targetCallback(...args);
-        return !isObservable(result)
-          ? result
-          : result.pipe(
-              catchError(error => {
-                this.handleError(exceptionsHandler, args, error);
-                return EMPTY;
-              }),
-            );
-      } catch (error) {
-        this.handleError(exceptionsHandler, args, error);
-      }
+        throw new Error("STUB");
     };
   }
 

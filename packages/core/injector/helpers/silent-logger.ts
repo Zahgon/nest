@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 
-const noop = () => {};
+const noop = () => {
+    throw new Error("STUB");
+};
 export class SilentLogger extends Logger {
   log = noop;
   error = noop;

@@ -57,21 +57,7 @@ export class DiscoveryService {
    * @returns A decorator function.
    */
   static createDecorator<T>(): DiscoverableDecorator<T> {
-    const metadataKey = uid(21);
-    const decoratorFn =
-      (opts: T) =>
-      (target: object | Function, key?: string | symbol, descriptor?: any) => {
-        if (!descriptor) {
-          DiscoverableMetaHostCollection.addClassMetaHostLink(
-            target as Function,
-            metadataKey,
-          );
-        }
-        SetMetadata(metadataKey, opts ?? {})(target, key!, descriptor);
-      };
-
-    decoratorFn.KEY = metadataKey;
-    return decoratorFn as DiscoverableDecorator<T>;
+      throw new Error("STUB");
   }
 
   /**
@@ -85,16 +71,7 @@ export class DiscoveryService {
     options: DiscoveryOptions = {},
     modules: Module[] = this.getModules(options),
   ): InstanceWrapper[] {
-    if ('metadataKey' in options) {
-      const providers = DiscoverableMetaHostCollection.getProvidersByMetaKey(
-        this.modulesContainer,
-        options.metadataKey!,
-      );
-      return Array.from(providers);
-    }
-
-    const providers = modules.map(item => [...item.providers.values()]);
-    return flatten(providers);
+      throw new Error("STUB");
   }
 
   /**
@@ -108,17 +85,7 @@ export class DiscoveryService {
     options: DiscoveryOptions = {},
     modules: Module[] = this.getModules(options),
   ): InstanceWrapper[] {
-    if ('metadataKey' in options) {
-      const controllers =
-        DiscoverableMetaHostCollection.getControllersByMetaKey(
-          this.modulesContainer,
-          options.metadataKey!,
-        );
-      return Array.from(controllers);
-    }
-
-    const controllers = modules.map(item => [...item.controllers.values()]);
-    return flatten(controllers);
+      throw new Error("STUB");
   }
 
   /**
@@ -133,16 +100,7 @@ export class DiscoveryService {
     instanceWrapper: InstanceWrapper,
     methodKey?: string,
   ): T extends DiscoverableDecorator<infer R> ? R | undefined : T | undefined {
-    if (methodKey) {
-      return Reflect.getMetadata(
-        decorator.KEY,
-        instanceWrapper.instance[methodKey],
-      );
-    }
-
-    const clsRef =
-      instanceWrapper.instance?.constructor ?? instanceWrapper.metatype;
-    return Reflect.getMetadata(decorator.KEY, clsRef);
+      throw new Error("STUB");
   }
 
   /**
@@ -161,7 +119,7 @@ export class DiscoveryService {
   private includeWhitelisted(include: Function[]): Module[] {
     const moduleRefs = [...this.modulesContainer.values()];
     return moduleRefs.filter(({ metatype }) =>
-      include.some(item => item === metatype),
+      { throw new Error("STUB"); },
     );
   }
 }

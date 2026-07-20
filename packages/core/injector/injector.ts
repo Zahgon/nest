@@ -94,7 +94,7 @@ export class Injector {
   private logger: LoggerService = new Logger('InjectorLogger');
   private readonly instanceDecorator: (target: unknown) => unknown = (
     target: unknown,
-  ) => target;
+  ) => { throw new Error("STUB"); };
 
   constructor(
     private readonly options?: {
@@ -112,9 +112,7 @@ export class Injector {
       instanceDecorator?: (target: unknown) => unknown;
     },
   ) {
-    if (options?.instanceDecorator) {
-      this.instanceDecorator = options.instanceDecorator;
-    }
+      throw new Error("STUB");
   }
 
   public loadPrototype<T>(
@@ -158,9 +156,7 @@ export class Injector {
       }
 
       return instanceHost.donePromise!.then((err?: unknown) => {
-        if (err) {
-          throw err;
-        }
+          throw new Error("STUB");
       });
     }
 
@@ -338,77 +334,7 @@ export class Injector {
     const paramBarrier = new Barrier(dependencies.length);
     let isResolved = true;
     const resolveParam = async (param: unknown, index: number) => {
-      try {
-        if (this.isInquirer(param, parentInquirer)) {
-          /*
-           * Signal the barrier to make sure other dependencies do not get stuck waiting forever.
-           */
-          paramBarrier.signal();
-
-          return parentInquirer && parentInquirer.instance;
-        }
-        if (resolutionContext.inquirer?.isTransient && parentInquirer) {
-          // When `inquirer` is transient too, inherit the parent inquirer
-          // This is required to ensure that transient providers are only resolved
-          // when requested
-          resolutionContext.inquirer.attachRootInquirer(parentInquirer);
-        }
-        const nestedResolutionContext =
-          this.getStaticTransientResolutionContext(
-            resolutionContext,
-            parentInquirer,
-          );
-        const paramWrapper = await this.resolveSingleParam<T>(
-          wrapper,
-          param as Type | string | symbol,
-          { index, dependencies },
-          moduleRef,
-          nestedResolutionContext,
-          index,
-        );
-
-        /*
-         * Ensure that all instance wrappers are resolved at this point before we continue.
-         * Otherwise the staticity of `wrapper`'s dependency tree may be evaluated incorrectly
-         * and result in undefined / null injection.
-         */
-        await paramBarrier.signalAndWait();
-
-        const effectiveResolutionContext = this.getEffectiveResolutionContext(
-          paramWrapper,
-          resolutionContext,
-          parentInquirer,
-        );
-        const paramWrapperWithInstance = await this.resolveComponentHost(
-          moduleRef,
-          paramWrapper,
-          effectiveResolutionContext,
-        );
-        const instanceHost = paramWrapperWithInstance.getInstanceByContextId(
-          this.getContextId(
-            effectiveResolutionContext.contextId,
-            paramWrapperWithInstance,
-          ),
-          effectiveResolutionContext.effectiveInquirerId,
-        );
-        if (!instanceHost.isResolved && !paramWrapperWithInstance.forwardRef) {
-          isResolved = false;
-        }
-        return instanceHost?.instance;
-      } catch (err) {
-        /*
-         * Signal the barrier to make sure other dependencies do not get stuck waiting forever. We
-         * do not care if this occurs after `Barrier.signalAndWait()` is called in the `try` block
-         * because the barrier will always have been resolved by then.
-         */
-        paramBarrier.signal();
-
-        const isOptional = optionalDependenciesIds.includes(index);
-        if (!isOptional) {
-          throw err;
-        }
-        return undefined;
-      }
+        throw new Error("STUB");
     };
     const instances = await Promise.all(dependencies.map(resolveParam));
     isResolved && (await callback(instances));
@@ -447,16 +373,7 @@ export class Injector {
       item: InjectionToken | OptionalFactoryDependency,
       index: number,
     ): InjectionToken => {
-      if (typeof item !== 'object') {
-        return item;
-      }
-      if (isOptionalFactoryDependency(item)) {
-        if (item.optional) {
-          optionalDependenciesIds.push(index);
-        }
-        return item?.token;
-      }
-      return item;
+        throw new Error("STUB");
     };
     return [
       wrapper.inject?.map?.(mapFactoryProviderInjectArray) as any[],
@@ -470,7 +387,7 @@ export class Injector {
     ];
     const selfParams = this.reflectSelfParams(type);
 
-    selfParams.forEach(({ index, param }) => (paramtypes[index] = param));
+    selfParams.forEach(({ index, param }) => { throw new Error("STUB"); });
     return Array.from(paramtypes);
   }
 
@@ -578,10 +495,10 @@ export class Injector {
       instanceHost.donePromise &&
         void instanceHost.donePromise
           .then(() =>
-            this.loadProvider(instanceWrapper, moduleRef, resolutionContext),
+            { throw new Error("STUB"); },
           )
           .catch(err => {
-            instanceWrapper.settlementSignal?.error(err);
+              throw new Error("STUB");
           });
     }
     if (instanceWrapper.async) {
@@ -669,13 +586,13 @@ export class Injector {
   ): Promise<any> {
     let instanceWrapperRef: InstanceWrapper | null = null;
     const imports = moduleRef.imports || new Set<Module>();
-    const identity = (item: any) => item;
+    const identity = (item: any) => { throw new Error("STUB"); };
 
     let children = [...imports.values()].filter(identity);
     if (isTraversing) {
       const contextModuleExports = moduleRef.exports;
       children = children.filter(child =>
-        contextModuleExports.has(child.metatype),
+        { throw new Error("STUB"); },
       );
     }
     for (const relatedModule of children) {
@@ -738,81 +655,10 @@ export class Injector {
     const propertyBarrier = new Barrier(properties.length);
     const instances = await Promise.all(
       properties.map(async (item: PropertyDependency) => {
-        try {
-          const dependencyContext = {
-            key: item.key,
-            name: item.name as Function | string | symbol,
-          };
-          if (this.isInquirer(item.name, parentInquirer)) {
-            /*
-             * Signal the barrier to make sure other dependencies do not get stuck waiting forever.
-             */
-            propertyBarrier.signal();
-
-            return parentInquirer && parentInquirer.instance;
-          }
-          const nestedResolutionContext =
-            this.getStaticTransientResolutionContext(
-              resolutionContext,
-              parentInquirer,
-            );
-          const paramWrapper = await this.resolveSingleParam<T>(
-            wrapper,
-            item.name as string,
-            dependencyContext,
-            moduleRef,
-            nestedResolutionContext,
-            item.key,
-          );
-
-          /*
-           * Ensure that all instance wrappers are resolved at this point before we continue.
-           * Otherwise the staticity of `wrapper`'s dependency tree may be evaluated incorrectly
-           * and result in undefined / null injection.
-           */
-          await propertyBarrier.signalAndWait();
-
-          const effectivePropertyResolutionContext =
-            this.getEffectiveResolutionContext(
-              paramWrapper,
-              resolutionContext,
-              parentInquirer,
-            );
-          const paramWrapperWithInstance = await this.resolveComponentHost(
-            moduleRef,
-            paramWrapper,
-            effectivePropertyResolutionContext,
-          );
-          if (!paramWrapperWithInstance) {
-            return undefined;
-          }
-          const instanceHost = paramWrapperWithInstance.getInstanceByContextId(
-            this.getContextId(
-              effectivePropertyResolutionContext.contextId,
-              paramWrapperWithInstance,
-            ),
-            effectivePropertyResolutionContext.effectiveInquirerId,
-          );
-          return instanceHost.instance;
-        } catch (err) {
-          /*
-           * Signal the barrier to make sure other dependencies do not get stuck waiting forever. We
-           * do not care if this occurs after `Barrier.signalAndWait()` is called in the `try` block
-           * because the barrier will always have been resolved by then.
-           */
-          propertyBarrier.signal();
-
-          if (!item.isOptional) {
-            throw err;
-          }
-          return undefined;
-        }
+          throw new Error("STUB");
       }),
     );
-    return properties.map((item: PropertyDependency, index: number) => ({
-      ...item,
-      instance: instances[index],
-    }));
+    return properties.map((item: PropertyDependency, index: number) => { throw new Error("STUB"); });
   }
 
   public reflectProperties<T>(type: Type<T>): PropertyDependency[] {
@@ -820,11 +666,7 @@ export class Injector {
     const optionalKeys: string[] =
       Reflect.getMetadata(OPTIONAL_PROPERTY_DEPS_METADATA, type) || [];
 
-    return properties.map((item: any) => ({
-      ...item,
-      name: item.type,
-      isOptional: optionalKeys.includes(item.key),
-    }));
+    return properties.map((item: any) => { throw new Error("STUB"); });
   }
 
   public applyProperties<T = any>(
@@ -835,8 +677,8 @@ export class Injector {
       return undefined;
     }
     iterate(properties)
-      .filter(item => !isNil(item.instance))
-      .forEach(item => (instance[item.key] = item.instance));
+      .filter(item => { throw new Error("STUB"); })
+      .forEach(item => { throw new Error("STUB"); });
   }
 
   public async instantiateClass<T = any>(
@@ -918,13 +760,7 @@ export class Injector {
     }
     const enhancers = wrapper.getEnhancersMetadata() || [];
     const loadEnhancer = (item: InstanceWrapper) => {
-      const hostModule = item.host!;
-      return this.loadInstance(
-        item,
-        hostModule.injectables,
-        hostModule,
-        this.createResolutionContext(ctx, inquirer),
-      );
+        throw new Error("STUB");
     };
     await Promise.all(enhancers.map(loadEnhancer));
   }
@@ -937,26 +773,11 @@ export class Injector {
   ): Promise<any[]> {
     const hosts: Array<InstanceWrapper<any> | undefined> = await Promise.all(
       metadata.map(async item =>
-        this.resolveScopedComponentHost(
-          item,
-          contextId,
-          inquirer,
-          parentInquirer,
-        ),
+        { throw new Error("STUB"); },
       ),
     );
     return hosts.map((item, index) => {
-      const dependency = metadata[index];
-      const effectiveInquirerId = this.getEffectiveInquirerId(
-        dependency,
-        this.createResolutionContext(contextId, inquirer),
-        parentInquirer,
-      );
-
-      return item?.getInstanceByContextId(
-        this.getContextId(contextId, item),
-        effectiveInquirerId,
-      ).instance;
+        throw new Error("STUB");
     });
   }
 
@@ -966,24 +787,10 @@ export class Injector {
     inquirer?: InstanceWrapper,
   ): Promise<PropertyDependency[]> {
     const dependenciesHosts = await Promise.all(
-      metadata.map(async ({ wrapper: item, key }) => ({
-        key,
-        host: await this.resolveComponentHost(
-          item.host!,
-          item,
-          this.createResolutionContext(contextId, inquirer),
-        ),
-      })),
+      metadata.map(async ({ wrapper: item, key }) => { throw new Error("STUB"); }),
     );
     const inquirerId = this.getInquirerId(inquirer);
-    return dependenciesHosts.map(({ key, host }) => ({
-      key,
-      name: key,
-      instance: host.getInstanceByContextId(
-        this.getContextId(contextId, host),
-        inquirerId,
-      ).instance,
-    }));
+    return dependenciesHosts.map(({ key, host }) => { throw new Error("STUB"); });
   }
 
   private getInquirerId(

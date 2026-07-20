@@ -29,7 +29,7 @@ export class KafkaContext extends BaseRpcContext<KafkaContextArgs> {
    * Returns the partition.
    */
   getPartition() {
-    return this.args[1];
+      throw new Error("STUB");
   }
 
   /**
@@ -43,20 +43,20 @@ export class KafkaContext extends BaseRpcContext<KafkaContextArgs> {
    * Returns the Kafka consumer reference.
    */
   getConsumer() {
-    return this.args[3];
+      throw new Error("STUB");
   }
 
   /**
    * Returns the Kafka heartbeat callback.
    */
   getHeartbeat() {
-    return this.args[4];
+      throw new Error("STUB");
   }
 
   /**
    * Returns the Kafka producer reference,
    */
   getProducer() {
-    return this.args[5];
+      throw new Error("STUB");
   }
 }

@@ -48,27 +48,19 @@ export class NestContainer {
       | NestApplicationContextOptions
       | undefined = undefined,
   ) {
-    const moduleOpaqueKeyFactory =
-      this._contextOptions?.moduleIdGeneratorAlgorithm === 'deep-hash'
-        ? new DeepHashedModuleOpaqueKeyFactory()
-        : new ByReferenceModuleOpaqueKeyFactory({
-            keyGenerationStrategy: this._contextOptions?.snapshot
-              ? 'shallow'
-              : 'random',
-          });
-    this.moduleCompiler = new ModuleCompiler(moduleOpaqueKeyFactory);
+      throw new Error("STUB");
   }
 
   get serializedGraph(): SerializedGraph {
-    return this._serializedGraph;
+      throw new Error("STUB");
   }
 
   get applicationConfig(): ApplicationConfig | undefined {
-    return this._applicationConfig;
+      throw new Error("STUB");
   }
 
   get contextOptions(): NestApplicationContextOptions | undefined {
-    return this._contextOptions;
+      throw new Error("STUB");
   }
 
   public setHttpAdapter(httpAdapter: any) {
@@ -199,10 +191,7 @@ export class NestContainer {
   }
 
   public async addDynamicModules(modules: any[], scope: Type<any>[]) {
-    if (!modules) {
-      return;
-    }
-    await Promise.all(modules.map(module => this.addModule(module, scope)));
+      throw new Error("STUB");
   }
 
   public isGlobalModule(
@@ -232,7 +221,7 @@ export class NestContainer {
   }
 
   public getInternalCoreModuleRef(): Module | undefined {
-    return this.internalCoreModule;
+      throw new Error("STUB");
   }
 
   public async addImport(
@@ -312,16 +301,16 @@ export class NestContainer {
   }
 
   public replace(toReplace: any, options: { scope: any[] | null }) {
-    this.modules.forEach(moduleRef => moduleRef.replace(toReplace, options));
+    this.modules.forEach(moduleRef => { throw new Error("STUB"); });
   }
 
   public bindGlobalScope() {
-    this.modules.forEach(moduleRef => this.bindGlobalsToImports(moduleRef));
+    this.modules.forEach(moduleRef => { throw new Error("STUB"); });
   }
 
   public bindGlobalsToImports(moduleRef: Module) {
     this.globalModules.forEach(globalModule =>
-      this.bindGlobalModuleToModule(moduleRef, globalModule),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -350,7 +339,7 @@ export class NestContainer {
   }
 
   public getModuleTokenFactory(): ModuleOpaqueKeyFactory {
-    return this.moduleCompiler.moduleOpaqueKeyFactory;
+      throw new Error("STUB");
   }
 
   public registerRequestProvider<T = any>(request: T, contextId: ContextId) {

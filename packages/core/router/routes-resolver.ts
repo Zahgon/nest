@@ -47,25 +47,7 @@ export class RoutesResolver implements Resolver {
     private readonly injector: Injector,
     graphInspector: GraphInspector,
   ) {
-    const httpAdapterRef = container.getHttpAdapterRef();
-    this.routerExceptionsFilter = new RouterExceptionFilters(
-      container,
-      applicationConfig,
-      httpAdapterRef,
-    );
-    this.routePathFactory = new RoutePathFactory(this.applicationConfig);
-
-    const metadataScanner = new MetadataScanner();
-    this.routerExplorer = new RouterExplorer(
-      metadataScanner,
-      this.container,
-      this.injector,
-      this.routerProxy,
-      this.routerExceptionsFilter,
-      this.applicationConfig,
-      this.routePathFactory,
-      graphInspector,
-    );
+      throw new Error("STUB");
   }
 
   public resolve<T extends HttpServer>(
@@ -74,14 +56,7 @@ export class RoutesResolver implements Resolver {
   ) {
     const modules = this.container.getModules();
     modules.forEach(({ controllers, metatype }, moduleName) => {
-      const modulePath = this.getModulePathMetadata(metatype)!;
-      this.registerRouters(
-        controllers,
-        moduleName,
-        globalPrefix,
-        modulePath,
-        applicationRef,
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -93,53 +68,7 @@ export class RoutesResolver implements Resolver {
     applicationRef: HttpServer,
   ) {
     routes.forEach(instanceWrapper => {
-      const { metatype } = instanceWrapper;
-
-      const host = this.getHostMetadata(metatype!);
-      const routerPaths = this.routerExplorer.extractRouterPath(
-        metatype as Type<any>,
-      );
-      const controllerVersion = this.getVersionMetadata(metatype!);
-      const controllerName = metatype!.name;
-
-      routerPaths.forEach(path => {
-        const pathsToLog = this.routePathFactory.create({
-          ctrlPath: path,
-          modulePath,
-          globalPrefix,
-        });
-        if (!controllerVersion) {
-          pathsToLog.forEach(path => {
-            const logMessage = CONTROLLER_MAPPING_MESSAGE(controllerName, path);
-            this.logger.log(logMessage);
-          });
-        } else {
-          pathsToLog.forEach(path => {
-            const logMessage = VERSIONED_CONTROLLER_MAPPING_MESSAGE(
-              controllerName,
-              path,
-              controllerVersion,
-            );
-            this.logger.log(logMessage);
-          });
-        }
-
-        const versioningOptions = this.applicationConfig.getVersioning();
-        const routePathMetadata: RoutePathMetadata = {
-          ctrlPath: path,
-          modulePath,
-          globalPrefix,
-          controllerVersion,
-          versioningOptions,
-        };
-        this.routerExplorer.explore(
-          instanceWrapper,
-          moduleName,
-          applicationRef,
-          host!,
-          routePathMetadata,
-        );
-      });
+        throw new Error("STUB");
     });
   }
 

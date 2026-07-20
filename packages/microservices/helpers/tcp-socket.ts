@@ -8,14 +8,11 @@ export abstract class TcpSocket {
   private isClosed = false;
 
   public get netSocket() {
-    return this.socket;
+      throw new Error("STUB");
   }
 
   constructor(public readonly socket: Socket) {
-    this.socket.on('data', this.onData.bind(this));
-    this.socket.on(TcpEventsMap.CONNECT, () => (this.isClosed = false));
-    this.socket.on(TcpEventsMap.CLOSE, () => (this.isClosed = true));
-    this.socket.on(TcpEventsMap.ERROR, () => (this.isClosed = true));
+      throw new Error("STUB");
   }
 
   public connect(port: number, host: string) {
@@ -52,12 +49,7 @@ export abstract class TcpSocket {
   ): any;
 
   private onData(data: Buffer) {
-    try {
-      this.handleData(data);
-    } catch (e) {
-      this.socket.emit(TcpEventsMap.ERROR, e.message);
-      this.socket.end();
-    }
+      throw new Error("STUB");
   }
 
   protected abstract handleData(data: Buffer | string): any;

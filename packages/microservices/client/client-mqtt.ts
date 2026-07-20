@@ -40,13 +40,7 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
   }> = [];
 
   constructor(protected readonly options: Required<MqttOptions>['options']) {
-    super();
-    this.url = this.getOptionsProp(this.options, 'url') ?? MQTT_DEFAULT_URL;
-
-    mqttPackage = loadPackage('mqtt', ClientMqtt.name, () => require('mqtt'));
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public getRequestPattern(pattern: string): string {
@@ -79,7 +73,7 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
     this.registerCloseListener(this.mqttClient);
 
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.mqttClient!.on(event, callback),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
 
@@ -87,10 +81,7 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
     this.connectionPromise = lastValueFrom(
       this.mergeCloseEvent(this.mqttClient, connect$).pipe(share()),
     ).catch(err => {
-      if (err instanceof EmptyError) {
-        return;
-      }
-      throw err;
+        throw new Error("STUB");
     });
     return this.connectionPromise;
   }
@@ -102,11 +93,11 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
     const close$ = fromEvent(instance, MqttEventsMap.CLOSE).pipe(
       tap({
         next: () => {
-          this._status$.next(MqttStatus.CLOSED);
-        },
+              throw new Error("STUB");
+          },
       }),
       map((err: any) => {
-        throw err;
+          throw new Error("STUB");
       }),
     );
     return merge(source$, close$).pipe(first());
@@ -118,58 +109,37 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
 
   public registerErrorListener(client: MqttClient) {
     client.on(MqttEventsMap.ERROR, (err: any) => {
-      if (err.code === ECONNREFUSED || err.code === ENOTFOUND) {
-        return;
-      }
-      this.logger.error(err);
+        throw new Error("STUB");
     });
   }
 
   public registerOfflineListener(client: MqttClient) {
     client.on(MqttEventsMap.OFFLINE, () => {
-      this.connectionPromise = Promise.reject(
-        'Error: Connection lost. Trying to reconnect...',
-      );
-
-      // Prevent unhandled rejections
-      this.connectionPromise.catch(() => {});
-      this.logger.error('MQTT broker went offline.');
+        throw new Error("STUB");
     });
   }
 
   public registerReconnectListener(client: MqttClient) {
     client.on(MqttEventsMap.RECONNECT, () => {
-      this.isReconnecting = true;
-      this._status$.next(MqttStatus.RECONNECTING);
-
-      this.logger.log('MQTT connection lost. Trying to reconnect...');
+        throw new Error("STUB");
     });
   }
 
   public registerDisconnectListener(client: MqttClient) {
     client.on(MqttEventsMap.DISCONNECT, () => {
-      this._status$.next(MqttStatus.DISCONNECTED);
+        throw new Error("STUB");
     });
   }
 
   public registerCloseListener(client: MqttClient) {
     client.on(MqttEventsMap.CLOSE, () => {
-      this._status$.next(MqttStatus.CLOSED);
+        throw new Error("STUB");
     });
   }
 
   public registerConnectListener(client: MqttClient) {
     client.on(MqttEventsMap.CONNECT, () => {
-      this.isReconnecting = false;
-      this._status$.next(MqttStatus.CONNECTED);
-
-      this.logger.log('Connected to MQTT broker');
-      this.connectionPromise = Promise.resolve();
-
-      if (!this.isInitialConnection) {
-        this.isInitialConnection = true;
-        client.on('message', this.createResponseCallback());
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -185,35 +155,12 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.mqttClient) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return this.mqttClient as T;
+      throw new Error("STUB");
   }
 
   public createResponseCallback(): (channel: string, buffer: Buffer) => any {
     return async (channel: string, buffer: Buffer) => {
-      const packet = JSON.parse(buffer.toString());
-      const { err, response, isDisposed, id } =
-        await this.deserializer.deserialize(packet);
-
-      const callback = this.routingMap.get(id);
-      if (!callback) {
-        return undefined;
-      }
-      if (isDisposed || err) {
-        return callback({
-          err,
-          response,
-          isDisposed: true,
-        });
-      }
-      callback({
-        err,
-        response,
-      });
+        throw new Error("STUB");
     };
   }
 
@@ -252,19 +199,20 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
       if (subscriptionsCount <= 0) {
         this.mqttClient!.subscribe(
           responseChannel,
-          (err: any) => !err && publishPacket(),
+          (err: any) => { throw new Error("STUB"); },
         );
       } else {
         publishPacket();
       }
 
       return () => {
-        this.unsubscribeFromChannel(responseChannel);
-        this.routingMap.delete(packet.id);
+          throw new Error("STUB");
       };
     } catch (err) {
       callback({ err });
-      return () => {};
+      return () => {
+          throw new Error("STUB");
+      };
     }
   }
 
@@ -278,12 +226,7 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
 
     const serializedPacket: string | Buffer = this.serializer.serialize(packet);
     return new Promise<void>((resolve, reject) =>
-      this.mqttClient!.publish(
-        pattern,
-        serializedPacket,
-        this.mergePacketOptions(options),
-        (err: any) => (err ? reject(err) : resolve()),
-      ),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -297,7 +240,7 @@ export class ClientMqtt extends ClientProxy<MqttEvents, MqttStatus> {
   }
 
   protected initializeSerializer(options: MqttOptions['options']) {
-    this.serializer = options?.serializer ?? new MqttRecordSerializer();
+      throw new Error("STUB");
   }
 
   protected mergePacketOptions(

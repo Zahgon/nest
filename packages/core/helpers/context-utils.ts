@@ -51,7 +51,7 @@ export class ContextUtils {
 
   public getArgumentsLength<T>(keys: string[], metadata: T): number {
     return keys.length
-      ? Math.max(...keys.map(key => metadata[key].index)) + 1
+      ? Math.max(...keys.map(key => { throw new Error("STUB"); })) + 1
       : 0;
   }
 
@@ -68,10 +68,7 @@ export class ContextUtils {
     if (!paramtypes) {
       return paramsProperties;
     }
-    return paramsProperties.map(param => ({
-      ...param,
-      metatype: paramtypes[param.index],
-    }));
+    return paramsProperties.map(param => { throw new Error("STUB"); });
   }
 
   public getCustomFactory(
@@ -80,8 +77,8 @@ export class ContextUtils {
     contextFactory: (args: unknown[]) => ExecutionContextHost,
   ): (...args: unknown[]) => unknown {
     return isFunction(factory)
-      ? (...args: unknown[]) => factory(data, contextFactory(args))
-      : () => null;
+      ? (...args: unknown[]) => { throw new Error("STUB"); }
+      : () => { throw new Error("STUB"); };
   }
 
   public getContextFactory<TContext extends string = ContextType>(
@@ -91,9 +88,7 @@ export class ContextUtils {
   ): (args: unknown[]) => ExecutionContextHost {
     const type = instance && (instance.constructor as Type<unknown>);
     return (args: unknown[]) => {
-      const ctx = new ExecutionContextHost(args, type, callback);
-      ctx.setType(contextType);
-      return ctx;
+        throw new Error("STUB");
     };
   }
 }

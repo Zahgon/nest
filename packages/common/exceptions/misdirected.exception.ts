@@ -37,17 +37,6 @@ export class MisdirectedException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Misdirected',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.MISDIRECTED,
-      ),
-      HttpStatus.MISDIRECTED,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

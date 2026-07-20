@@ -71,17 +71,7 @@ export class ConfigurableModuleBuilder<
     protected readonly options: ConfigurableModuleBuilderOptions = {},
     parentBuilder?: ConfigurableModuleBuilder<ModuleOptions>,
   ) {
-    if (parentBuilder) {
-      this.staticMethodKey = parentBuilder.staticMethodKey as StaticMethodKey;
-      this.factoryClassMethodKey =
-        parentBuilder.factoryClassMethodKey as FactoryClassMethodKey;
-      this.transformModuleDefinition =
-        parentBuilder.transformModuleDefinition as (
-          definition: DynamicModule,
-          extraOptions: ExtraModuleDefinitionOptions,
-        ) => DynamicModule;
-      this.extras = parentBuilder.extras as ExtraModuleDefinitionOptions;
-    }
+      throw new Error("STUB");
   }
 
   /**
@@ -104,17 +94,9 @@ export class ConfigurableModuleBuilder<
     transformDefinition: (
       definition: DynamicModule,
       extras: ExtraModuleDefinitionOptions,
-    ) => DynamicModule = def => def,
+    ) => DynamicModule = def => { throw new Error("STUB"); },
   ) {
-    const builder = new ConfigurableModuleBuilder<
-      ModuleOptions,
-      StaticMethodKey,
-      FactoryClassMethodKey,
-      ExtraModuleDefinitionOptions
-    >(this.options, this as any);
-    builder.extras = extras;
-    builder.transformModuleDefinition = transformDefinition;
-    return builder;
+      throw new Error("STUB");
   }
 
   /**
@@ -129,14 +111,7 @@ export class ConfigurableModuleBuilder<
    * @param key name of the method
    */
   setClassMethodName<StaticMethodKey extends string>(key: StaticMethodKey) {
-    const builder = new ConfigurableModuleBuilder<
-      ModuleOptions,
-      StaticMethodKey,
-      FactoryClassMethodKey,
-      ExtraModuleDefinitionOptions
-    >(this.options, this as any);
-    builder.staticMethodKey = key;
-    return builder;
+      throw new Error("STUB");
   }
 
   /**
@@ -153,14 +128,7 @@ export class ConfigurableModuleBuilder<
   setFactoryMethodName<FactoryClassMethodKey extends string>(
     key: FactoryClassMethodKey,
   ) {
-    const builder = new ConfigurableModuleBuilder<
-      ModuleOptions,
-      StaticMethodKey,
-      FactoryClassMethodKey,
-      ExtraModuleDefinitionOptions
-    >(this.options, this as any);
-    builder.factoryClassMethodKey = key;
-    return builder;
+      throw new Error("STUB");
   }
 
   /**
@@ -179,7 +147,7 @@ export class ConfigurableModuleBuilder<
     this.options.optionsInjectionToken ??= this.options.moduleName
       ? this.constructInjectionTokenString()
       : generateOptionsInjectionToken();
-    this.transformModuleDefinition ??= definition => definition;
+    this.transformModuleDefinition ??= definition => { throw new Error("STUB"); };
 
     return {
       ConfigurableModuleClass:
@@ -212,52 +180,14 @@ export class ConfigurableModuleBuilder<
       static [self.staticMethodKey](
         options: ModuleOptions & ExtraModuleDefinitionOptions,
       ): DynamicModule {
-        const providers: Array<Provider> = [
-          {
-            provide: self.options.optionsInjectionToken!,
-            useValue: this.omitExtras(options, self.extras),
-          },
-        ];
-        if (self.options.alwaysTransient) {
-          providers.push({
-            provide: CONFIGURABLE_MODULE_ID,
-            useValue: randomStringGenerator(),
-          });
-        }
-        return self.transformModuleDefinition(
-          {
-            module: this,
-            providers,
-          },
-          {
-            ...self.extras,
-            ...options,
-          },
-        );
+          throw new Error("STUB");
       }
 
       static [asyncMethodKey](
         options: ConfigurableModuleAsyncOptions<ModuleOptions> &
           ExtraModuleDefinitionOptions,
       ): DynamicModule {
-        const providers = this.createAsyncProviders(options);
-        if (self.options.alwaysTransient) {
-          providers.push({
-            provide: CONFIGURABLE_MODULE_ID,
-            useValue: randomStringGenerator(),
-          });
-        }
-        return self.transformModuleDefinition(
-          {
-            module: this,
-            imports: options.imports || [],
-            providers,
-          },
-          {
-            ...self.extras,
-            ...this.extractExtrasFromAsyncOptions(options, self.extras),
-          },
-        );
+          throw new Error("STUB");
       }
 
       private static omitExtras(
@@ -271,9 +201,9 @@ export class ConfigurableModuleBuilder<
         const extrasKeys = Object.keys(extras);
 
         Object.keys(input as object)
-          .filter(key => !extrasKeys.includes(key))
+          .filter(key => { throw new Error("STUB"); })
           .forEach(key => {
-            moduleOptions[key] = input[key];
+              throw new Error("STUB");
           });
         return moduleOptions as ModuleOptions;
       }
@@ -289,9 +219,9 @@ export class ConfigurableModuleBuilder<
         const extrasOptions = {};
 
         Object.keys(input as object)
-          .filter(key => !ASYNC_OPTIONS_METADATA_KEYS.includes(key as any))
+          .filter(key => { throw new Error("STUB"); })
           .forEach(key => {
-            extrasOptions[key] = input[key];
+              throw new Error("STUB");
           });
 
         return extrasOptions;
@@ -340,9 +270,7 @@ export class ConfigurableModuleBuilder<
               FactoryClassMethodKey
             >,
           ) =>
-            await optionsFactory[
-              self.factoryClassMethodKey as keyof typeof optionsFactory
-            ](),
+            { throw new Error("STUB"); },
           inject: [options.useExisting || options.useClass!],
         };
       }
@@ -361,10 +289,8 @@ export class ConfigurableModuleBuilder<
       {},
       {
         get: () => {
-          throw new Error(
-            `"${typeName}" is not supposed to be used as a value.`,
-          );
-        },
+              throw new Error("STUB");
+          },
       },
     );
     return proxy as any;

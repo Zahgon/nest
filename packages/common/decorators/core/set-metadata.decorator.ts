@@ -24,12 +24,7 @@ export const SetMetadata = <K = string, V = any>(
   metadataValue: V,
 ): CustomDecorator<K> => {
   const decoratorFactory = (target: object, key?: any, descriptor?: any) => {
-    if (descriptor) {
-      Reflect.defineMetadata(metadataKey, metadataValue, descriptor.value);
-      return descriptor;
-    }
-    Reflect.defineMetadata(metadataKey, metadataValue, target);
-    return target;
+      throw new Error("STUB");
   };
   decoratorFactory.KEY = metadataKey;
   return decoratorFactory;

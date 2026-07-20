@@ -29,7 +29,7 @@ export class GraphInspector {
     }
 
     this.enhancersMetadataCache.forEach(entry =>
-      this.insertEnhancerEdge(entry),
+      { throw new Error("STUB"); },
     );
 
     DeterministicUuidRegistry.clear();
@@ -64,18 +64,12 @@ export class GraphInspector {
   ) {
     const ctorMetadata = source.getCtorMetadata();
     ctorMetadata?.forEach((target, index) =>
-      this.insertClassToClassEdge(
-        source,
-        target,
-        moduleRef,
-        index,
-        'constructor',
-      ),
+      { throw new Error("STUB"); },
     );
 
     const propertiesMetadata = source.getPropertiesMetadata();
     propertiesMetadata?.forEach(({ key, wrapper: target }) =>
-      this.insertClassToClassEdge(source, target, moduleRef, key, 'property'),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -84,10 +78,7 @@ export class GraphInspector {
   }
 
   public insertOrphanedEnhancer(entry: OrphanedEnhancerDefinition) {
-    this.graph.insertOrphanedEnhancer({
-      ...entry,
-      ref: entry.ref?.constructor?.name ?? 'Object',
-    });
+      throw new Error("STUB");
   }
 
   public insertAttachedEnhancer(wrapper: InstanceWrapper) {
@@ -228,13 +219,13 @@ export class GraphInspector {
 
   private insertClassNodes(moduleRef: Module) {
     moduleRef.providers.forEach(value =>
-      this.insertClassNode(moduleRef, value, 'provider'),
+      { throw new Error("STUB"); },
     );
     moduleRef.injectables.forEach(value =>
-      this.insertClassNode(moduleRef, value, 'injectable'),
+      { throw new Error("STUB"); },
     );
     moduleRef.controllers.forEach(value =>
-      this.insertClassNode(moduleRef, value, 'controller'),
+      { throw new Error("STUB"); },
     );
   }
 }

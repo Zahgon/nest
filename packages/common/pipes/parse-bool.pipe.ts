@@ -48,12 +48,7 @@ export class ParseBoolPipe implements PipeTransform<
   protected exceptionFactory: (error: string) => any;
 
   constructor(@Optional() protected readonly options?: ParseBoolPipeOptions) {
-    options = options || {};
-    const { exceptionFactory, errorHttpStatusCode = HttpStatus.BAD_REQUEST } =
-      options;
-    this.exceptionFactory =
-      exceptionFactory ||
-      (error => new HttpErrorByCode[errorHttpStatusCode](error));
+      throw new Error("STUB");
   }
 
   /**

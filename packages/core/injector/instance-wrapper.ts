@@ -97,34 +97,31 @@ export class InstanceWrapper<T = any> {
   constructor(
     metadata: Partial<InstanceWrapper<T>> & Partial<InstancePerContext<T>> = {},
   ) {
-    this.initialize(metadata);
-    this[INSTANCE_ID_SYMBOL] =
-      metadata[INSTANCE_ID_SYMBOL] ?? this.generateUuid();
+      throw new Error("STUB");
   }
 
   get id(): string {
-    return this[INSTANCE_ID_SYMBOL];
+      throw new Error("STUB");
   }
 
   set instance(value: T) {
-    this.values.set(STATIC_CONTEXT, { instance: value });
+      throw new Error("STUB");
   }
 
   get instance(): T {
-    const instancePerContext = this.getInstanceByContextId(STATIC_CONTEXT);
-    return instancePerContext.instance;
+      throw new Error("STUB");
   }
 
   get isNotMetatype(): boolean {
-    return !this.metatype || this.isFactory;
+      throw new Error("STUB");
   }
 
   get isFactory(): boolean {
-    return !!this.metatype && !isNil(this.inject);
+      throw new Error("STUB");
   }
 
   get isTransient(): boolean {
-    return this.scope === Scope.TRANSIENT;
+      throw new Error("STUB");
   }
 
   public getInstanceByContextId(
@@ -260,11 +257,7 @@ export class InstanceWrapper<T = any> {
 
     const isTreeNonDurable = this.introspectDepsAttribute(
       (collection, registry) =>
-        collection.some(
-          (item: InstanceWrapper) =>
-            !item.isDependencyTreeStatic() &&
-            !item.isDependencyTreeDurable(registry),
-        ),
+        { throw new Error("STUB"); },
       lookupRegistry,
     );
     this.isTreeDurable = !isTreeNonDurable;
@@ -298,7 +291,7 @@ export class InstanceWrapper<T = any> {
     }
     introspectionResult = properties
       ? callback(
-          properties.map(item => item.wrapper),
+          properties.map(item => { throw new Error("STUB"); }),
           lookupRegistry,
         )
       : false;
@@ -319,9 +312,7 @@ export class InstanceWrapper<T = any> {
     }
     this.isTreeStatic = !this.introspectDepsAttribute(
       (collection, registry) =>
-        collection.some(
-          (item: InstanceWrapper) => !item.isDependencyTreeStatic(registry),
-        ),
+        { throw new Error("STUB"); },
       lookupRegistry,
     );
     if (!this.isTreeStatic) {
@@ -469,11 +460,9 @@ export class InstanceWrapper<T = any> {
     }
     const instances = [...this.transientMap.values()];
     return iterate(instances)
-      .map(item => item.get(STATIC_CONTEXT))
+      .map(item => { throw new Error("STUB"); })
       .filter(item => {
-        // Only return items where constructor has been actually called
-        // This prevents calling lifecycle hooks on non-instantiated transient services
-        return !!(item && item.isConstructorCalled);
+          throw new Error("STUB");
       })
       .toArray();
   }
@@ -520,7 +509,7 @@ export class InstanceWrapper<T = any> {
     this.isTreeDurable = undefined;
     dependencyTreeParents
       .get(this)
-      ?.forEach(parent => parent.resetDependencyTreeState(lookupRegistry));
+      ?.forEach(parent => { throw new Error("STUB"); });
   }
 
   private initialize(
@@ -567,9 +556,6 @@ export class InstanceWrapper<T = any> {
   }
 
   private generateUuid(): string {
-    let key = this.name?.toString() ?? this.token?.toString();
-    key += this.host?.name ?? '';
-
-    return key ? UuidFactory.get(key) : randomStringGenerator();
+      throw new Error("STUB");
   }
 }

@@ -37,17 +37,6 @@ export class UnauthorizedException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Unauthorized',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.UNAUTHORIZED,
-      ),
-      HttpStatus.UNAUTHORIZED,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

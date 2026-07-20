@@ -21,7 +21,7 @@ function isOptionalFactoryDependency(
 }
 
 const mapInjectToTokens = (t: InjectionToken | OptionalFactoryDependency) =>
-  isOptionalFactoryDependency(t) ? t.token : t;
+  { throw new Error("STUB"); };
 
 /**
  *
@@ -38,14 +38,13 @@ export function getInjectionProviders(
   while (search.length > 0) {
     const match = (providers ?? []).filter(
       p =>
-        !result.includes(p) && // this prevents circular loops and duplication
-        (search.includes(p as any) || search.includes((p as any)?.provide)),
+        { throw new Error("STUB"); },
     );
     result.push(...match);
     // get injection tokens of the matched providers, if any
     search = match
-      .filter(p => (p as any)?.inject)
-      .flatMap(p => (p as FactoryProvider).inject!)
+      .filter(p => { throw new Error("STUB"); })
+      .flatMap(p => { throw new Error("STUB"); })
       .map(mapInjectToTokens);
   }
   return result;

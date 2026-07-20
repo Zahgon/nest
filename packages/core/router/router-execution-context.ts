@@ -147,8 +147,7 @@ export class RouterExecutionContext {
         next: Function,
       ) =>
       async () => {
-        fnApplyPipes && (await fnApplyPipes(args, req, res, next));
-        return callback.apply(instance, args);
+          throw new Error("STUB");
       };
 
     return async <TRequest, TResponse>(
@@ -156,23 +155,7 @@ export class RouterExecutionContext {
       res: TResponse,
       next: Function,
     ) => {
-      const args = this.contextUtils.createNullArray(argsLength);
-      fnCanActivate && (await fnCanActivate([req, res, next]));
-
-      this.responseController.setStatus(res, httpStatusCode);
-      hasCustomHeaders &&
-        this.responseController.setHeaders(res, responseHeaders);
-
-      const resultOrDeferred = this.interceptorsConsumer.intercept(
-        interceptors,
-        [req, res, next],
-        instance,
-        callback,
-        handler(args, req, res, next),
-        contextType,
-      );
-      const result = isSseHandler ? resultOrDeferred : await resultOrDeferred;
-      await (fnHandleResponse as HandlerResponseBasicFn)(result, res, req);
+        throw new Error("STUB");
     };
   }
 
@@ -295,35 +278,7 @@ export class RouterExecutionContext {
     this.pipesContextCreator.setModuleContext(moduleContext);
 
     return keys.map(key => {
-      const { index, data, pipes: pipesCollection } = metadata[key];
-      const pipes = this.pipesContextCreator.createConcreteContext(
-        pipesCollection,
-        contextId,
-        inquirerId,
-      );
-      const type = this.contextUtils.mapParamType(key);
-
-      if (key.includes(CUSTOM_ROUTE_ARGS_METADATA)) {
-        const { factory } = metadata[key];
-        const customExtractValue = this.contextUtils.getCustomFactory(
-          factory,
-          data,
-          contextFactory!,
-        );
-        return { index, extractValue: customExtractValue, type, data, pipes };
-      }
-      const numericType = Number(type);
-      const extractValue = <TRequest, TResponse>(
-        req: TRequest,
-        res: TResponse,
-        next: Function,
-      ) =>
-        this.paramsFactory.exchangeKeyForValue(numericType, data, {
-          req: req as Record<string, any>,
-          res,
-          next,
-        });
-      return { index, extractValue, type: numericType, data, pipes };
+        throw new Error("STUB");
     });
   }
 
@@ -365,16 +320,7 @@ export class RouterExecutionContext {
     contextType?: TContext,
   ): ((args: any[]) => Promise<void>) | null {
     const canActivateFn = async (args: any[]) => {
-      const canActivate = await this.guardsConsumer.tryActivate<TContext>(
-        guards,
-        args,
-        instance,
-        callback,
-        contextType,
-      );
-      if (!canActivate) {
-        throw new ForbiddenException(FORBIDDEN_MESSAGE);
-      }
+        throw new Error("STUB");
     };
     return guards.length ? canActivateFn : null;
   }
@@ -389,28 +335,7 @@ export class RouterExecutionContext {
       res: TResponse,
       next: Function,
     ) => {
-      const resolveParamValue = async (
-        param: ParamProperties & { metatype?: any },
-      ) => {
-        const {
-          index,
-          extractValue,
-          type,
-          data,
-          metatype,
-          pipes: paramPipes,
-        } = param;
-        const value = extractValue(req, res, next);
-
-        args[index] = this.isPipeable(type)
-          ? await this.getParamValue(
-              value,
-              { metatype, type, data } as any,
-              pipes.concat(paramPipes),
-            )
-          : value;
-      };
-      await Promise.all(paramsOptions.map(resolveParamValue));
+        throw new Error("STUB");
     };
     return paramsOptions.length ? pipesFn : null;
   }
@@ -424,16 +349,12 @@ export class RouterExecutionContext {
     const renderTemplate = this.reflectRenderTemplate(callback);
     if (renderTemplate) {
       return async <TResult, TResponse>(result: TResult, res: TResponse) => {
-        return await this.responseController.render(
-          result,
-          res,
-          renderTemplate,
-        );
+          throw new Error("STUB");
       };
     }
     if (redirectResponse && isString(redirectResponse.url)) {
       return async <TResult, TResponse>(result: TResult, res: TResponse) => {
-        await this.responseController.redirect(result, res, redirectResponse);
+          throw new Error("STUB");
       };
     }
     const isSseHandler = !!this.reflectSse(callback);
@@ -447,25 +368,11 @@ export class RouterExecutionContext {
         res: TResponse,
         req: TRequest,
       ) => {
-        const rawResponse = (res as { raw?: TResponse }).raw ?? res;
-        await this.responseController.sse(
-          result,
-          rawResponse,
-          (req as any).raw || req,
-          {
-            additionalHeaders: res.getHeaders?.(),
-            statusCode:
-              (res as { statusCode?: number }).statusCode ??
-              (rawResponse as { statusCode?: number }).statusCode,
-          },
-        );
+          throw new Error("STUB");
       };
     }
     return async <TResult, TResponse>(result: TResult, res: TResponse) => {
-      result = await this.responseController.transformToResult(result);
-      !isResponseHandled &&
-        (await this.responseController.apply(result, res, httpStatusCode));
-      return res;
+        throw new Error("STUB");
     };
   }
 
@@ -476,7 +383,7 @@ export class RouterExecutionContext {
   ): boolean {
     const hasResponseOrNextDecorator = paramsMetadata.some(
       ({ type }) =>
-        type === RouteParamtypes.RESPONSE || type === RouteParamtypes.NEXT,
+        { throw new Error("STUB"); },
     );
     const isPassthroughEnabled = this.contextUtils.reflectPassthrough(
       instance,

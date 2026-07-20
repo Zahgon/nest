@@ -21,7 +21,7 @@ export class ExecutionContextHost implements ExecutionContext {
   }
 
   getType<TContext extends string = ContextType>(): TContext {
-    return this.contextType as TContext;
+      throw new Error("STUB");
   }
 
   getClass<T = any>(): Type<T> {
@@ -41,25 +41,22 @@ export class ExecutionContextHost implements ExecutionContext {
   }
 
   switchToRpc(): RpcArgumentsHost {
-    return Object.assign(this, {
-      getData: () => this.getArgByIndex(0),
-      getContext: () => this.getArgByIndex(1),
-    });
+      throw new Error("STUB");
   }
 
   switchToHttp(): HttpArgumentsHost {
     return Object.assign(this, {
-      getRequest: () => this.getArgByIndex(0),
-      getResponse: () => this.getArgByIndex(1),
-      getNext: () => this.getArgByIndex(2),
+      getRequest: () => { throw new Error("STUB"); },
+      getResponse: () => { throw new Error("STUB"); },
+      getNext: () => { throw new Error("STUB"); },
     });
   }
 
   switchToWs(): WsArgumentsHost {
     return Object.assign(this, {
-      getClient: () => this.getArgByIndex(0),
-      getData: () => this.getArgByIndex(1),
-      getPattern: () => this.getArgByIndex(this.getArgs().length - 1),
+      getClient: () => { throw new Error("STUB"); },
+      getData: () => { throw new Error("STUB"); },
+      getPattern: () => { throw new Error("STUB"); },
     });
   }
 }

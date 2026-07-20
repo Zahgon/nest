@@ -168,70 +168,16 @@ export class FastifyAdapter<
       }
     },
     storage() {
-      const versions = new Map<string, unknown>();
-      return {
-        get(version: string | Array<string>) {
-          if (Array.isArray(version)) {
-            return versions.get(version.find(v => versions.has(v))!) || null;
-          }
-          return versions.get(version) || null;
-        },
-        set(versionOrVersions: string | Array<string>, store: unknown) {
-          const storeVersionConstraint = (version: string) =>
-            versions.set(version, store);
-          if (Array.isArray(versionOrVersions))
-            versionOrVersions.forEach(storeVersionConstraint);
-          else storeVersionConstraint(versionOrVersions);
-        },
-        del(version: string | Array<string>) {
-          if (Array.isArray(version)) {
-            version.forEach(v => versions.delete(v));
-          } else {
-            versions.delete(version);
-          }
-        },
-        empty() {
-          versions.clear();
-        },
-      };
+        throw new Error("STUB");
     },
     deriveConstraint: (req: FastifyRequest) => {
-      // Media Type (Accept Header) Versioning Handler
-      if (this.versioningOptions?.type === VersioningType.MEDIA_TYPE) {
-        const MEDIA_TYPE_HEADER = 'Accept';
-        const acceptHeaderValue: string | undefined = (req.headers?.[
-          MEDIA_TYPE_HEADER
-        ] || req.headers?.[MEDIA_TYPE_HEADER.toLowerCase()]) as string;
-
-        const acceptHeaderVersionParameter = acceptHeaderValue
-          ? acceptHeaderValue.split(';')[1]
-          : '';
-
-        return isUndefined(acceptHeaderVersionParameter)
-          ? VERSION_NEUTRAL // No version was supplied
-          : acceptHeaderVersionParameter.split(this.versioningOptions.key)[1];
-      }
-      // Header Versioning Handler
-      else if (this.versioningOptions?.type === VersioningType.HEADER) {
-        const customHeaderVersionParameter: string | string[] | undefined =
-          req.headers?.[this.versioningOptions.header] ||
-          req.headers?.[this.versioningOptions.header.toLowerCase()];
-
-        return isUndefined(customHeaderVersionParameter)
-          ? VERSION_NEUTRAL // No version was supplied
-          : customHeaderVersionParameter;
-      }
-      // Custom Versioning Handler
-      else if (this.versioningOptions?.type === VersioningType.CUSTOM) {
-        return this.versioningOptions.extractor(req);
-      }
-      return undefined;
+        throw new Error("STUB");
     },
     mustMatchWhenDerived: false,
   };
 
   get isParserRegistered(): boolean {
-    return !!this._isParserRegistered;
+      throw new Error("STUB");
   }
 
   constructor(
@@ -243,42 +189,7 @@ export class FastifyAdapter<
       | FastifyHttpOptions<any>
       | FastifyAdapterBaseOptions<TServer>,
   ) {
-    super();
-
-    const instance =
-      instanceOrOptions && (instanceOrOptions as TInstance).server
-        ? instanceOrOptions
-        : fastify({
-            ...(instanceOrOptions as FastifyServerOptions),
-            routerOptions: {
-              ...(instanceOrOptions as FastifyServerOptions)?.routerOptions,
-              constraints: {
-                version: this.versionConstraint as any,
-              },
-            },
-          });
-
-    this.setInstance(instance);
-
-    if ((instanceOrOptions as FastifyAdapterBaseOptions)?.skipMiddie) {
-      this.isMiddieRegistered = true;
-    }
-
-    this.instance.addHook('onRequest', (request, reply, done) => {
-      if (this.onRequestHook) {
-        this.onRequestHook(request as TRequest, reply as TReply, done);
-      } else {
-        done();
-      }
-    });
-
-    this.instance.addHook('onResponse', (request, reply, done) => {
-      if (this.onResponseHook) {
-        this.onResponseHook(request as TRequest, reply as TReply, done);
-      } else {
-        done();
-      }
-    });
+      throw new Error("STUB");
   }
 
   public setOnRequestHook(
@@ -288,7 +199,7 @@ export class FastifyAdapter<
       done: (err?: Error) => void,
     ) => void | Promise<void>,
   ) {
-    this.onRequestHook = hook;
+      throw new Error("STUB");
   }
 
   public setOnResponseHook(
@@ -298,7 +209,7 @@ export class FastifyAdapter<
       done: (err?: Error) => void,
     ) => void | Promise<void>,
   ) {
-    this.onResponseHook = hook;
+      throw new Error("STUB");
   }
 
   public async init() {
@@ -354,11 +265,11 @@ export class FastifyAdapter<
   }
 
   public post(...args: any[]) {
-    return this.injectRouteOptions('POST', ...args);
+      throw new Error("STUB");
   }
 
   public head(...args: any[]) {
-    return this.injectRouteOptions('HEAD', ...args);
+      throw new Error("STUB");
   }
 
   public delete(...args: any[]) {
@@ -366,47 +277,47 @@ export class FastifyAdapter<
   }
 
   public put(...args: any[]) {
-    return this.injectRouteOptions('PUT', ...args);
+      throw new Error("STUB");
   }
 
   public patch(...args: any[]) {
-    return this.injectRouteOptions('PATCH', ...args);
+      throw new Error("STUB");
   }
 
   public options(...args: any[]) {
-    return this.injectRouteOptions('OPTIONS', ...args);
+      throw new Error("STUB");
   }
 
   public search(...args: any[]) {
-    return this.injectRouteOptions('SEARCH', ...args);
+      throw new Error("STUB");
   }
 
   public propfind(...args: any[]) {
-    return this.injectRouteOptions('PROPFIND', ...args);
+      throw new Error("STUB");
   }
 
   public proppatch(...args: any[]) {
-    return this.injectRouteOptions('PROPPATCH', ...args);
+      throw new Error("STUB");
   }
 
   public mkcol(...args: any[]) {
-    return this.injectRouteOptions('MKCOL', ...args);
+      throw new Error("STUB");
   }
 
   public copy(...args: any[]) {
-    return this.injectRouteOptions('COPY', ...args);
+      throw new Error("STUB");
   }
 
   public move(...args: any[]) {
-    return this.injectRouteOptions('MOVE', ...args);
+      throw new Error("STUB");
   }
 
   public lock(...args: any[]) {
-    return this.injectRouteOptions('LOCK', ...args);
+      throw new Error("STUB");
   }
 
   public unlock(...args: any[]) {
-    return this.injectRouteOptions('UNLOCK', ...args);
+      throw new Error("STUB");
   }
 
   public applyVersionFilter(
@@ -536,7 +447,7 @@ export class FastifyAdapter<
   public inject(
     opts?: InjectOptions | string,
   ): LightMyRequestChain | Promise<LightMyRequestResponse> {
-    return this.instance.inject(opts!);
+      throw new Error("STUB");
   }
 
   public async close() {
@@ -556,27 +467,11 @@ export class FastifyAdapter<
   }
 
   public useStaticAssets(options: FastifyStaticOptions) {
-    return this.register(
-      loadPackage('@fastify/static', 'FastifyAdapter.useStaticAssets()', () =>
-        require('@fastify/static'),
-      ),
-      options,
-    );
+      throw new Error("STUB");
   }
 
   public setViewEngine(options: FastifyViewOptions | string) {
-    if (isString(options)) {
-      new Logger('FastifyAdapter').error(
-        "setViewEngine() doesn't support a string argument.",
-      );
-      process.exit(1);
-    }
-    return this.register(
-      loadPackage('@fastify/view', 'FastifyAdapter.setViewEngine()', () =>
-        require('@fastify/view'),
-      ),
-      options,
-    );
+      throw new Error("STUB");
   }
 
   public isHeadersSent(response: TReply): boolean {
@@ -592,7 +487,7 @@ export class FastifyAdapter<
   }
 
   public appendHeader(response: any, name: string, value: string) {
-    response.header(name, value);
+      throw new Error("STUB");
   }
 
   public getRequestHostname(request: TRequest): string {
@@ -651,16 +546,7 @@ export class FastifyAdapter<
         body: Buffer,
         done,
       ) => {
-        if (rawBody === true && Buffer.isBuffer(body)) {
-          req.rawBody = body;
-        }
-
-        if (parser) {
-          parser(req, body, done);
-          return;
-        }
-
-        done(null, body);
+          throw new Error("STUB");
       },
     );
 
@@ -676,63 +562,12 @@ export class FastifyAdapter<
       await this.registerMiddie();
     }
     return (path: string, callback: Function) => {
-      const hasEndOfStringCharacter = path.endsWith('$');
-      path = hasEndOfStringCharacter ? path.slice(0, -1) : path;
-
-      let normalizedPath = LegacyRouteConverter.tryConvert(path);
-
-      // Fallback to "*path" to support plugins like GraphQL
-      normalizedPath = normalizedPath === '/*path' ? '*path' : normalizedPath;
-
-      // Normalize the path to support the prefix if it set in application
-      if (this._pathPrefix && !normalizedPath.startsWith(this._pathPrefix)) {
-        normalizedPath = `${this._pathPrefix}${normalizedPath}`;
-        if (normalizedPath.endsWith('/')) {
-          normalizedPath = `${normalizedPath}{*path}`;
-        }
-      }
-
-      try {
-        let { regexp: re } = pathToRegexp(normalizedPath);
-        re = hasEndOfStringCharacter
-          ? new RegExp(re.source + '$', re.flags)
-          : re;
-
-        // The following type assertion is valid as we use import('@fastify/middie') rather than require('@fastify/middie')
-        // ref https://github.com/fastify/middie/pull/55
-        this.instance.use(
-          normalizedPath,
-          (req: any, res: any, next: Function) => {
-            const queryParamsIndex = req.originalUrl.indexOf('?');
-            let pathname =
-              queryParamsIndex >= 0
-                ? req.originalUrl.slice(0, queryParamsIndex)
-                : req.originalUrl;
-
-            pathname = this.sanitizeUrl(pathname);
-
-            if (normalizedPath) {
-              const pathToCheck = pathname.endsWith('/')
-                ? pathname
-                : `${pathname}/`;
-              if (!re.exec(pathToCheck)) {
-                return next();
-              }
-            }
-            return callback(req, res, next);
-          },
-        );
-      } catch (e) {
-        if (e instanceof TypeError) {
-          LegacyRouteConverter.printError(path);
-        }
-        throw e;
-      }
+        throw new Error("STUB");
     };
   }
 
   public getType(): string {
-    return 'fastify';
+      throw new Error("STUB");
   }
 
   public use(...args: any[]) {
@@ -753,7 +588,7 @@ export class FastifyAdapter<
       | Promise<{ default: FastifyPluginAsync<any> }>,
     prefix = '/',
   ) {
-    return this.instance.register(factory, { prefix });
+      throw new Error("STUB");
   }
 
   private isNativeResponse(
@@ -772,13 +607,7 @@ export class FastifyAdapter<
       withRawBody,
       { bodyLimit },
       (req, body, done) => {
-        const { onProtoPoisoning, onConstructorPoisoning } =
-          this.instance.initialConfig;
-        const defaultJsonParser = this.instance.getDefaultJsonParser(
-          onProtoPoisoning || 'error',
-          onConstructorPoisoning || 'error',
-        ) as FastifyBodyParser<string | Buffer, TServer>;
-        defaultJsonParser(req, body, done);
+          throw new Error("STUB");
       },
     );
   }
@@ -793,7 +622,7 @@ export class FastifyAdapter<
       withRawBody,
       { bodyLimit },
       (_req, body, done) => {
-        done(null, querystringParse(body.toString()));
+          throw new Error("STUB");
       },
     );
   }

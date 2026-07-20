@@ -17,7 +17,7 @@ export class MulterModule {
     return {
       module: MulterModule,
       providers: [
-        { provide: MULTER_MODULE_OPTIONS, useFactory: () => options },
+        { provide: MULTER_MODULE_OPTIONS, useFactory: () => { throw new Error("STUB"); } },
         {
           provide: MULTER_MODULE_ID,
           useValue: randomStringGenerator(),
@@ -28,18 +28,7 @@ export class MulterModule {
   }
 
   static registerAsync(options: MulterModuleAsyncOptions): DynamicModule {
-    return {
-      module: MulterModule,
-      imports: options.imports,
-      providers: [
-        ...this.createAsyncProviders(options),
-        {
-          provide: MULTER_MODULE_ID,
-          useValue: randomStringGenerator(),
-        },
-      ],
-      exports: [MULTER_MODULE_OPTIONS],
-    };
+      throw new Error("STUB");
   }
 
   private static createAsyncProviders(
@@ -70,7 +59,7 @@ export class MulterModule {
     return {
       provide: MULTER_MODULE_OPTIONS,
       useFactory: async (optionsFactory: MulterOptionsFactory) =>
-        optionsFactory.createMulterOptions(),
+        { throw new Error("STUB"); },
       inject: [options.useExisting || options.useClass!],
     };
   }

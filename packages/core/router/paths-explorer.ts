@@ -36,17 +36,7 @@ export class PathsExplorer {
     return this.metadataScanner
       .getAllMethodNames(instancePrototype)
       .reduce((acc, method) => {
-        const route = this.exploreMethodMetadata(
-          instance,
-          instancePrototype,
-          method,
-        );
-
-        if (route) {
-          acc.push(route);
-        }
-
-        return acc;
+          throw new Error("STUB");
       }, [] as RouteDefinition[]);
   }
 
@@ -71,7 +61,7 @@ export class PathsExplorer {
     );
     const path = isString(routePath)
       ? [addLeadingSlash(routePath)]
-      : routePath.map((p: string) => addLeadingSlash(p));
+      : routePath.map((p: string) => { throw new Error("STUB"); });
 
     return {
       path,

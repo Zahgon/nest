@@ -68,23 +68,7 @@ export class ServerGrpc extends Server<never, never> {
   }
 
   constructor(private readonly options: Readonly<GrpcOptions>['options']) {
-    super();
-    this.url = this.getOptionsProp(options, 'url') || GRPC_DEFAULT_URL;
-
-    const protoLoader =
-      this.getOptionsProp(options, 'protoLoader') || GRPC_DEFAULT_PROTO_LOADER;
-
-    grpcPackage = this.loadPackage('@grpc/grpc-js', ServerGrpc.name, () =>
-      require('@grpc/grpc-js'),
-    );
-    grpcProtoLoaderPackage = this.loadPackage(
-      protoLoader,
-      ServerGrpc.name,
-      () =>
-        protoLoader === GRPC_DEFAULT_PROTO_LOADER
-          ? require('@grpc/proto-loader')
-          : require(protoLoader),
-    );
+      throw new Error("STUB");
   }
 
   public async listen(
@@ -296,41 +280,18 @@ export class ServerGrpc extends Server<never, never> {
 
   public createUnaryServiceMethod(methodHandler: Function): Function {
     return async (call: GrpcCall, callback: Function) => {
-      return this.onProcessingStartHook(
-        this.transportId,
-        { ...call, operationId: methodHandler.name } as any,
-        async () => {
-          const handler = methodHandler(call.request, call.metadata, call);
-          this.transformToObservable(await handler).subscribe({
-            next: async data => callback(null, await data),
-            error: (err: any) => callback(err),
-            complete: () => {
-              this.onProcessingEndHook?.(this.transportId, call.request);
-            },
-          });
-        },
-      );
+        throw new Error("STUB");
     };
   }
 
   public createStreamServiceMethod(methodHandler: Function): Function {
     return async (call: GrpcCall, callback: Function) => {
-      return this.onProcessingStartHook(
-        this.transportId,
-        { ...call, operationId: methodHandler.name } as any,
-        async () => {
-          const handler = methodHandler(call.request, call.metadata, call);
-          const result$ = this.transformToObservable(await handler);
-          await this.writeObservableToGrpc(result$, call);
-
-          this.onProcessingEndHook?.(this.transportId, call.request);
-        },
-      );
+        throw new Error("STUB");
     };
   }
 
   public unwrap<T>(): T {
-    throw new Error('Method is not supported for gRPC transport');
+      throw new Error("STUB");
   }
 
   public on<
@@ -357,94 +318,7 @@ export class ServerGrpc extends Server<never, never> {
     // This promise should **not** reject, as we're handling errors in the observable for the Call
     // the promise is only needed to signal when writing/draining has been completed
     return new Promise((resolve, _doNotUse) => {
-      const valuesWaitingToBeDrained: T[] = [];
-      let shouldErrorAfterDraining = false;
-      let error: any;
-      let shouldResolveAfterDraining = false;
-      let writing = true;
-
-      // Used to manage finalization
-      const subscription = new Subscription();
-
-      // If the call is cancelled, unsubscribe from the source
-      const cancelHandler = () => {
-        subscription.unsubscribe();
-        // Calls that are cancelled by the client should be successfully resolved here
-        resolve();
-      };
-      call.on(CANCELLED_EVENT, cancelHandler);
-      subscription.add(() => call.off(CANCELLED_EVENT, cancelHandler));
-
-      // In all cases, when we finalize, end the writable stream
-      // being careful that errors and writes must be emitted _before_ this call is ended
-      subscription.add(() => call.end());
-
-      const drain = () => {
-        writing = true;
-        while (valuesWaitingToBeDrained.length > 0) {
-          const value = valuesWaitingToBeDrained.shift();
-          if (writing) {
-            // The first time `call.write` returns false, we need to stop.
-            // It wrote the value, but it won't write anything else.
-            writing = call.write(value);
-            if (!writing) {
-              // We can't write anymore so we need to wait for the drain event
-              return;
-            }
-          }
-        }
-
-        if (shouldResolveAfterDraining) {
-          subscription.unsubscribe();
-          resolve();
-        } else if (shouldErrorAfterDraining) {
-          call.emit('error', error);
-          subscription.unsubscribe();
-          resolve();
-        }
-      };
-
-      call.on('drain', drain);
-      subscription.add(() => call.off('drain', drain));
-
-      subscription.add(
-        source.subscribe({
-          next(value) {
-            if (writing) {
-              writing = call.write(value);
-            } else {
-              // If we can't write, that's because we need to
-              // wait for the drain event before we can write again
-              // buffer the value and wait for the drain event
-              valuesWaitingToBeDrained.push(value);
-            }
-          },
-          error(err) {
-            if (valuesWaitingToBeDrained.length === 0) {
-              // We're not waiting for a drain event, so we can just
-              // reject and teardown.
-              call.emit('error', err);
-              subscription.unsubscribe();
-              resolve();
-            } else {
-              // We're waiting for a drain event, record the
-              // error so it can be handled after everything is drained.
-              shouldErrorAfterDraining = true;
-              error = err;
-            }
-          },
-          complete() {
-            if (valuesWaitingToBeDrained.length === 0) {
-              // We're not waiting for a drain event, so we can just
-              // resolve and teardown.
-              subscription.unsubscribe();
-              resolve();
-            } else {
-              shouldResolveAfterDraining = true;
-            }
-          },
-        }),
-      );
+        throw new Error("STUB");
     });
   }
 
@@ -456,62 +330,7 @@ export class ServerGrpc extends Server<never, never> {
       call: GrpcCall,
       callback: (err: unknown, value: unknown) => void,
     ) => {
-      return this.onProcessingStartHook(
-        this.transportId,
-        { ...call, operationId: methodHandler.name } as any,
-        async () => {
-          // Needs to be a Proxy in order to buffer messages that come before handler is executed
-          // This could happen if handler has any async guards or interceptors registered that would delay
-          // the execution.
-          const { subject, next, error, complete, cleanup } =
-            this.bufferUntilDrained();
-          call.on('data', (m: any) => next(m));
-          call.on('error', (e: any) => {
-            // Check if error means that stream ended on other end
-            const isCancelledError = String(e)
-              .toLowerCase()
-              .indexOf('cancelled');
-
-            if (isCancelledError !== -1) {
-              call.end();
-              return;
-            }
-            // If another error then just pass it along
-            error(e);
-          });
-          call.on('end', () => {
-            complete();
-            cleanup();
-
-            this.onProcessingEndHook?.(this.transportId, call.request);
-          });
-
-          const handler = methodHandler(
-            subject.asObservable(),
-            call.metadata,
-            call,
-          );
-          const res = this.transformToObservable(await handler);
-          if (isResponseStream) {
-            await this.writeObservableToGrpc(res, call);
-          } else {
-            const response = await lastValueFrom(
-              res.pipe(
-                takeUntil(fromEvent(call as any, CANCELLED_EVENT)),
-                catchError(err => {
-                  callback(err, null);
-                  return EMPTY;
-                }),
-                defaultIfEmpty(undefined),
-              ),
-            );
-
-            if (!isUndefined(response)) {
-              callback(null, response);
-            }
-          }
-        },
-      );
+        throw new Error("STUB");
     };
   }
 
@@ -523,25 +342,7 @@ export class ServerGrpc extends Server<never, never> {
       call: GrpcCall,
       callback: (err: unknown, value: unknown) => void,
     ) => {
-      return this.onProcessingStartHook(
-        this.transportId,
-        { ...call, operationId: methodHandler.name } as any,
-        async () => {
-          let handlerStream: Observable<any>;
-          if (isResponseStream) {
-            handlerStream = this.transformToObservable(
-              await methodHandler(call),
-            );
-          } else {
-            handlerStream = this.transformToObservable(
-              await methodHandler(call, callback),
-            );
-          }
-          await lastValueFrom(handlerStream).finally(() => {
-            this.onProcessingEndHook?.(this.transportId, call.request);
-          });
-        },
-      );
+        throw new Error("STUB");
     };
   }
 
@@ -550,10 +351,7 @@ export class ServerGrpc extends Server<never, never> {
       const graceful = this.getOptionsProp(this.options, 'gracefulShutdown');
       if (graceful) {
         await new Promise<void>((resolve, reject) => {
-          this.grpcClient.tryShutdown((error: Error) => {
-            if (error) reject(error);
-            else resolve();
-          });
+            throw new Error("STUB");
         });
       } else {
         this.grpcClient.forceShutdown();
@@ -608,12 +406,7 @@ export class ServerGrpc extends Server<never, never> {
     const credentials = this.getOptionsProp(this.options, 'credentials');
 
     await new Promise((resolve, reject) => {
-      server.bindAsync(
-        this.url,
-        credentials || grpcPackage.ServerCredentials.createInsecure(),
-        (error: Error | null, port: number) =>
-          error ? reject(error) : resolve(port),
-      );
+        throw new Error("STUB");
     });
 
     return server;
@@ -740,17 +533,7 @@ export class ServerGrpc extends Server<never, never> {
     let hasDrained = false;
 
     function drainBuffer(this: DrainableSubject<T>) {
-      if (hasDrained || !replayBuffer) {
-        return;
-      }
-      hasDrained = true;
-
-      // Replay buffered values to the new subscriber
-      setImmediate(() => {
-        const subcription = replayBuffer!.subscribe(subject);
-        subcription.unsubscribe();
-        replayBuffer = null;
-      });
+        throw new Error("STUB");
     }
 
     return {
@@ -758,14 +541,7 @@ export class ServerGrpc extends Server<never, never> {
         get(target, prop, receiver) {
           if (prop === 'asObservable') {
             return () => {
-              const stream = subject.asObservable();
-
-              // "drainBuffer" will be called before the evaluation of the handler
-              // but after any enhancers have been applied (e.g., `interceptors`)
-              Object.defineProperty(stream, drainBuffer.name, {
-                value: drainBuffer,
-              });
-              return stream;
+                throw new Error("STUB");
             };
           }
           if (hasDrained) {
@@ -775,32 +551,16 @@ export class ServerGrpc extends Server<never, never> {
         },
       }),
       next: (value: T) => {
-        if (!hasDrained) {
-          replayBuffer!.next(value);
-        }
-        subject.next(value);
+          throw new Error("STUB");
       },
       error: (err: any) => {
-        if (!hasDrained) {
-          replayBuffer!.error(err);
-        }
-        subject.error(err);
+          throw new Error("STUB");
       },
       complete: () => {
-        if (!hasDrained) {
-          replayBuffer!.complete();
-          // Replay buffer is no longer needed
-          // Return early to allow subject to complete later, after the replay buffer
-          // has been drained
-          return;
-        }
-        subject.complete();
+          throw new Error("STUB");
       },
       cleanup: () => {
-        if (hasDrained) {
-          return;
-        }
-        replayBuffer = null;
+          throw new Error("STUB");
       },
     };
   }

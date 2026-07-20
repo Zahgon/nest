@@ -72,138 +72,99 @@ export class Module {
     private readonly _metatype: Type<any>,
     private readonly container: NestContainer,
   ) {
-    this.addCoreProviders();
-    this._id = this.generateUuid();
+      throw new Error("STUB");
   }
 
   get id(): string {
-    return this._id;
+      throw new Error("STUB");
   }
 
   get token(): string {
-    return this._token;
+      throw new Error("STUB");
   }
 
   set token(token: string) {
-    this._token = token;
+      throw new Error("STUB");
   }
 
   get name() {
-    return this.metatype.name;
+      throw new Error("STUB");
   }
 
   get isGlobal() {
-    return this._isGlobal;
+      throw new Error("STUB");
   }
 
   set isGlobal(global: boolean) {
-    this._isGlobal = global;
+      throw new Error("STUB");
   }
 
   get initOnPreview() {
-    return this._initOnPreview;
+      throw new Error("STUB");
   }
 
   set initOnPreview(initOnPreview: boolean) {
-    this._initOnPreview = initOnPreview;
+      throw new Error("STUB");
   }
 
   get providers(): Map<InjectionToken, InstanceWrapper<Injectable>> {
-    return this._providers;
+      throw new Error("STUB");
   }
 
   get middlewares(): Map<InjectionToken, InstanceWrapper<Injectable>> {
-    return this._middlewares;
+      throw new Error("STUB");
   }
 
   get imports(): Set<Module> {
-    return this._imports;
+      throw new Error("STUB");
   }
 
   get injectables(): Map<InjectionToken, InstanceWrapper<Injectable>> {
-    return this._injectables;
+      throw new Error("STUB");
   }
 
   get controllers(): Map<InjectionToken, InstanceWrapper<Controller>> {
-    return this._controllers;
+      throw new Error("STUB");
   }
 
   get entryProviders(): Array<InstanceWrapper<Injectable>> {
-    return Array.from(this._entryProviderKeys).map(
-      token => this.providers.get(token)!,
-    );
+      throw new Error("STUB");
   }
 
   get exports(): Set<InjectionToken> {
-    return this._exports;
+      throw new Error("STUB");
   }
 
   get instance(): NestModule {
-    if (!this._providers.has(this._metatype)) {
-      throw new RuntimeException();
-    }
-    const moduleRef = this._providers.get(this._metatype);
-    return moduleRef!.instance as NestModule;
+      throw new Error("STUB");
   }
 
   get metatype(): Type<any> {
-    return this._metatype;
+      throw new Error("STUB");
   }
 
   get distance(): number {
-    return this._distance;
+      throw new Error("STUB");
   }
 
   set distance(value: number) {
-    this._distance = value;
+      throw new Error("STUB");
   }
 
   public addCoreProviders() {
-    this.addModuleAsProvider();
-    this.addModuleRef();
-    this.addApplicationConfig();
+      throw new Error("STUB");
   }
 
   public addModuleRef() {
-    const moduleRef = this.createModuleReferenceType();
-    this._providers.set(
-      ModuleRef,
-      new InstanceWrapper({
-        token: ModuleRef,
-        name: ModuleRef.name,
-        metatype: ModuleRef as any,
-        isResolved: true,
-        instance: new moduleRef(),
-        host: this,
-      }),
-    );
+      throw new Error("STUB");
   }
 
   public addModuleAsProvider() {
-    this._providers.set(
-      this._metatype,
-      new InstanceWrapper({
-        token: this._metatype,
-        name: this._metatype.name,
-        metatype: this._metatype,
-        isResolved: false,
-        instance: null,
-        host: this,
-      }),
-    );
+      throw new Error("STUB");
   }
 
   public addApplicationConfig() {
-    this._providers.set(
-      ApplicationConfig,
-      new InstanceWrapper({
-        token: ApplicationConfig,
-        name: ApplicationConfig.name,
-        isResolved: true,
-        instance: this.container.applicationConfig,
-        host: this,
-      }),
-    );
+      throw new Error("STUB");
   }
 
   public addInjectable<T extends Injectable>(
@@ -443,7 +404,7 @@ export class Module {
       new InstanceWrapper({
         token: providerToken,
         name: (providerToken as Function)?.name || providerToken,
-        metatype: (instance => instance) as any,
+        metatype: (instance => { throw new Error("STUB"); }) as any,
         instance: null,
         isResolved: false,
         inject: [useExisting],
@@ -490,9 +451,9 @@ export class Module {
       return token;
     }
     const imports = iterate(this._imports.values())
-      .filter(item => !!item)
-      .map(({ metatype }) => metatype)
-      .filter(metatype => !!metatype)
+      .filter(item => { throw new Error("STUB"); })
+      .map(({ metatype }) => { throw new Error("STUB"); })
+      .filter(metatype => { throw new Error("STUB"); })
       .toArray();
 
     if (!imports.includes(token as Type<unknown>)) {
@@ -564,93 +525,35 @@ export class Module {
   }
 
   public getProviderById<T = any>(id: string): InstanceWrapper<T> | undefined {
-    return Array.from(this._providers.values()).find(
-      item => item.id === id,
-    ) as InstanceWrapper<T>;
+      throw new Error("STUB");
   }
 
   public getControllerById<T = any>(
     id: string,
   ): InstanceWrapper<T> | undefined {
-    return Array.from(this._controllers.values()).find(
-      item => item.id === id,
-    ) as InstanceWrapper<T>;
+      throw new Error("STUB");
   }
 
   public getInjectableById<T = any>(
     id: string,
   ): InstanceWrapper<T> | undefined {
-    return Array.from(this._injectables.values()).find(
-      item => item.id === id,
-    ) as InstanceWrapper<T>;
+      throw new Error("STUB");
   }
 
   public getMiddlewareById<T = any>(
     id: string,
   ): InstanceWrapper<T> | undefined {
-    return Array.from(this._middlewares.values()).find(
-      item => item.id === id,
-    ) as InstanceWrapper<T>;
+      throw new Error("STUB");
   }
 
   public getNonAliasProviders(): Array<
     [InjectionToken, InstanceWrapper<Injectable>]
   > {
-    return [...this._providers].filter(([_, wrapper]) => !wrapper.isAlias);
+    return [...this._providers].filter(([_, wrapper]) => { throw new Error("STUB"); });
   }
 
   public createModuleReferenceType(): Type<ModuleRef> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
-    return class extends ModuleRef {
-      constructor() {
-        super(self.container);
-      }
-
-      public get<TInput = any, TResult = TInput>(
-        typeOrToken: Type<TInput> | string | symbol,
-        options: ModuleRefGetOrResolveOpts = {},
-      ): TResult | Array<TResult> {
-        options.strict ??= true;
-        options.each ??= false;
-
-        return this.find<TInput, TResult>(
-          typeOrToken,
-          options.strict
-            ? {
-                moduleId: self.id,
-                each: options.each,
-              }
-            : options,
-        );
-      }
-
-      public resolve<TInput = any, TResult = TInput>(
-        typeOrToken: Type<TInput> | string | symbol,
-        contextId = createContextId(),
-        options: ModuleRefGetOrResolveOpts = {},
-      ): Promise<TResult | Array<TResult>> {
-        options.strict ??= true;
-        options.each ??= false;
-
-        return this.resolvePerContext<TInput, TResult>(
-          typeOrToken,
-          self,
-          contextId,
-          options,
-        );
-      }
-
-      public async create<T = any>(
-        type: Type<T>,
-        contextId?: ContextId,
-      ): Promise<T> {
-        if (!(type && isFunction(type) && type.prototype)) {
-          throw new InvalidClassException(type);
-        }
-        return this.instantiateClass<T>(type, self, contextId);
-      }
-    };
+      throw new Error("STUB");
   }
 
   private isEntryProvider(metatype: InjectionToken): boolean {
@@ -660,14 +563,7 @@ export class Module {
   }
 
   private generateUuid(): string {
-    const prefix = 'M_';
-    const key = this.token
-      ? this.token.includes(':')
-        ? this.token.split(':')[1]
-        : this.token
-      : this.name;
-
-    return key ? UuidFactory.get(`${prefix}_${key}`) : randomStringGenerator();
+      throw new Error("STUB");
   }
 
   private isTransientProvider(provider: Type<any>): boolean {

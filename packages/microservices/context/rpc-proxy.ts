@@ -9,18 +9,7 @@ export class RpcProxy {
     exceptionsHandler: RpcExceptionsHandler,
   ): (...args: unknown[]) => Promise<Observable<unknown>> {
     return async (...args: unknown[]) => {
-      try {
-        const result = await targetCallback(...args);
-        return !isObservable(result)
-          ? result
-          : result.pipe(
-              catchError(error =>
-                this.handleError(exceptionsHandler, args, error),
-              ),
-            );
-      } catch (error) {
-        return this.handleError(exceptionsHandler, args, error);
-      }
+        throw new Error("STUB");
     };
   }
 

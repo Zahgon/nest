@@ -28,7 +28,7 @@ export class ApplicationConfig {
   constructor(private ioAdapter: WebSocketAdapter | null = null) {}
 
   public setGlobalPrefix(prefix: string) {
-    this.globalPrefix = prefix;
+      throw new Error("STUB");
   }
 
   public getGlobalPrefix() {
@@ -38,7 +38,7 @@ export class ApplicationConfig {
   public setGlobalPrefixOptions(
     options: GlobalPrefixOptions<ExcludeRouteMetadata>,
   ) {
-    this.globalPrefixOptions = options;
+      throw new Error("STUB");
   }
 
   public getGlobalPrefixOptions(): GlobalPrefixOptions<ExcludeRouteMetadata> {
@@ -58,7 +58,7 @@ export class ApplicationConfig {
   }
 
   public useGlobalPipes(...pipes: PipeTransform<any>[]) {
-    this.globalPipes = this.globalPipes.concat(pipes);
+      throw new Error("STUB");
   }
 
   public getGlobalFilters(): ExceptionFilter[] {
@@ -70,7 +70,7 @@ export class ApplicationConfig {
   }
 
   public useGlobalFilters(...filters: ExceptionFilter[]) {
-    this.globalFilters = this.globalFilters.concat(filters);
+      throw new Error("STUB");
   }
 
   public getGlobalPipes(): PipeTransform<any>[] {
@@ -86,7 +86,7 @@ export class ApplicationConfig {
   }
 
   public useGlobalInterceptors(...interceptors: NestInterceptor[]) {
-    this.globalInterceptors = this.globalInterceptors.concat(interceptors);
+      throw new Error("STUB");
   }
 
   public getGlobalGuards(): CanActivate[] {
@@ -98,7 +98,7 @@ export class ApplicationConfig {
   }
 
   public useGlobalGuards(...guards: CanActivate[]) {
-    this.globalGuards = this.globalGuards.concat(guards);
+      throw new Error("STUB");
   }
 
   public addGlobalRequestInterceptor(
@@ -136,12 +136,7 @@ export class ApplicationConfig {
   }
 
   public enableVersioning(options: VersioningOptions): void {
-    if (Array.isArray(options.defaultVersion)) {
-      // Drop duplicated versions
-      options.defaultVersion = Array.from(new Set(options.defaultVersion));
-    }
-
-    this.versioningOptions = options;
+      throw new Error("STUB");
   }
 
   public getVersioning(): VersioningOptions | undefined {

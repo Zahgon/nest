@@ -36,11 +36,7 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
   }>();
 
   constructor(protected readonly options: Required<NatsOptions>['options']) {
-    super();
-    natsPackage = loadPackage('nats', ClientNats.name, () => require('nats'));
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async close() {
@@ -57,8 +53,7 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
     }
     this.connectionPromise = this.createClient();
     this.natsClient = await this.connectionPromise.catch(err => {
-      this.connectionPromise = null;
-      throw err;
+        throw new Error("STUB");
     });
 
     this._status$.next(NatsStatus.CONNECTED);
@@ -93,7 +88,9 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
             'Error: Connection lost. Trying to reconnect...',
           );
           // Prevent unhandled promise rejection
-          this.connectionPromise.catch(() => {});
+          this.connectionPromise.catch(() => {
+              throw new Error("STUB");
+          });
 
           this.logger.error(
             `NatsError: type: "${status.type}", data: "${data}".`,
@@ -155,12 +152,7 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.natsClient) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return this.natsClient as T;
+      throw new Error("STUB");
   }
 
   public createSubscriptionHandler(
@@ -168,36 +160,7 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
     callback: (packet: WritePacket) => any,
   ) {
     return async (error: string | Error | undefined, natsMsg: NatsMsg) => {
-      if (error) {
-        return callback({
-          err: error,
-        });
-      }
-      const rawPacket = natsMsg.data;
-      if (rawPacket?.length === 0) {
-        return callback({
-          err: new EmptyResponseException(
-            this.normalizePattern(packet.pattern),
-          ),
-          isDisposed: true,
-        });
-      }
-      const message = await this.deserializer.deserialize(rawPacket);
-      if (message.id && message.id !== packet.id) {
-        return undefined;
-      }
-      const { err, response, isDisposed } = message;
-      if (isDisposed || err) {
-        return callback({
-          err,
-          response,
-          isDisposed: true,
-        });
-      }
-      callback({
-        err,
-        response,
-      });
+        throw new Error("STUB");
     };
   }
 
@@ -226,10 +189,12 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
         headers,
       });
 
-      return () => subscription.unsubscribe();
+      return () => { throw new Error("STUB"); };
     } catch (err) {
       callback({ err });
-      return () => {};
+      return () => {
+          throw new Error("STUB");
+      };
     }
   }
 
@@ -239,24 +204,16 @@ export class ClientNats extends ClientProxy<NatsEvents, NatsStatus> {
     const headers = this.mergeHeaders(serializedPacket.headers);
 
     return new Promise<void>((resolve, reject) => {
-      try {
-        this.natsClient!.publish(pattern, serializedPacket.data, {
-          headers,
-        });
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
+        throw new Error("STUB");
     });
   }
 
   protected initializeSerializer(options: NatsOptions['options']) {
-    this.serializer = options?.serializer ?? new NatsRecordSerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: NatsOptions['options']) {
-    this.deserializer =
-      options?.deserializer ?? new NatsResponseJSONDeserializer();
+      throw new Error("STUB");
   }
 
   protected mergeHeaders<THeaders = any>(requestHeaders?: THeaders) {

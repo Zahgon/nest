@@ -65,93 +65,17 @@ export const UNKNOWN_DEPENDENCIES_MESSAGE = (
   unknownDependencyContext: InjectorDependencyContext,
   moduleRef: Module | undefined,
 ) => {
-  const { index, name, dependencies, key } = unknownDependencyContext;
-  const moduleName = getModuleName(moduleRef);
-  const dependencyName = getDependencyName(name, 'dependency');
-
-  const isImportTypeIssue =
-    !isNil(index) &&
-    dependencies &&
-    (dependencies[index] === undefined ||
-      dependencies[index] === Object ||
-      (typeof dependencies[index] === 'function' &&
-        (dependencies[index] as any).name === 'Object'));
-
-  let potentialSolutions: string;
-
-  if (isImportTypeIssue) {
-    potentialSolutions = `\n
-Potential solutions:
-- The dependency at index [${index}] appears to be undefined at runtime
-- This commonly occurs when using 'import type' instead of 'import' for injectable classes
-- Check your imports and change:
-  ❌ import type { SomeService } from './some.service';
-  ✅ import { SomeService } from './some.service';
-- Ensure the imported class is decorated with @Injectable() or is a valid provider
-- If using dynamic imports, ensure the class is available at runtime, not just for type checking
-
-For more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors`;
-  } else {
-    potentialSolutions =
-      // If module's name is well defined
-      moduleName !== 'current'
-        ? `\n
-Potential solutions:
-- Is ${moduleName} a valid NestJS module?
-- If ${dependencyName} is a provider, is it part of the current ${moduleName}?
-- If ${dependencyName} is exported from a separate @Module, is that module imported within ${moduleName}?
-  @Module({
-    imports: [ /* the Module containing ${dependencyName} */ ]
-  })
-
-For more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors`
-        : `\n
-Potential solutions:
-- If ${dependencyName} is a provider, is it part of the current Module?
-- If ${dependencyName} is exported from a separate @Module, is that module imported within Module?
-  @Module({
-    imports: [ /* the Module containing ${dependencyName} */ ]
-  })
-
-For more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors`;
-  }
-
-  let message = `Nest can't resolve dependencies of the ${type.toString()}`;
-
-  if (isNil(index)) {
-    message += `. Please make sure that the "${key!.toString()}" property is available in the current context.${potentialSolutions}`;
-    return message;
-  }
-  const dependenciesName = (dependencies || []).map(dependencyName =>
-    getDependencyName(dependencyName, '+', false),
-  );
-  dependenciesName[index] = '?';
-
-  const tokenFragment =
-    !isImportTypeIssue && name !== undefined ? ` ${dependencyName}` : '';
-  const contextLabel = isImportTypeIssue ? 'current' : moduleName;
-
-  message += ` (`;
-  message += dependenciesName.join(', ');
-  message += `). Please make sure that the argument${tokenFragment} at index [${index}]`;
-  message += ` is available in the ${contextLabel} module.`;
-  message += potentialSolutions;
-
-  return message;
+    throw new Error("STUB");
 };
 
 export const INVALID_MIDDLEWARE_MESSAGE = (
   text: TemplateStringsArray,
   name: string,
-) => `The middleware doesn't provide the 'use' method (${name})`;
+) => { throw new Error("STUB"); };
 
 export const UNDEFINED_FORWARDREF_MESSAGE = (
   scope: Type<any>[],
-) => `Nest cannot create the module instance. Often, this is because of a circular dependency between modules. Use forwardRef() to avoid it.
-
-(Read more: https://docs.nestjs.com/fundamentals/circular-dependency)
-Scope [${stringifyScope(scope)}]
-`;
+) => { throw new Error("STUB"); };
 
 export const INVALID_MODULE_MESSAGE = (
   parentModule: any,
@@ -159,26 +83,7 @@ export const INVALID_MODULE_MESSAGE = (
   scope: any[],
   receivedValue: unknown,
 ) => {
-  const parentModuleName = parentModule?.name || 'module';
-
-  let formattedValue: string;
-  let receivedType: string;
-  if (receivedValue === null) {
-    formattedValue = 'null';
-    receivedType = 'null';
-  } else if (typeof receivedValue === 'string') {
-    formattedValue = `"${receivedValue}"`;
-    receivedType = 'string';
-  } else {
-    formattedValue = String(receivedValue);
-    receivedType = typeof receivedValue;
-  }
-
-  return `Nest cannot create the ${parentModuleName} instance.
-Received an unexpected value at index [${index}] of the ${parentModuleName} "imports" array.
-The received value \`${formattedValue}\` is of type "${receivedType}".
-
-Scope [${stringifyScope(scope)}]`;
+    throw new Error("STUB");
 };
 
 export const USING_INVALID_CLASS_AS_A_MODULE_MESSAGE = (
@@ -186,25 +91,7 @@ export const USING_INVALID_CLASS_AS_A_MODULE_MESSAGE = (
   scope: any[],
   classKind: 'provider' | 'controller' | 'filter',
 ) => {
-  const metatypeNameQuote = `"${getInstanceName(metatypeUsedAsAModule)}"`;
-
-  let hint: string;
-  switch (classKind) {
-    case 'controller':
-      hint = `${metatypeNameQuote} is decorated with @Controller() and cannot appear in the "imports" array of a module. Please move ${metatypeNameQuote} to the "controllers" array of the importing module instead.`;
-      break;
-    case 'provider':
-      hint = `${metatypeNameQuote} is decorated with @Injectable() and cannot appear in the "imports" array of a module. Please move ${metatypeNameQuote} to the "providers" array of the importing module instead.`;
-      break;
-    case 'filter':
-      hint = `${metatypeNameQuote} is decorated with @Catch() and cannot appear in the "imports" array of a module. Please move ${metatypeNameQuote} to the "providers" array (using the APP_FILTER token to apply it globally) or apply it via @UseFilters() instead.`;
-      break;
-  }
-
-  return `${hint}
-
-Scope [${stringifyScope(scope)}]
-`;
+    throw new Error("STUB");
 };
 
 export const UNDEFINED_MODULE_MESSAGE = (
@@ -212,49 +99,27 @@ export const UNDEFINED_MODULE_MESSAGE = (
   index: number,
   scope: any[],
 ) => {
-  const parentModuleName = parentModule?.name || 'module';
-
-  return `Nest cannot create the ${parentModuleName} instance.
-The module at index [${index}] of the ${parentModuleName} "imports" array is undefined.
-
-Potential causes:
-- A circular dependency between modules. Use forwardRef() to avoid it. Read more: https://docs.nestjs.com/fundamentals/circular-dependency
-- The module at index [${index}] is of type "undefined". Check your import statements and the type of the module.
-
-Scope [${stringifyScope(scope)}]`;
+    throw new Error("STUB");
 };
 
 export const UNKNOWN_EXPORT_MESSAGE = (
   token: string | symbol = 'item',
   module: string,
 ) => {
-  token = isSymbol(token) ? token.toString() : token;
-
-  return `Nest cannot export a provider/module that is not a part of the currently processed module (${module}). Please verify whether the exported ${token} is available in this particular context.
-
-Possible Solutions:
-- Is ${token} part of the relevant providers/imports within ${module}?
-
-For more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors
-`;
+    throw new Error("STUB");
 };
 
 export const INVALID_CLASS_MESSAGE = (text: TemplateStringsArray, value: any) =>
-  `ModuleRef cannot instantiate class (${value} is not constructable).`;
+  { throw new Error("STUB"); };
 
 export const INVALID_CLASS_SCOPE_MESSAGE = (
   text: TemplateStringsArray,
   name: string | undefined,
 ) =>
-  `${
-    name || 'This class'
-  } is marked as a scoped provider. Request and transient-scoped providers can't be used in combination with "get()" method. Please, use "resolve()" instead.`;
+  { throw new Error("STUB"); };
 
 export const UNKNOWN_REQUEST_MAPPING = (metatype: Type) => {
-  const className = metatype.name;
-  return className
-    ? `An invalid controller has been detected. "${className}" does not have the @Controller() decorator but it is being listed in the "controllers" array of some module.`
-    : `An invalid controller has been detected. Perhaps, one of your controllers is missing the @Controller() decorator.`;
+    throw new Error("STUB");
 };
 
 export const INVALID_MIDDLEWARE_CONFIGURATION = `An invalid middleware configuration has been passed inside the module 'configure()' method.`;

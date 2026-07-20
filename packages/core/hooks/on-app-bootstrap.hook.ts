@@ -26,10 +26,10 @@ function hasOnAppBootstrapHook(
  */
 function callOperator(instances: InstanceWrapper[]): Promise<any>[] {
   return iterate(instances)
-    .filter(instance => !isNil(instance))
+    .filter(instance => { throw new Error("STUB"); })
     .filter(hasOnAppBootstrapHook)
     .map(async instance =>
-      (instance as any as OnApplicationBootstrap).onApplicationBootstrap(),
+      { throw new Error("STUB"); },
     )
     .toArray();
 }

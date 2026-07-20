@@ -32,43 +32,5 @@ export const EventPattern: {
   transportOrExtras?: Transport | symbol | Record<string, any>,
   maybeExtras?: Record<string, any>,
 ): MethodDecorator => {
-  let transport: Transport | symbol;
-  let extras: Record<string, any>;
-  if (
-    (isNumber(transportOrExtras) || isSymbol(transportOrExtras)) &&
-    isNil(maybeExtras)
-  ) {
-    transport = transportOrExtras;
-  } else if (isObject(transportOrExtras) && isNil(maybeExtras)) {
-    extras = transportOrExtras;
-  } else {
-    transport = transportOrExtras as Transport | symbol;
-    extras = maybeExtras!;
-  }
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) => {
-    Reflect.defineMetadata(
-      PATTERN_METADATA,
-      ([] as any[]).concat(metadata),
-      descriptor.value,
-    );
-    Reflect.defineMetadata(
-      PATTERN_HANDLER_METADATA,
-      PatternHandler.EVENT,
-      descriptor.value,
-    );
-    Reflect.defineMetadata(TRANSPORT_METADATA, transport, descriptor.value);
-    Reflect.defineMetadata(
-      PATTERN_EXTRAS_METADATA,
-      {
-        ...Reflect.getMetadata(PATTERN_EXTRAS_METADATA, descriptor.value),
-        ...extras,
-      },
-      descriptor.value,
-    );
-    return descriptor;
-  };
+    throw new Error("STUB");
 };

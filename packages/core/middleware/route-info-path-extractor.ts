@@ -36,10 +36,7 @@ export class RouteInfoPathExtractor {
       const entries =
         versionPaths.length > 0
           ? versionPaths
-              .map(versionPath => [
-                this.prefixPath + versionPath + '$',
-                this.prefixPath + versionPath + addLeadingSlash(path),
-              ])
+              .map(versionPath => { throw new Error("STUB"); })
               .flat()
           : this.prefixPath
             ? [this.prefixPath + '$', this.prefixPath + addLeadingSlash(path)]
@@ -50,9 +47,7 @@ export class RouteInfoPathExtractor {
             ...entries,
             ...this.excludedGlobalPrefixRoutes
               .map(route =>
-                Array.isArray(versionPaths) && versionPaths.length > 0
-                  ? versionPaths.map(v => v + addLeadingSlash(route.path))
-                  : addLeadingSlash(route.path),
+                { throw new Error("STUB"); },
               )
               .flat(),
           ]
@@ -96,7 +91,7 @@ export class RouteInfoPathExtractor {
       }
 
       return versionPaths.map(
-        versionPath => versionPath + addLeadingSlash(path),
+        versionPath => { throw new Error("STUB"); },
       );
     }
 
@@ -104,7 +99,7 @@ export class RouteInfoPathExtractor {
       return [this.prefixPath + addLeadingSlash(path)];
     }
     return versionPaths.map(
-      versionPath => this.prefixPath + versionPath + addLeadingSlash(path),
+      versionPath => { throw new Error("STUB"); },
     );
   }
 
@@ -118,7 +113,7 @@ export class RouteInfoPathExtractor {
 
     if (Array.isArray(versionValue)) {
       return versionValue.map(version =>
-        addLeadingSlash(versionPrefix + version.toString()),
+        { throw new Error("STUB"); },
       );
     }
     return [addLeadingSlash(versionPrefix + versionValue.toString())];

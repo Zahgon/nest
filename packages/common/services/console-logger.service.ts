@@ -151,25 +151,7 @@ export class ConsoleLogger implements LoggerService {
     @Optional()
     options?: ConsoleLoggerOptions,
   ) {
-    // eslint-disable-next-line prefer-const
-    let [context, opts] = isString(contextOrOptions)
-      ? [contextOrOptions, options]
-      : options
-        ? [undefined, options]
-        : [contextOrOptions?.context, contextOrOptions];
-
-    opts = opts ?? {};
-    opts.logLevels ??= DEFAULT_LOG_LEVELS;
-    opts.colors ??= opts.colors ?? (opts.json ? false : isColorAllowed());
-    opts.prefix ??= 'Nest';
-
-    this.options = opts;
-    this.inspectOptions = this.getInspectOptions();
-
-    if (context) {
-      this.context = context;
-      this.originalContext = context;
-    }
+      throw new Error("STUB");
   }
 
   /**
@@ -248,14 +230,7 @@ export class ConsoleLogger implements LoggerService {
   verbose(message: any, context?: string): void;
   verbose(message: any, ...optionalParams: [...any, string?]): void;
   verbose(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('verbose')) {
-      return;
-    }
-    const { messages, context } = this.getContextAndMessagesToPrint([
-      message,
-      ...optionalParams,
-    ]);
-    this.printMessages(messages, context, 'verbose');
+      throw new Error("STUB");
   }
 
   /**
@@ -265,14 +240,7 @@ export class ConsoleLogger implements LoggerService {
   fatal(message: any, context?: string): void;
   fatal(message: any, ...optionalParams: [...any, string?]): void;
   fatal(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('fatal')) {
-      return;
-    }
-    const { messages, context } = this.getContextAndMessagesToPrint([
-      message,
-      ...optionalParams,
-    ]);
-    this.printMessages(messages, context, 'fatal');
+      throw new Error("STUB");
   }
 
   /**
@@ -291,14 +259,14 @@ export class ConsoleLogger implements LoggerService {
    * @param context context
    */
   setContext(context: string) {
-    this.context = context;
+      throw new Error("STUB");
   }
 
   /**
    * Resets the logger context to the value that was passed in the constructor.
    */
   resetContext() {
-    this.context = this.originalContext;
+      throw new Error("STUB");
   }
 
   isLevelEnabled(level: LogLevel): boolean {
@@ -318,37 +286,7 @@ export class ConsoleLogger implements LoggerService {
     errorStack?: unknown,
   ) {
     messages.forEach(message => {
-      if (this.options.json) {
-        this.printAsJson(message, {
-          context,
-          logLevel,
-          writeStreamType,
-          errorStack,
-        });
-        return;
-      }
-      const pidMessage = this.formatPid(process.pid);
-      const contextMessage = this.formatContext(context);
-      const timestampDiff = this.updateAndGetTimestampDiff();
-      const formattedLogLevel = logLevel.toUpperCase().padStart(7, ' ');
-      const formattedMessage = this.formatMessage(
-        logLevel,
-        message,
-        pidMessage,
-        formattedLogLevel,
-        contextMessage,
-        timestampDiff,
-      );
-
-      if (this.options.forceConsole) {
-        if (writeStreamType === 'stderr') {
-          console.error(formattedMessage.trim());
-        } else {
-          console.log(formattedMessage.trim());
-        }
-      } else {
-        process[writeStreamType ?? 'stdout'].write(formattedMessage);
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -502,53 +440,11 @@ export class ConsoleLogger implements LoggerService {
   }
 
   protected getInspectOptions() {
-    let breakLength = this.options.breakLength;
-    if (typeof breakLength === 'undefined') {
-      breakLength = this.options.colors
-        ? this.options.compact
-          ? Infinity
-          : undefined
-        : this.options.compact === false
-          ? undefined
-          : Infinity; // default breakLength to Infinity if inline is not set and colors is false
-    }
-
-    const inspectOptions: InspectOptions = {
-      depth: this.options.depth ?? DEFAULT_DEPTH,
-      sorted: this.options.sorted,
-      showHidden: this.options.showHidden,
-      compact: this.options.compact ?? (this.options.json ? true : false),
-      colors: this.options.colors,
-      breakLength,
-    };
-
-    if (typeof this.options.maxArrayLength !== 'undefined') {
-      inspectOptions.maxArrayLength = this.options.maxArrayLength;
-    }
-    if (typeof this.options.maxStringLength !== 'undefined') {
-      inspectOptions.maxStringLength = this.options.maxStringLength;
-    }
-
-    return inspectOptions;
+      throw new Error("STUB");
   }
 
   protected stringifyReplacer(key: string, value: unknown) {
-    // Mimic util.inspect behavior for JSON logger with compact on and colors off
-    if (typeof value === 'bigint') {
-      return value.toString();
-    }
-    if (typeof value === 'symbol') {
-      return value.toString();
-    }
-
-    if (
-      value instanceof Map ||
-      value instanceof Set ||
-      value instanceof Error
-    ) {
-      return `${inspect(value, this.inspectOptions)}`;
-    }
-    return value;
+      throw new Error("STUB");
   }
 
   protected getContextAndMessagesToPrint(args: unknown[]) {

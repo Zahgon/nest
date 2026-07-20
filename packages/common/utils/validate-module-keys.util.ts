@@ -3,7 +3,7 @@ import { MODULE_METADATA as metadataConstants } from '../constants';
 export const INVALID_MODULE_CONFIG_MESSAGE = (
   text: TemplateStringsArray,
   property: string,
-) => `Invalid property '${property}' passed into the @Module() decorator.`;
+) => { throw new Error("STUB"); };
 
 const metadataKeys = [
   metadataConstants.IMPORTS,
@@ -14,10 +14,7 @@ const metadataKeys = [
 
 export function validateModuleKeys(keys: string[]) {
   const validateKey = (key: string) => {
-    if (metadataKeys.includes(key)) {
-      return;
-    }
-    throw new Error(INVALID_MODULE_CONFIG_MESSAGE`${key}`);
+      throw new Error("STUB");
   };
   keys.forEach(validateKey);
 }

@@ -17,13 +17,7 @@ export class RouterProxy {
       res: TResponse,
       next: () => void,
     ) => {
-      try {
-        await targetCallback(req, res, next);
-      } catch (e) {
-        const host = new ExecutionContextHost([req, res, next]);
-        exceptionsHandler.next(e, host);
-        return res;
-      }
+        throw new Error("STUB");
     };
   }
 
@@ -42,13 +36,7 @@ export class RouterProxy {
       res: TResponse,
       next: () => void,
     ) => {
-      try {
-        await targetCallback(err, req, res, next);
-      } catch (e) {
-        const host = new ExecutionContextHost([req, res, next]);
-        exceptionsHandler.next(e, host);
-        return res;
-      }
+        throw new Error("STUB");
     };
   }
 }

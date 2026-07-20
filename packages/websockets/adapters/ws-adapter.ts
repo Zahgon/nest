@@ -19,19 +19,15 @@ export abstract class AbstractWsAdapter<
   private _forceCloseConnections: boolean;
 
   public set forceCloseConnections(value: boolean) {
-    this._forceCloseConnections = value;
+      throw new Error("STUB");
   }
 
   public get forceCloseConnections(): boolean {
-    return this._forceCloseConnections;
+      throw new Error("STUB");
   }
 
   constructor(appOrHttpServer?: INestApplicationContext | object) {
-    if (appOrHttpServer && appOrHttpServer instanceof NestApplication) {
-      this.httpServer = appOrHttpServer.getUnderlyingHttpServer();
-    } else {
-      this.httpServer = appOrHttpServer;
-    }
+      throw new Error("STUB");
   }
 
   public bindClientConnect(server: TServer, callback: Function) {
@@ -39,12 +35,12 @@ export abstract class AbstractWsAdapter<
   }
 
   public bindClientDisconnect(client: TClient, callback: Function) {
-    client.on(DISCONNECT_EVENT, callback);
+      throw new Error("STUB");
   }
 
   public async close(server: TServer) {
     const isCallable = server && isFunction(server.close);
-    isCallable && (await new Promise(resolve => server.close(resolve)));
+    isCallable && (await new Promise(resolve => { throw new Error("STUB"); }));
   }
 
   public async dispose() {}

@@ -18,50 +18,7 @@ export class MetadataScanner {
     prototype: object | null,
     callback: (name: string) => R,
   ): R[] {
-    if (!prototype) {
-      return [];
-    }
-
-    const visitedNames = new Map<string, boolean>();
-    const result: R[] = [];
-
-    do {
-      for (const property of Object.getOwnPropertyNames(prototype)) {
-        if (visitedNames.has(property)) {
-          continue;
-        }
-
-        visitedNames.set(property, true);
-
-        // reason: https://github.com/nestjs/nest/pull/10821#issuecomment-1411916533
-        const descriptor = Object.getOwnPropertyDescriptor(
-          prototype,
-          property,
-        )!;
-
-        if (
-          descriptor.set ||
-          descriptor.get ||
-          isConstructor(property) ||
-          !isFunction(prototype[property])
-        ) {
-          continue;
-        }
-
-        const value = callback(property);
-
-        if (isNil(value)) {
-          continue;
-        }
-
-        result.push(value);
-      }
-    } while (
-      (prototype = Reflect.getPrototypeOf(prototype)) &&
-      prototype !== Object.prototype
-    );
-
-    return result;
+      throw new Error("STUB");
   }
 
   /**
@@ -72,7 +29,7 @@ export class MetadataScanner {
   public *getAllFilteredMethodNames(
     prototype: object,
   ): IterableIterator<string> {
-    yield* this.getAllMethodNames(prototype);
+      throw new Error("STUB");
   }
 
   public getAllMethodNames(prototype: object | null): string[] {

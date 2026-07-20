@@ -37,13 +37,6 @@ export class GoneException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Gone',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(objectOrError, description!, HttpStatus.GONE),
-      HttpStatus.GONE,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

@@ -38,13 +38,11 @@ export class RmqRecordBuilder<TData> {
   constructor(private data?: TData) {}
 
   public setOptions(options: RmqRecordOptions): this {
-    this.options = options;
-    return this;
+      throw new Error("STUB");
   }
 
   public setData(data: TData): this {
-    this.data = data;
-    return this;
+      throw new Error("STUB");
   }
 
   public build(): RmqRecord {

@@ -35,7 +35,7 @@ export class DiscoverableMetaHostCollection {
     target: Type | Function,
     metadataKey: string,
   ) {
-    this.metaHostLinks.set(target, metadataKey);
+      throw new Error("STUB");
   }
 
   /**
@@ -93,16 +93,14 @@ export class DiscoverableMetaHostCollection {
     hostContainerRef: ModulesContainer,
     metaKey: string,
   ): Set<InstanceWrapper> {
-    const wrappersByMetaKey = this.providersByMetaKey.get(hostContainerRef);
-    return wrappersByMetaKey?.get(metaKey) ?? new Set<InstanceWrapper>();
+      throw new Error("STUB");
   }
 
   public static getControllersByMetaKey(
     hostContainerRef: ModulesContainer,
     metaKey: string,
   ): Set<InstanceWrapper> {
-    const wrappersByMetaKey = this.controllersByMetaKey.get(hostContainerRef);
-    return wrappersByMetaKey?.get(metaKey) ?? new Set<InstanceWrapper>();
+      throw new Error("STUB");
   }
 
   private static inspectInstanceWrapper(

@@ -47,27 +47,14 @@ export class ServerTCP extends Server<TcpEvents, TcpStatus> {
   }> = [];
 
   constructor(private readonly options: Required<TcpOptions>['options']) {
-    super();
-    this.port = this.getOptionsProp(options, 'port', TCP_DEFAULT_PORT);
-    this.host = this.getOptionsProp(options, 'host', TCP_DEFAULT_HOST);
-    this.socketClass = this.getOptionsProp(options, 'socketClass', JsonSocket);
-    this.tlsOptions = this.getOptionsProp(options, 'tlsOptions');
-    this.maxBufferSize = this.getOptionsProp(options, 'maxBufferSize');
-
-    this.init();
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public listen(
     callback: (err?: unknown, ...optionalParams: unknown[]) => void,
   ) {
     this.server.once(TcpEventsMap.ERROR, (err: Record<string, unknown>) => {
-      if (err?.code === EADDRINUSE || err?.code === ECONNREFUSED) {
-        this._status$.next(TcpStatus.DISCONNECTED);
-
-        return callback(err);
-      }
+        throw new Error("STUB");
     });
     this.server.listen(this.port, this.host, callback as () => void);
   }
@@ -82,11 +69,10 @@ export class ServerTCP extends Server<TcpEvents, TcpStatus> {
   public bindHandler(socket: Socket) {
     const readSocket = this.getSocketInstance(socket);
     readSocket.on('message', async (msg: ReadPacket & PacketId) =>
-      this.handleMessage(readSocket, msg),
+      { throw new Error("STUB"); },
     );
     readSocket.on(TcpEventsMap.ERROR, err => {
-      const invalidError = new InvalidTcpDataReceptionException(err);
-      this.handleError(invalidError as any);
+        throw new Error("STUB");
     });
   }
 
@@ -115,20 +101,7 @@ export class ServerTCP extends Server<TcpEvents, TcpStatus> {
       this.transportId,
       tcpContext,
       async () => {
-        const response$ = this.transformToObservable(
-          await handler(packet.data, tcpContext),
-        );
-
-        response$ &&
-          this.send(response$, data => {
-            Object.assign(data, { id: (packet as IncomingRequest).id });
-            const outgoingResponse = this.serializer.serialize(
-              data as WritePacket & PacketId,
-            );
-
-            this.onProcessingEndHook?.(this.transportId, tcpContext);
-            socket.sendMessage(outgoingResponse);
-          });
+          throw new Error("STUB");
       },
     );
   }
@@ -144,18 +117,13 @@ export class ServerTCP extends Server<TcpEvents, TcpStatus> {
     }
     ++this.retryAttemptsCount;
     return setTimeout(
-      () => this.server.listen(this.port, this.host),
+      () => { throw new Error("STUB"); },
       this.getOptionsProp(this.options, 'retryDelay', 0),
     );
   }
 
   public unwrap<T>(): T {
-    if (!this.server) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return this.server as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -185,30 +153,26 @@ export class ServerTCP extends Server<TcpEvents, TcpStatus> {
     this.registerCloseListener(this.server);
 
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.server.on(event, callback),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
   }
 
   protected registerListeningListener(socket: net.Server) {
     socket.on(TcpEventsMap.LISTENING, () => {
-      this._status$.next(TcpStatus.CONNECTED);
+        throw new Error("STUB");
     });
   }
 
   protected registerErrorListener(socket: net.Server) {
     socket.on(TcpEventsMap.ERROR, err => {
-      if ('code' in err && err.code === ECONNREFUSED) {
-        this._status$.next(TcpStatus.DISCONNECTED);
-      }
-      this.handleError(err as any);
+        throw new Error("STUB");
     });
   }
 
   protected registerCloseListener(socket: net.Server) {
     socket.on(TcpEventsMap.CLOSE, () => {
-      this._status$.next(TcpStatus.DISCONNECTED);
-      this.handleClose();
+        throw new Error("STUB");
     });
   }
 

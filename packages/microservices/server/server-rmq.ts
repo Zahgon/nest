@@ -75,24 +75,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
   }> = [];
 
   constructor(protected readonly options: Required<RmqOptions>['options']) {
-    super();
-    this.urls = this.getOptionsProp(this.options, 'urls') || [RQM_DEFAULT_URL];
-    this.queue =
-      this.getOptionsProp(this.options, 'queue') || RQM_DEFAULT_QUEUE;
-    this.noAck = this.getOptionsProp(this.options, 'noAck', RQM_DEFAULT_NOACK);
-    this.queueOptions =
-      this.getOptionsProp(this.options, 'queueOptions') ||
-      RQM_DEFAULT_QUEUE_OPTIONS;
-
-    this.loadPackage('amqplib', ServerRMQ.name, () => require('amqplib'));
-    rmqPackage = this.loadPackage(
-      'amqp-connection-manager',
-      ServerRMQ.name,
-      () => require('amqp-connection-manager'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async listen(
@@ -116,14 +99,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
   ) {
     this.server = this.createClient();
     this.server!.once(RmqEventsMap.CONNECT, () => {
-      if (this.channel) {
-        return;
-      }
-      this._status$.next(RmqStatus.CONNECTED);
-      this.channel = this.server!.createChannel({
-        json: false,
-        setup: (channel: Channel) => this.setupChannel(channel, callback!),
-      });
+        throw new Error("STUB");
     });
 
     const maxConnectionAttempts = this.getOptionsProp(
@@ -137,7 +113,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
     this.registerBlockedListener();
     this.registerUnblockedListener();
     this.pendingEventListeners.forEach(({ event, callback }) =>
-      this.server!.on(event, callback),
+      { throw new Error("STUB"); },
     );
     this.pendingEventListeners = [];
 
@@ -145,23 +121,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
     this.server!.once(
       connectFailedEvent,
       async (error: Record<string, unknown>) => {
-        this._status$.next(RmqStatus.DISCONNECTED);
-
-        this.logger.error(CONNECTION_FAILED_MESSAGE);
-        if (error?.err) {
-          this.logger.error(error.err);
-        }
-        const isReconnecting = !!this.channel;
-        if (
-          maxConnectionAttempts === INFINITE_CONNECTION_ATTEMPTS ||
-          isReconnecting
-        ) {
-          return;
-        }
-        if (++this.connectionAttempts === maxConnectionAttempts) {
-          await this.close();
-          callback?.(error.err ?? new Error(CONNECTION_FAILED_MESSAGE));
-        }
+          throw new Error("STUB");
       },
     );
   }
@@ -177,29 +137,25 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
 
   private registerConnectListener() {
     this.server!.on(RmqEventsMap.CONNECT, (err: any) => {
-      this._status$.next(RmqStatus.CONNECTED);
+        throw new Error("STUB");
     });
   }
 
   private registerDisconnectListener() {
     this.server!.on(RmqEventsMap.DISCONNECT, (err: any) => {
-      this._status$.next(RmqStatus.DISCONNECTED);
-      this.logger.error(DISCONNECTED_RMQ_MESSAGE);
-      this.logger.error(err);
+        throw new Error("STUB");
     });
   }
 
   private registerBlockedListener() {
     this.server!.on(RmqEventsMap.BLOCKED, ({ reason }: { reason: string }) => {
-      this._status$.next(RmqStatus.BLOCKED);
-      this.logger.warn(BLOCKED_RMQ_MESSAGE(reason));
+        throw new Error("STUB");
     });
   }
 
   private registerUnblockedListener() {
     this.server!.on(RmqEventsMap.UNBLOCKED, () => {
-      this._status$.next(RmqStatus.UNBLOCKED);
-      this.logger.log(UNBLOCKED_RMQ_MESSAGE);
+        throw new Error("STUB");
     });
   }
 
@@ -261,7 +217,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
         const routingKeys = Array.from(this.getHandlers().keys());
         await Promise.all(
           routingKeys.map(routingKey =>
-            channel.bindQueue(createdQueue, exchange, routingKey),
+            { throw new Error("STUB"); },
           ),
         );
 
@@ -274,7 +230,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
     await channel.prefetch(prefetchCount, isGlobalPrefetchCount);
     channel.consume(
       createdQueue,
-      (msg: Record<string, any> | null) => this.handleMessage(msg!, channel),
+      (msg: Record<string, any> | null) => { throw new Error("STUB"); },
       {
         noAck: this.noAck,
         consumerTag: this.getOptionsProp(
@@ -329,19 +285,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
       this.transportId,
       rmqContext,
       async () => {
-        const response$ = this.transformToObservable(
-          await handler(packet.data, rmqContext),
-        );
-
-        const publish = <T>(data: T) =>
-          this.sendMessage(
-            data,
-            properties.replyTo,
-            properties.correlationId,
-            rmqContext,
-          );
-
-        response$ && this.send(response$, publish);
+          throw new Error("STUB");
       },
     );
   }
@@ -379,12 +323,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
   }
 
   public unwrap<T>(): T {
-    if (!this.server) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return this.server as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -422,7 +361,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
   }
 
   protected initializeSerializer(options: RmqOptions['options']) {
-    this.serializer = options?.serializer ?? new RmqRecordSerializer();
+      throw new Error("STUB");
   }
 
   private parseMessageContent(content: Buffer) {
@@ -440,16 +379,7 @@ export class ServerRMQ extends Server<RmqEvents, RmqStatus> {
     const handlers = this.getHandlers();
 
     handlers.forEach((handler, pattern) => {
-      if (typeof pattern !== 'string') {
-        return;
-      }
-
-      if (
-        pattern.includes(RMQ_WILDCARD_ALL) ||
-        pattern.includes(RMQ_WILDCARD_SINGLE)
-      ) {
-        this.wildcardHandlers.set(pattern, handler);
-      }
+        throw new Error("STUB");
     });
   }
 

@@ -61,7 +61,7 @@ export class SocketModule<
     );
     const modules = container.getModules();
     modules.forEach(({ providers }, moduleName: string) =>
-      this.connectAllGateways(providers, moduleName),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -70,8 +70,8 @@ export class SocketModule<
     moduleName: string,
   ) {
     iterate(providers.values())
-      .filter(wrapper => wrapper && !wrapper.isNotMetatype)
-      .forEach(wrapper => this.connectGatewayToServer(wrapper, moduleName));
+      .filter(wrapper => { throw new Error("STUB"); })
+      .forEach(wrapper => { throw new Error("STUB"); });
   }
 
   public connectGatewayToServer(
@@ -105,8 +105,8 @@ export class SocketModule<
     const servers = this.socketsContainer.getAll();
     await Promise.all(
       iterate(servers.values())
-        .filter(({ server }) => server)
-        .map(async ({ server }) => adapter.close(server)),
+        .filter(({ server }) => { throw new Error("STUB"); })
+        .map(async ({ server }) => { throw new Error("STUB"); }),
     );
     await (adapter as AbstractWsAdapter)?.dispose();
 
@@ -126,7 +126,7 @@ export class SocketModule<
     const { IoAdapter } = loadAdapter(
       '@nestjs/platform-socket.io',
       'WebSockets',
-      () => require('@nestjs/platform-socket.io'),
+      () => { throw new Error("STUB"); },
     );
     const ioAdapter = new IoAdapter(this.httpServer);
     ioAdapter.forceCloseConnections = forceCloseConnections;

@@ -45,12 +45,12 @@ export class GuardsContextCreator extends ContextCreator {
       return [] as unknown[] as R;
     }
     return iterate(metadata)
-      .filter((guard: any) => guard && (guard.name || guard.canActivate))
+      .filter((guard: any) => { throw new Error("STUB"); })
       .map(guard =>
-        this.getGuardInstance(guard as Function, contextId, inquirerId),
+        { throw new Error("STUB"); },
       )
       .filter(
-        (guard: CanActivate | null) => !!guard && isFunction(guard.canActivate),
+        (guard: CanActivate | null) => { throw new Error("STUB"); },
       )
       .toArray() as R;
   }
@@ -107,13 +107,10 @@ export class GuardsContextCreator extends ContextCreator {
       this.config.getGlobalRequestGuards() as InstanceWrapper[];
     const scopedGuards = iterate(scopedGuardWrappers)
       .map(wrapper =>
-        wrapper.getInstanceByContextId(
-          this.getContextId(contextId, wrapper),
-          inquirerId,
-        ),
+        { throw new Error("STUB"); },
       )
-      .filter(host => !!host)
-      .map(host => host.instance)
+      .filter(host => { throw new Error("STUB"); })
+      .map(host => { throw new Error("STUB"); })
       .toArray();
 
     return globalGuards.concat(scopedGuards) as T;

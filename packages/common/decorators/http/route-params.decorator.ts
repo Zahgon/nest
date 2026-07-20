@@ -46,44 +46,12 @@ export function assignMetadata<TParamtype = any, TArgs = any>(
 
 function createRouteParamDecorator(paramtype: RouteParamtypes) {
   return (data?: ParamData): ParameterDecorator =>
-    (target, key, index) => {
-      const args =
-        Reflect.getMetadata(ROUTE_ARGS_METADATA, target.constructor, key!) ||
-        {};
-      Reflect.defineMetadata(
-        ROUTE_ARGS_METADATA,
-        assignMetadata<RouteParamtypes, Record<number, RouteParamMetadata>>(
-          args,
-          paramtype,
-          index,
-          data,
-        ),
-        target.constructor,
-        key!,
-      );
-    };
+    { throw new Error("STUB"); };
 }
 
 const createPipesRouteParamDecorator =
   (paramtype: RouteParamtypes) =>
-  (
-    data?: any,
-    ...pipes: (Type<PipeTransform> | PipeTransform)[]
-  ): ParameterDecorator =>
-  (target, key, index) => {
-    const args =
-      Reflect.getMetadata(ROUTE_ARGS_METADATA, target.constructor, key!) || {};
-    const hasParamData = isNil(data) || isString(data);
-    const paramData = hasParamData ? data : undefined;
-    const paramPipes = hasParamData ? pipes : [data, ...pipes];
-
-    Reflect.defineMetadata(
-      ROUTE_ARGS_METADATA,
-      assignMetadata(args, paramtype, index, paramData!, ...paramPipes),
-      target.constructor,
-      key!,
-    );
-  };
+  { throw new Error("STUB"); };
 
 /**
  * Route handler parameter decorator. Extracts the `Request`
@@ -112,21 +80,7 @@ export const Request: () => ParameterDecorator = createRouteParamDecorator(
 export const Response: (
   options?: ResponseDecoratorOptions,
 ) => ParameterDecorator =
-  (options?: ResponseDecoratorOptions) => (target, key, index) => {
-    if (options?.passthrough) {
-      Reflect.defineMetadata(
-        RESPONSE_PASSTHROUGH_METADATA,
-        options?.passthrough,
-        target.constructor,
-        key!,
-      );
-    }
-    return createRouteParamDecorator(RouteParamtypes.RESPONSE)()(
-      target,
-      key,
-      index,
-    );
-  };
+  (options?: ResponseDecoratorOptions) => { throw new Error("STUB"); };
 
 /**
  * Route handler parameter decorator. Extracts reference to the `Next` function
@@ -242,10 +196,7 @@ export function UploadedFile(
   fileKey?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.FILE)(
-    fileKey,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -303,10 +254,7 @@ export function UploadedFiles(
 export function UploadedFiles(
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.FILES)(
-    undefined,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -409,10 +357,7 @@ export function Query(
   property?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.QUERY)(
-    property,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -503,10 +448,7 @@ export function Body(
   property?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.BODY)(
-    property,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -576,10 +518,7 @@ export function RawBody(
     | PipeTransform<Buffer | undefined>
   )[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.RAW_BODY)(
-    undefined,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -690,10 +629,7 @@ export function Param(
   property?: string | (Type<PipeTransform> | PipeTransform),
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ): ParameterDecorator {
-  return createPipesRouteParamDecorator(RouteParamtypes.PARAM)(
-    property,
-    ...pipes,
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -764,7 +700,7 @@ export function HostParam(property: string): ParameterDecorator;
 export function HostParam(
   property?: string | (Type<PipeTransform> | PipeTransform),
 ): ParameterDecorator {
-  return createRouteParamDecorator(RouteParamtypes.HOST)(property);
+    throw new Error("STUB");
 }
 
 /**

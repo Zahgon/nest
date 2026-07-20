@@ -59,10 +59,7 @@ export class NestApplicationContext<
   private initializationPromise?: Promise<void>;
 
   protected get instanceLinksHost() {
-    if (!this._instanceLinksHost) {
-      this._instanceLinksHost = new InstanceLinksHost(this.container);
-    }
-    return this._instanceLinksHost;
+      throw new Error("STUB");
   }
 
   constructor(
@@ -71,18 +68,11 @@ export class NestApplicationContext<
     private contextModule: Module | null = null,
     private readonly scope = new Array<Type<any>>(),
   ) {
-    super();
-    this.injector = new Injector();
-    this.moduleCompiler = container.getModuleCompiler();
-
-    if (this.appOptions.preview) {
-      this.printInPreviewModeWarning();
-    }
+      throw new Error("STUB");
   }
 
   public selectContextModule() {
-    const modules = this.container.getModules().values();
-    this.contextModule = modules.next().value!;
+      throw new Error("STUB");
   }
 
   /**
@@ -93,40 +83,7 @@ export class NestApplicationContext<
     moduleType: Type<T> | DynamicModule,
     selectOptions?: SelectOptions,
   ): INestApplicationContext {
-    const modulesContainer = this.container.getModules();
-    const contextModuleCtor = this.contextModule!.metatype;
-    const scope = this.scope.concat(contextModuleCtor);
-
-    const moduleTokenFactory = this.container.getModuleTokenFactory();
-    const { type, dynamicMetadata } =
-      this.moduleCompiler.extractMetadata(moduleType);
-    const token = dynamicMetadata
-      ? moduleTokenFactory.createForDynamic(
-          type,
-          dynamicMetadata,
-          moduleType as DynamicModule,
-        )
-      : moduleTokenFactory.createForStatic(type, moduleType as Type);
-
-    const selectedModule = modulesContainer.get(token);
-    if (!selectedModule) {
-      throw new UnknownModuleException(type.name);
-    }
-
-    const options =
-      typeof selectOptions?.abortOnError !== 'undefined'
-        ? {
-            ...this.appOptions,
-            ...selectOptions,
-          }
-        : this.appOptions;
-
-    return new NestApplicationContext(
-      this.container,
-      options,
-      selectedModule,
-      scope,
-    );
+      throw new Error("STUB");
   }
 
   /**
@@ -241,7 +198,7 @@ export class NestApplicationContext<
    * @returns {void}
    */
   public registerRequestByContextId<T = any>(request: T, contextId: ContextId) {
-    this.container.registerRequestProvider(request, contextId);
+      throw new Error("STUB");
   }
 
   /**
@@ -256,13 +213,7 @@ export class NestApplicationContext<
     }
     /* eslint-disable-next-line no-async-promise-executor */
     this.initializationPromise = new Promise(async (resolve, reject) => {
-      try {
-        await this.callInitHook();
-        await this.callBootstrapHook();
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
+        throw new Error("STUB");
     });
     await this.initializationPromise;
 
@@ -289,11 +240,7 @@ export class NestApplicationContext<
    * @returns {void}
    */
   public useLogger(logger: LoggerService | LogLevel[] | false) {
-    Logger.overrideLogger(logger);
-
-    if (this.shouldFlushLogsOnOverride) {
-      this.flushLogs();
-    }
+      throw new Error("STUB");
   }
 
   /**
@@ -308,7 +255,7 @@ export class NestApplicationContext<
    * Define that it must flush logs right after defining a custom logger.
    */
   public flushLogsOnOverride() {
-    this.shouldFlushLogsOnOverride = true;
+      throw new Error("STUB");
   }
 
   /**
@@ -325,24 +272,7 @@ export class NestApplicationContext<
     signals: (ShutdownSignal | string)[] = [],
     options: ShutdownHooksOptions = {},
   ): this {
-    if (isEmpty(signals)) {
-      signals = Object.keys(ShutdownSignal).map(
-        (key: string) => ShutdownSignal[key],
-      );
-    } else {
-      // given signals array should be unique because
-      // process shouldn't listen to the same signal more than once.
-      signals = Array.from(new Set(signals));
-    }
-
-    signals = iterate(signals)
-      .map((signal: string) => signal.toString().toUpperCase().trim())
-      // filter out the signals which is already listening to
-      .filter(signal => !this.activeShutdownSignals.includes(signal))
-      .toArray();
-
-    this.listenToShutdownSignals(signals, options);
-    return this;
+      throw new Error("STUB");
   }
 
   protected async dispose(): Promise<void> {
@@ -362,45 +292,7 @@ export class NestApplicationContext<
     signals: string[],
     options: ShutdownHooksOptions = {},
   ) {
-    let receivedSignal = false;
-    const cleanup = async (signal: string) => {
-      try {
-        if (receivedSignal) {
-          // If we receive another signal while we're waiting
-          // for the server to stop, just ignore it.
-          return;
-        }
-        receivedSignal = true;
-        await this.initializationPromise;
-        await this.callDestroyHook();
-        await this.callBeforeShutdownHook(signal);
-        await this.dispose();
-        await this.callShutdownHook(signal);
-        signals.forEach(sig => process.removeListener(sig, cleanup));
-
-        if (options.useProcessExit) {
-          // Use process.exit() to ensure the 'exit' event is properly triggered.
-          // This is required for async loggers (like Pino with transports)
-          // to flush their buffers before the process terminates.
-          process.exit(0);
-        } else {
-          process.kill(process.pid, signal);
-        }
-      } catch (err) {
-        Logger.error(
-          MESSAGES.ERROR_DURING_SHUTDOWN,
-          (err as Error)?.stack,
-          NestApplicationContext.name,
-        );
-        process.exit(1);
-      }
-    };
-    this.shutdownCleanupRef = cleanup as (...args: unknown[]) => unknown;
-
-    signals.forEach((signal: string) => {
-      this.activeShutdownSignals.push(signal);
-      process.on(signal as any, cleanup);
-    });
+      throw new Error("STUB");
   }
 
   /**
@@ -411,7 +303,7 @@ export class NestApplicationContext<
       return;
     }
     this.activeShutdownSignals.forEach(signal => {
-      process.removeListener(signal, this.shutdownCleanupRef!);
+        throw new Error("STUB");
     });
   }
 
@@ -492,21 +384,18 @@ export class NestApplicationContext<
       return this._moduleRefsForHooksByDistance;
     }
     const modulesContainer = this.container.getModules();
-    const compareFn = (a: Module, b: Module) => b.distance - a.distance;
+    const compareFn = (a: Module, b: Module) => { throw new Error("STUB"); };
     const modulesSortedByDistance = Array.from(modulesContainer.values()).sort(
       compareFn,
     );
 
     this._moduleRefsForHooksByDistance = this.appOptions?.preview
-      ? modulesSortedByDistance.filter(moduleRef => moduleRef.initOnPreview)
+      ? modulesSortedByDistance.filter(moduleRef => { throw new Error("STUB"); })
       : modulesSortedByDistance;
     return this._moduleRefsForHooksByDistance;
   }
 
   private printInPreviewModeWarning() {
-    this.logger.warn('------------------------------------------------');
-    this.logger.warn('Application is running in the PREVIEW mode!');
-    this.logger.warn('Providers/controllers will not be instantiated.');
-    this.logger.warn('------------------------------------------------');
+      throw new Error("STUB");
   }
 }

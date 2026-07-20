@@ -69,10 +69,7 @@ export class HttpException extends IntrinsicException {
     private readonly status: number,
     private readonly options?: HttpExceptionOptions,
   ) {
-    super();
-    this.initMessage();
-    this.initName();
-    this.initCause();
+      throw new Error("STUB");
   }
 
   /**
@@ -82,26 +79,15 @@ export class HttpException extends IntrinsicException {
    * @see https://github.com/microsoft/TypeScript/issues/45167
    */
   public initCause(): void {
-    if (this.options?.cause) {
-      this.cause = this.options.cause;
-      return;
-    }
+      throw new Error("STUB");
   }
 
   public initMessage() {
-    if (isString(this.response)) {
-      this.message = this.response;
-    } else if (isObject(this.response) && isString(this.response.message)) {
-      this.message = this.response.message;
-    } else if (this.constructor) {
-      this.message =
-        this.constructor.name.match(/[A-Z][a-z]+|[0-9]+/g)?.join(' ') ??
-        'Error';
-    }
+      throw new Error("STUB");
   }
 
   public initName(): void {
-    this.name = this.constructor.name;
+      throw new Error("STUB");
   }
 
   public getResponse(): string | object {
@@ -130,36 +116,19 @@ export class HttpException extends IntrinsicException {
     arg1?: HttpExceptionBodyMessage | string,
     statusCode?: number,
   ): HttpExceptionBody | Body {
-    if (!arg0) {
-      return {
-        message: arg1!,
-        statusCode: statusCode!,
-      };
-    }
-
-    if (isString(arg0) || Array.isArray(arg0) || isNumber(arg0)) {
-      return {
-        message: arg0,
-        error: arg1 as string,
-        statusCode: statusCode!,
-      };
-    }
-
-    return arg0;
+      throw new Error("STUB");
   }
 
   public static getDescriptionFrom(
     descriptionOrOptions: string | HttpExceptionOptions,
   ): string {
-    return isString(descriptionOrOptions)
-      ? descriptionOrOptions
-      : (descriptionOrOptions?.description as string);
+      throw new Error("STUB");
   }
 
   public static getHttpExceptionOptionsFrom(
     descriptionOrOptions: string | HttpExceptionOptions,
   ): HttpExceptionOptions {
-    return isString(descriptionOrOptions) ? {} : descriptionOrOptions;
+      throw new Error("STUB");
   }
 
   /**
@@ -170,17 +139,6 @@ export class HttpException extends IntrinsicException {
   public static extractDescriptionAndOptionsFrom(
     descriptionOrOptions: string | HttpExceptionOptions,
   ): DescriptionAndOptions {
-    const description = isString(descriptionOrOptions)
-      ? descriptionOrOptions
-      : descriptionOrOptions?.description;
-
-    const httpExceptionOptions = isString(descriptionOrOptions)
-      ? {}
-      : descriptionOrOptions;
-
-    return {
-      description,
-      httpExceptionOptions,
-    };
+      throw new Error("STUB");
   }
 }

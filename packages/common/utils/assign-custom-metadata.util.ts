@@ -14,13 +14,5 @@ export function assignCustomParameterMetadata(
   data?: ParamData,
   ...pipes: (Type<PipeTransform> | PipeTransform)[]
 ) {
-  return {
-    ...args,
-    [`${paramtype}${CUSTOM_ROUTE_ARGS_METADATA}:${index}`]: {
-      index,
-      factory,
-      data,
-      pipes,
-    },
-  };
+    throw new Error("STUB");
 }

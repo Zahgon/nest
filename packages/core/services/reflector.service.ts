@@ -57,18 +57,7 @@ export class Reflector {
   static createDecorator<TParam, TTransformed = TParam>(
     options: CreateDecoratorOptions<TParam, TTransformed> = {},
   ): ReflectableDecorator<TParam, TTransformed> {
-    const metadataKey = options.key ?? uid(21);
-    const decoratorFn =
-      (metadataValue: TParam) =>
-      (target: object | Function, key?: string | symbol, descriptor?: any) => {
-        const value = options.transform
-          ? options.transform(metadataValue)
-          : metadataValue;
-        SetMetadata(metadataKey, value ?? {})(target, key!, descriptor);
-      };
-
-    decoratorFn.KEY = metadataKey;
-    return decoratorFn as ReflectableDecorator<TParam, TTransformed>;
+      throw new Error("STUB");
   }
 
   /**
@@ -154,7 +143,7 @@ export class Reflector {
     targets: (Type<any> | Function)[],
   ): TResult {
     return (targets || []).map(target =>
-      this.get(metadataKeyOrDecorator, target),
+      { throw new Error("STUB"); },
     ) as TResult;
   }
 
@@ -195,33 +184,7 @@ export class Reflector {
     metadataKeyOrDecorator: TKey,
     targets: (Type<any> | Function)[],
   ): TResult {
-    const metadataCollection = this.getAll<any[], TKey>(
-      metadataKeyOrDecorator,
-      targets,
-    ).filter(item => item !== undefined);
-
-    if (isEmpty(metadataCollection)) {
-      return metadataCollection as TResult;
-    }
-    if (metadataCollection.length === 1) {
-      const value = metadataCollection[0];
-      if (isObject(value)) {
-        return value as TResult;
-      }
-      return metadataCollection as TResult;
-    }
-    return metadataCollection.reduce((a, b) => {
-      if (Array.isArray(a)) {
-        return a.concat(b);
-      }
-      if (isObject(a) && isObject(b)) {
-        return {
-          ...a,
-          ...b,
-        };
-      }
-      return [a, b];
-    });
+      throw new Error("STUB");
   }
 
   /**

@@ -65,20 +65,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
   ) => Promise<void> | void;
 
   constructor(instance?: any) {
-    super(instance || express());
-    this.instance!.use((req, res, next) => {
-      if (this.onResponseHook) {
-        res.on('finish', () => {
-          void this.onResponseHook!.apply(this, [req, res]);
-        });
-      }
-
-      if (this.onRequestHook) {
-        void this.onRequestHook.apply(this, [req, res, next]);
-      } else {
-        next();
-      }
-    });
+      throw new Error("STUB");
   }
 
   public setOnRequestHook(
@@ -88,7 +75,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       done: () => void,
     ) => Promise<void> | void,
   ) {
-    this.onRequestHook = onRequestHook;
+      throw new Error("STUB");
   }
 
   public setOnResponseHook(
@@ -97,7 +84,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       res: express.Response,
     ) => Promise<void> | void,
   ) {
-    this.onResponseHook = onResponseHook;
+      throw new Error("STUB");
   }
 
   public reply(response: any, body: any, statusCode?: number) {
@@ -111,11 +98,11 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       this.applyStreamHeaders(response, body);
       const stream = body.getStream();
       stream.once('error', err => {
-        body.errorHandler(err, response);
+          throw new Error("STUB");
       });
       return stream
         .pipe<Writable>(response)
-        .on('error', (err: Error) => body.errorLogger(err));
+        .on('error', (err: Error) => { throw new Error("STUB"); });
     }
     const responseContentType = response.getHeader('Content-Type');
     if (
@@ -168,7 +155,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
   }
 
   public appendHeader(response: any, name: string, value: string) {
-    return response.append(name, value);
+      throw new Error("STUB");
   }
 
   public normalizePath(path: string): string {
@@ -201,7 +188,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
     if (!this.httpServer) {
       return undefined;
     }
-    return new Promise(resolve => this.httpServer.close(resolve));
+    return new Promise(resolve => { throw new Error("STUB"); });
   }
 
   public set(...args: any[]) {
@@ -209,30 +196,27 @@ export class ExpressAdapter extends AbstractHttpAdapter<
   }
 
   public enable(...args: any[]) {
-    return this.instance.enable(...args);
+      throw new Error("STUB");
   }
 
   public disable(...args: any[]) {
-    return this.instance.disable(...args);
+      throw new Error("STUB");
   }
 
   public engine(...args: any[]) {
-    return this.instance.engine(...args);
+      throw new Error("STUB");
   }
 
   public useStaticAssets(path: string, options: ServeStaticOptions) {
-    if (options && options.prefix) {
-      return this.use(options.prefix, express.static(path, options));
-    }
-    return this.use(express.static(path, options));
+      throw new Error("STUB");
   }
 
   public setBaseViewsDir(path: string | string[]) {
-    return this.set('views', path);
+      throw new Error("STUB");
   }
 
   public setViewEngine(engine: string) {
-    return this.set('view engine', engine);
+      throw new Error("STUB");
   }
 
   public getRequestHostname(request: any): string {
@@ -255,17 +239,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
     requestMethod: RequestMethod,
   ): (path: string, callback: Function) => any {
     return (path: string, callback: Function) => {
-      try {
-        const convertedPath = LegacyRouteConverter.tryConvert(path);
-        return this.routerMethodFactory
-          .get(this.instance, requestMethod)
-          .call(this.instance, convertedPath, callback);
-      } catch (e) {
-        if (e instanceof TypeError) {
-          LegacyRouteConverter.printError(path);
-        }
-        throw e;
-      }
+        throw new Error("STUB");
     };
   }
 
@@ -296,8 +270,8 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       urlencodedParser: express.urlencoded(bodyParserUrlencodedOptions),
     };
     Object.keys(parserMiddleware)
-      .filter(parser => !this.isMiddlewareApplied(parser))
-      .forEach(parserKey => this.use(parserMiddleware[parserKey]));
+      .filter(parser => { throw new Error("STUB"); })
+      .forEach(parserKey => { throw new Error("STUB"); });
   }
 
   public useBodyParser<
@@ -316,12 +290,11 @@ export class ExpressAdapter extends AbstractHttpAdapter<
   }
 
   public setLocal(key: string, value: any) {
-    this.instance.locals[key] = value;
-    return this;
+      throw new Error("STUB");
   }
 
   public getType(): string {
-    return 'express';
+      throw new Error("STUB");
   }
 
   public applyVersionFilter(
@@ -344,7 +317,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       versioningOptions.type === VersioningType.URI
     ) {
       const handlerForNoVersioning: VersionedRoute = (req, res, next) =>
-        handler(req, res, next);
+        { throw new Error("STUB"); };
 
       return handlerForNoVersioning;
     }
@@ -352,40 +325,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
     // Custom Extractor Versioning Handler
     if (versioningOptions.type === VersioningType.CUSTOM) {
       const handlerForCustomVersioning: VersionedRoute = (req, res, next) => {
-        const extractedVersion = versioningOptions.extractor(req);
-
-        if (Array.isArray(version)) {
-          if (
-            Array.isArray(extractedVersion) &&
-            version.filter(v => extractedVersion.includes(v as string)).length
-          ) {
-            return handler(req, res, next);
-          }
-
-          if (
-            isString(extractedVersion) &&
-            version.includes(extractedVersion)
-          ) {
-            return handler(req, res, next);
-          }
-        } else if (isString(version)) {
-          // Known bug here - if there are multiple versions supported across separate
-          // handlers/controllers, we can't select the highest matching handler.
-          // Since this code is evaluated per-handler, then we can't see if the highest
-          // specified version exists in a different handler.
-          if (
-            Array.isArray(extractedVersion) &&
-            extractedVersion.includes(version)
-          ) {
-            return handler(req, res, next);
-          }
-
-          if (isString(extractedVersion) && version === extractedVersion) {
-            return handler(req, res, next);
-          }
-        }
-
-        return callNextHandler(req, res, next);
+          throw new Error("STUB");
       };
 
       return handlerForCustomVersioning;
@@ -398,39 +338,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
         res,
         next,
       ) => {
-        const MEDIA_TYPE_HEADER = 'Accept';
-        const acceptHeaderValue: string | undefined =
-          req.headers?.[MEDIA_TYPE_HEADER] ||
-          req.headers?.[MEDIA_TYPE_HEADER.toLowerCase()];
-
-        const acceptHeaderVersionParameter = acceptHeaderValue
-          ? acceptHeaderValue.split(';')[1]
-          : undefined;
-
-        // No version was supplied
-        if (isUndefined(acceptHeaderVersionParameter)) {
-          if (Array.isArray(version)) {
-            if (version.includes(VERSION_NEUTRAL)) {
-              return handler(req, res, next);
-            }
-          }
-        } else {
-          const headerVersion = acceptHeaderVersionParameter.split(
-            versioningOptions.key,
-          )[1];
-
-          if (Array.isArray(version)) {
-            if (version.includes(headerVersion)) {
-              return handler(req, res, next);
-            }
-          } else if (isString(version)) {
-            if (version === headerVersion) {
-              return handler(req, res, next);
-            }
-          }
-        }
-
-        return callNextHandler(req, res, next);
+          throw new Error("STUB");
       };
 
       return handlerForMediaTypeVersioning;
@@ -439,30 +347,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
     // Header Versioning Handler
     if (versioningOptions.type === VersioningType.HEADER) {
       const handlerForHeaderVersioning: VersionedRoute = (req, res, next) => {
-        const customHeaderVersionParameter: string | undefined =
-          req.headers?.[versioningOptions.header] ||
-          req.headers?.[versioningOptions.header.toLowerCase()];
-
-        // No version was supplied
-        if (isUndefined(customHeaderVersionParameter)) {
-          if (Array.isArray(version)) {
-            if (version.includes(VERSION_NEUTRAL)) {
-              return handler(req, res, next);
-            }
-          }
-        } else {
-          if (Array.isArray(version)) {
-            if (version.includes(customHeaderVersionParameter)) {
-              return handler(req, res, next);
-            }
-          } else if (isString(version)) {
-            if (version === customHeaderVersionParameter) {
-              return handler(req, res, next);
-            }
-          }
-        }
-
-        return callNextHandler(req, res, next);
+          throw new Error("STUB");
       };
 
       return handlerForHeaderVersioning;
@@ -473,9 +358,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
 
   private trackOpenConnections() {
     this.httpServer.on('connection', (socket: Duplex) => {
-      this.openConnections.add(socket);
-
-      socket.on('close', () => this.openConnections.delete(socket));
+        throw new Error("STUB");
     });
   }
 
@@ -493,7 +376,7 @@ export class ExpressAdapter extends AbstractHttpAdapter<
       !!app.router.stack &&
       isFunction(app.router.stack.filter) &&
       app.router.stack.some(
-        (layer: any) => layer && layer.handle && layer.handle.name === name,
+        (layer: any) => { throw new Error("STUB"); },
       )
     );
   }

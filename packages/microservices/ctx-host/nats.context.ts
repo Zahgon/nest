@@ -14,7 +14,7 @@ export class NatsContext extends BaseRpcContext<NatsContextArgs> {
    * Returns the name of the subject.
    */
   getSubject() {
-    return this.args[0];
+      throw new Error("STUB");
   }
 
   /**

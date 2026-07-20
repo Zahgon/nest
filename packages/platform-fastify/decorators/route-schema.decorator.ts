@@ -12,4 +12,4 @@ import { FastifySchema } from 'fastify';
  * @param schema See {@link https://fastify.dev/docs/latest/Reference/Routes/#routes-options}
  */
 export const RouteSchema = (schema: FastifySchema) =>
-  SetMetadata(FASTIFY_ROUTE_SCHEMA_METADATA, schema);
+  { throw new Error("STUB"); };

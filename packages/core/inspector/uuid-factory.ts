@@ -10,7 +10,7 @@ export class UuidFactory {
   private static _mode = UuidFactoryMode.Random;
 
   static set mode(value: UuidFactoryMode) {
-    this._mode = value;
+      throw new Error("STUB");
   }
 
   static get(key = '') {

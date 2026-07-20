@@ -16,28 +16,7 @@ export const mapToExcludeRoute = (
   routes: (string | RouteInfo)[],
 ): ExcludeRouteMetadata[] => {
   return routes.map(route => {
-    const originalPath = isString(route) ? route : route.path;
-    const path = LegacyRouteConverter.tryConvert(originalPath);
-
-    try {
-      if (isString(route)) {
-        return {
-          path,
-          requestMethod: RequestMethod.ALL,
-          pathRegex: pathToRegexp(addLeadingSlash(path)).regexp,
-        };
-      }
-      return {
-        path,
-        requestMethod: route.method,
-        pathRegex: pathToRegexp(addLeadingSlash(path)).regexp,
-      };
-    } catch (e) {
-      if (e instanceof TypeError) {
-        LegacyRouteConverter.printError(originalPath);
-      }
-      throw e;
-    }
+      throw new Error("STUB");
   });
 };
 
@@ -50,7 +29,7 @@ export const filterMiddleware = <T extends Function | Type<any> = any>(
   return iterate([])
     .concat(middleware)
     .filter(isFunction)
-    .map((item: T) => mapToClass(item, excludedRoutes, httpAdapter))
+    .map((item: T) => { throw new Error("STUB"); })
     .toArray();
 };
 

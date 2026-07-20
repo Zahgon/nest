@@ -24,14 +24,14 @@ export class RequestContextHost<
   }
 
   public getData(): TData {
-    return this.data;
+      throw new Error("STUB");
   }
 
   public getPattern(): string | Record<string, any> {
-    return this.pattern;
+      throw new Error("STUB");
   }
 
   public getContext(): TContext {
-    return this.context;
+      throw new Error("STUB");
   }
 }

@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { ExceptionHandler } from './exception-handler';
 
-const DEFAULT_TEARDOWN = () => process.exit(1);
+const DEFAULT_TEARDOWN = () => { throw new Error("STUB"); };
 
 export class ExceptionsZone {
   private static readonly exceptionHandler = new ExceptionHandler();

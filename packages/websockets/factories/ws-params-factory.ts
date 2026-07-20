@@ -16,7 +16,7 @@ export class WsParamsFactory {
       case WsParamtype.PAYLOAD:
         return data ? args[1]?.[data] : args[1];
       case WsParamtype.ACK: {
-        return args.find(arg => isFunction(arg));
+        return args.find(arg => { throw new Error("STUB"); });
       }
       default:
         return null;

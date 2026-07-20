@@ -33,7 +33,7 @@ function bindLast<F extends (...args: any[]) => any>(
   fn: F,
   last: Last<Parameters<F>>,
 ): (...args: DropLast<Parameters<F>>) => ReturnType<F> {
-  return (...args: any[]) => fn(...args, last);
+  return (...args: any[]) => { throw new Error("STUB"); };
 }
 
 // Helper types
@@ -127,86 +127,7 @@ function middie<
   }
 
   function Holder(this: HolderInstance) {
-    this.req = null;
-    this.res = null;
-    this.url = null;
-    this.context = null;
-    this.initialConfig = null;
-    this.i = 0;
-
-    const that = this;
-
-    this.done = function (err?: unknown) {
-      const req = that.req!;
-      const res = that.res!;
-      const url = that.url!;
-      const context = that.context!;
-      const i = that.i++;
-
-      req.url = req.originalUrl!;
-
-      if (res.finished === true || res.writableEnded === true) {
-        cleanup();
-        return;
-      }
-
-      if (err || middlewares.length === i) {
-        complete(err, req, res, context);
-        cleanup();
-      } else {
-        const { fn, regexp } = middlewares[i];
-
-        if (regexp) {
-          // Decode URL before matching to avoid bypassing middleware
-          let sanitizedUrl = url;
-          if (
-            that.initialConfig!.ignoreDuplicateSlashes ||
-            that.initialConfig!.routerOptions?.ignoreDuplicateSlashes
-          ) {
-            sanitizedUrl = removeDuplicateSlashes(sanitizedUrl);
-          }
-
-          if (
-            that.initialConfig!.ignoreTrailingSlash ||
-            that.initialConfig!.routerOptions?.ignoreTrailingSlash
-          ) {
-            sanitizedUrl = trimLastSlash(sanitizedUrl);
-          }
-
-          if (
-            that.initialConfig!.caseSensitive === false ||
-            that.initialConfig!.routerOptions?.caseSensitive === false
-          ) {
-            sanitizedUrl = sanitizedUrl.toLowerCase();
-          }
-
-          const decodedUrl = safeDecodeURI(
-            sanitizedUrl,
-            (that.initialConfig?.routerOptions as any)?.useSemicolonDelimiter ||
-              that.initialConfig?.useSemicolonDelimiter,
-          ).path;
-          const result = regexp.exec(decodedUrl);
-          if (result) {
-            req.url = req.url.replace(result[0], '');
-            if (req.url[0] !== '/') req.url = '/' + req.url;
-            fn(req, res, that.done);
-          } else {
-            that.done();
-          }
-        } else {
-          fn(req, res, that.done);
-        }
-      }
-    };
-
-    function cleanup() {
-      that.req = null;
-      that.res = null;
-      that.context = null;
-      that.initialConfig = null;
-      that.i = 0;
-      pool.release(that as any);
-    }
+      throw new Error("STUB");
   }
 }
 
@@ -320,21 +241,7 @@ function fastifyMiddie(
     reply: FastifyReply,
     next: HookHandlerDoneFunction,
   ) {
-    if (this[kMiddieHasMiddlewares]) {
-      const raw = req.raw as any;
-      raw.id = req.id;
-      raw.hostname = req.hostname;
-      raw.protocol = req.protocol;
-      raw.ip = req.ip;
-      raw.ips = req.ips;
-      raw.log = req.log;
-      (req.raw as any).query = req.query;
-      (reply.raw as any).log = req.log;
-      if (req.body !== undefined) (req.raw as any).body = req.body;
-      this[kMiddie].run(req.raw, reply.raw, next);
-    } else {
-      next();
-    }
+      throw new Error("STUB");
   }
 
   function runMiddieWithPayload(
@@ -344,7 +251,7 @@ function fastifyMiddie(
     _payload: unknown,
     next: HookHandlerDoneFunction,
   ) {
-    runMiddie.bind(this)(req, reply, next);
+      throw new Error("STUB");
   }
 
   function onMiddieEnd(
@@ -353,18 +260,11 @@ function fastifyMiddie(
     _res: any,
     next: (err?: unknown) => void,
   ) {
-    next(err);
+      throw new Error("STUB");
   }
 
   function onRegister(instance: FastifyInstance) {
-    const middlewares = instance[kMiddlewares].slice() as Array<Array<unknown>>;
-    instance[kMiddlewares] = [];
-    instance[kMiddie] = middie(onMiddieEnd, instance.initialConfig);
-    instance[kMiddieHasMiddlewares] = false;
-    instance.decorate('use', use as any);
-    for (const middleware of middlewares) {
-      (instance.use as any)(...middleware);
-    }
+      throw new Error("STUB");
   }
 
   next();

@@ -37,17 +37,6 @@ export class NotFoundException extends HttpException {
     objectOrError?: any,
     descriptionOrOptions: string | HttpExceptionOptions = 'Not Found',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.NOT_FOUND,
-      ),
-      HttpStatus.NOT_FOUND,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

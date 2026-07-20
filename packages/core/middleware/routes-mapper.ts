@@ -91,33 +91,13 @@ export class RoutesMapper {
 
     const toRouteInfo = (item: RouteDefinition, prefix: string) =>
       item.path?.flatMap(p => {
-        let endpointPath = modulePath ?? '';
-        endpointPath += this.normalizeGlobalPath(prefix) + addLeadingSlash(p);
-
-        const routeInfo: RouteInfo = {
-          path: endpointPath,
-          method: item.requestMethod,
-        };
-        const version = item.version ?? controllerVersion;
-        if (version && versioningConfig) {
-          if (typeof version !== 'string' && Array.isArray(version)) {
-            return version.map(v => ({
-              ...routeInfo,
-              version: toUndefinedIfNeural(v),
-            }));
-          }
-          routeInfo.version = toUndefinedIfNeural(version);
-        }
-
-        return routeInfo;
+          throw new Error("STUB");
       });
 
     return ([] as string[])
       .concat(routePath)
       .map(routePath =>
-        controllerPaths
-          .map(item => toRouteInfo(item, routePath))
-          .reduce(concatPaths, []),
+        { throw new Error("STUB"); },
       )
       .reduce(concatPaths, []);
   }
@@ -151,9 +131,9 @@ export class RoutesMapper {
     }
 
     const modules = Array.from(modulesContainer.values()).filter(moduleRef =>
-      moduleRefsSet.has(moduleRef),
+      { throw new Error("STUB"); },
     );
-    return modules.find(({ controllers }) => controllers.has(metatype));
+    return modules.find(({ controllers }) => { throw new Error("STUB"); });
   }
 
   private getModulePath(

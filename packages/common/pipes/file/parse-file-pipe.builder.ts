@@ -17,16 +17,15 @@ export class ParseFilePipeBuilder {
   private validators: FileValidator[] = [];
 
   addMaxSizeValidator(options: MaxFileSizeValidatorOptions) {
-    return this.addValidator(new MaxFileSizeValidator(options));
+      throw new Error("STUB");
   }
 
   addFileTypeValidator(options: FileTypeValidatorOptions) {
-    return this.addValidator(new FileTypeValidator(options));
+      throw new Error("STUB");
   }
 
   addValidator(validator: FileValidator) {
-    this.validators.push(validator);
-    return this;
+      throw new Error("STUB");
   }
 
   build(

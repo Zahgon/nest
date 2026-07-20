@@ -27,7 +27,7 @@ import { validateEach } from '../../utils/validate-each.util';
  */
 
 export const UseFilters = (...filters: (ExceptionFilter | Function)[]) =>
-  addExceptionFiltersMetadata(...filters);
+  { throw new Error("STUB"); };
 
 function addExceptionFiltersMetadata(
   ...filters: (Function | ExceptionFilter)[]
@@ -37,27 +37,6 @@ function addExceptionFiltersMetadata(
     key?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
-    const isFilterValid = <T extends Function | Record<string, any>>(
-      filter: T,
-    ) => filter && (isFunction(filter) || isFunction(filter.catch));
-
-    if (descriptor) {
-      validateEach(
-        target.constructor,
-        filters,
-        isFilterValid,
-        '@UseFilters',
-        'filter',
-      );
-      extendArrayMetadata(
-        EXCEPTION_FILTERS_METADATA,
-        filters,
-        descriptor.value,
-      );
-      return descriptor;
-    }
-    validateEach(target, filters, isFilterValid, '@UseFilters', 'filter');
-    extendArrayMetadata(EXCEPTION_FILTERS_METADATA, filters, target);
-    return target;
+      throw new Error("STUB");
   };
 }

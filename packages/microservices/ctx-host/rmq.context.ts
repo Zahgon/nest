@@ -21,13 +21,13 @@ export class RmqContext extends BaseRpcContext<RmqContextArgs> {
    * Returns the reference to the original RMQ channel.
    */
   getChannelRef() {
-    return this.args[1];
+      throw new Error("STUB");
   }
 
   /**
    * Returns the name of the pattern.
    */
   getPattern() {
-    return this.args[2];
+      throw new Error("STUB");
   }
 }

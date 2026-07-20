@@ -48,40 +48,23 @@ export class MqttRecordBuilder<TData> {
   constructor(private data?: TData) {}
 
   public setData(data: TData): this {
-    this.data = data;
-    return this;
+      throw new Error("STUB");
   }
 
   public setQoS(qos: MqttRecordOptions['qos']): this {
-    this.options = {
-      ...this.options,
-      qos,
-    };
-    return this;
+      throw new Error("STUB");
   }
 
   public setRetain(retain: MqttRecordOptions['retain']): this {
-    this.options = {
-      ...this.options,
-      retain,
-    };
-    return this;
+      throw new Error("STUB");
   }
 
   public setDup(dup: MqttRecordOptions['dup']): this {
-    this.options = {
-      ...this.options,
-      dup,
-    };
-    return this;
+      throw new Error("STUB");
   }
 
   public setProperties(properties: MqttRecordOptions['properties']): this {
-    this.options = {
-      ...this.options,
-      properties,
-    };
-    return this;
+      throw new Error("STUB");
   }
 
   public build(): MqttRecord {

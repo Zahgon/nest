@@ -24,7 +24,7 @@ export class KafkaParser {
     }
     if (!isNil(data.headers)) {
       const decodeHeaderByKey = (key: string) => {
-        result.headers[key] = this.decode(data.headers[key]);
+          throw new Error("STUB");
       };
       Object.keys(data.headers).forEach(decodeHeaderByKey);
     } else {

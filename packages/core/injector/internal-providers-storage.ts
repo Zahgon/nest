@@ -6,14 +6,14 @@ export class InternalProvidersStorage {
   private _httpAdapter: AbstractHttpAdapter;
 
   get httpAdapterHost(): HttpAdapterHost {
-    return this._httpAdapterHost;
+      throw new Error("STUB");
   }
 
   get httpAdapter(): AbstractHttpAdapter {
-    return this._httpAdapter;
+      throw new Error("STUB");
   }
 
   set httpAdapter(httpAdapter: AbstractHttpAdapter) {
-    this._httpAdapter = httpAdapter;
+      throw new Error("STUB");
   }
 }

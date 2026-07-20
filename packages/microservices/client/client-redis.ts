@@ -42,14 +42,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     protected readonly options: Required<RedisOptions>['options'] &
       RedisOutputOptions,
   ) {
-    super();
-
-    redisPackage = loadPackage('ioredis', ClientRedis.name, () =>
-      require('ioredis'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public getRequestPattern(pattern: string): string {
@@ -77,14 +70,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     this.subClient = this.createClient();
 
     [this.pubClient, this.subClient].forEach((client, index) => {
-      const type = index === 0 ? 'pub' : 'sub';
-      this.registerErrorListener(client);
-      this.registerReconnectListener(client);
-      this.registerReadyListener(client);
-      this.registerEndListener(client);
-      this.pendingEventListeners.forEach(({ event, callback }) =>
-        client.on(event, (...args: [any]) => callback(type, ...args)),
-      );
+        throw new Error("STUB");
     });
     this.pendingEventListeners = [];
 
@@ -109,7 +95,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
 
   public registerErrorListener(client: Redis) {
     client.addListener(RedisEventsMap.ERROR, (err: any) =>
-      this.logger.error(err),
+      { throw new Error("STUB"); },
     );
   }
 
@@ -117,22 +103,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on(RedisEventsMap.RECONNECTING, () => {
-      if (this.isManuallyClosed) {
-        return;
-      }
-
-      this.connectionPromise = Promise.reject(
-        'Error: Connection lost. Trying to reconnect...',
-      );
-
-      // Prevent unhandled rejections
-      this.connectionPromise.catch(() => {});
-
-      this._status$.next(RedisStatus.RECONNECTING);
-
-      if (this.wasInitialConnectionSuccessful) {
-        this.logger.log('Reconnecting to Redis...');
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -140,18 +111,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on(RedisEventsMap.READY, () => {
-      this.connectionPromise = Promise.resolve();
-      this._status$.next(RedisStatus.CONNECTED);
-
-      this.logger.log('Connected to Redis. Subscribing to channels...');
-
-      if (!this.wasInitialConnectionSuccessful) {
-        this.wasInitialConnectionSuccessful = true;
-        this.subClient.on(
-          this.options.returnBuffers ? 'messageBuffer' : 'message',
-          this.createResponseCallback(),
-        );
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -159,27 +119,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     on: (event: string, fn: () => void) => void;
   }) {
     client.on('end', () => {
-      if (this.isManuallyClosed) {
-        return;
-      }
-      this._status$.next(RedisStatus.DISCONNECTED);
-      this.handleClose();
-
-      if (this.getOptionsProp(this.options, 'retryAttempts') === undefined) {
-        // When retryAttempts is not specified, the connection will not be re-established
-        this.logger.error('Disconnected from Redis.');
-
-        // Clean up client instances and just recreate them when connect is called
-        this.pubClient = this.subClient = null;
-      } else {
-        this.logger.error('Disconnected from Redis.');
-        this.connectionPromise = Promise.reject(
-          'Error: Connection lost. Trying to reconnect...',
-        );
-
-        // Prevent unhandled rejections
-        this.connectionPromise.catch(() => {});
-      }
+        throw new Error("STUB");
     });
   }
 
@@ -195,7 +135,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
   }
 
   public getClientOptions(): Partial<RedisOptions['options']> {
-    const retryStrategy = (times: number) => this.createRetryStrategy(times);
+    const retryStrategy = (times: number) => { throw new Error("STUB"); };
 
     return {
       ...(this.options || {}),
@@ -208,20 +148,15 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     EventCallback extends RedisEvents[EventKey] = RedisEvents[EventKey],
   >(event: EventKey, callback: EventCallback) {
     if (this.subClient && this.pubClient) {
-      this.subClient.on(event, (...args: [any]) => callback('sub', ...args));
-      this.pubClient.on(event, (...args: [any]) => callback('pub', ...args));
+      this.subClient.on(event, (...args: [any]) => { throw new Error("STUB"); });
+      this.pubClient.on(event, (...args: [any]) => { throw new Error("STUB"); });
     } else {
       this.pendingEventListeners.push({ event, callback });
     }
   }
 
   public unwrap<T>(): T {
-    if (!this.pubClient || !this.subClient) {
-      throw new Error(
-        'Not initialized. Please call the "connect" method first.',
-      );
-    }
-    return [this.pubClient, this.subClient] as T;
+      throw new Error("STUB");
   }
 
   public createRetryStrategy(times: number): undefined | number {
@@ -246,40 +181,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     buffer: string,
   ) => Promise<void> {
     return async (channel: string, buffer: string) => {
-      let packet: any;
-      try {
-        packet = JSON.parse(buffer);
-      } catch (err) {
-        this.logger.debug(
-          'Redis response packet is not in json format, bypassing...',
-        );
-        packet = buffer;
-      }
-      const { err, response, isDisposed, id } =
-        await this.deserializer.deserialize(packet);
-
-      const callback = this.routingMap.get(id);
-      if (!callback) {
-        if (Buffer.isBuffer(buffer))
-          this.logger.debug(
-            'You have to parse your buffer on your own to get id from it, because it is not in json format',
-          );
-        this.logger.debug(
-          'No matching callback found for Redis response packet with id: ' + id,
-        );
-        return;
-      }
-      if (isDisposed || err) {
-        return callback({
-          err,
-          response,
-          isDisposed: true,
-        });
-      }
-      callback({
-        err,
-        response,
-      });
+        throw new Error("STUB");
     };
   }
 
@@ -308,19 +210,20 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
       if (subscriptionsCount <= 0) {
         this.subClient.subscribe(
           responseChannel,
-          (err: any) => !err && publishPacket(),
+          (err: any) => { throw new Error("STUB"); },
         );
       } else {
         publishPacket();
       }
 
       return () => {
-        this.unsubscribeFromChannel(responseChannel);
-        this.routingMap.delete(packet.id);
+          throw new Error("STUB");
       };
     } catch (err) {
       callback({ err });
-      return () => {};
+      return () => {
+          throw new Error("STUB");
+      };
     }
   }
 
@@ -329,9 +232,7 @@ export class ClientRedis extends ClientProxy<RedisEvents, RedisStatus> {
     const serializedPacket = this.serializer.serialize(packet);
 
     return new Promise<void>((resolve, reject) =>
-      this.pubClient.publish(pattern, JSON.stringify(serializedPacket), err =>
-        err ? reject(err) : resolve(),
-      ),
+      { throw new Error("STUB"); },
     );
   }
 

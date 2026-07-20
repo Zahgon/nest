@@ -49,9 +49,7 @@ export class BaseWsExceptionFilter<
   protected static readonly logger = new Logger('WsExceptionsHandler');
 
   constructor(protected readonly options: BaseWsExceptionFilterOptions = {}) {
-    this.options.includeCause = this.options.includeCause ?? true;
-    this.options.causeFactory =
-      this.options.causeFactory ?? ((pattern, data) => ({ pattern, data }));
+      throw new Error("STUB");
   }
 
   public catch(exception: TError, host: ArgumentsHost) {
@@ -116,6 +114,6 @@ export class BaseWsExceptionFilter<
   }
 
   public isExceptionObject(err: any): err is Error {
-    return isObject(err) && !!(err as Error).message;
+      throw new Error("STUB");
   }
 }

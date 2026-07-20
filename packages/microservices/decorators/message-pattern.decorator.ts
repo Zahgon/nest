@@ -50,50 +50,7 @@ export const MessagePattern: {
   transportOrExtras?: Transport | symbol | Record<string, any>,
   maybeExtras?: Record<string, any>,
 ): MethodDecorator => {
-  let transport: Transport | symbol;
-  let extras: Record<string, any>;
-  if (
-    (isNumber(transportOrExtras) || isSymbol(transportOrExtras)) &&
-    isNil(maybeExtras)
-  ) {
-    transport = transportOrExtras;
-  } else if (isObject(transportOrExtras) && isNil(maybeExtras)) {
-    extras = transportOrExtras;
-  } else {
-    transport = transportOrExtras as Transport | symbol;
-    extras = maybeExtras!;
-  }
-
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) => {
-    try {
-      Reflect.defineMetadata(
-        PATTERN_METADATA,
-        ([] as any[]).concat(metadata),
-        descriptor.value,
-      );
-      Reflect.defineMetadata(
-        PATTERN_HANDLER_METADATA,
-        PatternHandler.MESSAGE,
-        descriptor.value,
-      );
-      Reflect.defineMetadata(TRANSPORT_METADATA, transport, descriptor.value);
-      Reflect.defineMetadata(
-        PATTERN_EXTRAS_METADATA,
-        {
-          ...Reflect.getMetadata(PATTERN_EXTRAS_METADATA, descriptor.value),
-          ...extras,
-        },
-        descriptor.value,
-      );
-      return descriptor;
-    } catch (err) {
-      throw new InvalidGrpcDecoratorException(metadata as RpcDecoratorMetadata);
-    }
-  };
+    throw new Error("STUB");
 };
 
 /**
@@ -105,14 +62,7 @@ export function GrpcMethod(
   service: string | undefined,
   method?: string,
 ): MethodDecorator {
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) => {
-    const metadata = createGrpcMethodMetadata(target, key, service, method);
-    return MessagePattern(metadata, Transport.GRPC)(target, key, descriptor);
-  };
+    throw new Error("STUB");
 }
 
 /**
@@ -133,50 +83,7 @@ export function GrpcStreamMethod(
   service: string | undefined,
   method?: string,
 ): MethodDecorator {
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) => {
-    const metadata = createGrpcMethodMetadata(
-      target,
-      key,
-      service,
-      method,
-      GrpcMethodStreamingType.RX_STREAMING,
-    );
-
-    MessagePattern(metadata, Transport.GRPC)(target, key, descriptor);
-
-    const originalMethod = descriptor.value;
-
-    // Override original method to call the "drainBuffer" method on the first parameter
-    // This is required to avoid premature message emission
-    descriptor.value = function (this: any, observable: any, ...args: any[]) {
-      const result = originalMethod.apply(this, [observable, ...args]);
-      const isPromise = result && typeof result.then === 'function';
-      if (isPromise) {
-        return result.then((data: any) => {
-          if (observable && observable.drainBuffer) {
-            observable.drainBuffer();
-          }
-          return data;
-        });
-      }
-
-      if (observable && observable.drainBuffer) {
-        observable.drainBuffer();
-      }
-      return result;
-    };
-
-    // Copy all metadata from the original method to the new one
-    const metadataKeys = Reflect.getMetadataKeys(originalMethod);
-    metadataKeys.forEach(metadataKey => {
-      const metadataValue = Reflect.getMetadata(metadataKey, originalMethod);
-      Reflect.defineMetadata(metadataKey, metadataValue, descriptor.value);
-    });
-  };
+    throw new Error("STUB");
 }
 
 /**
@@ -197,20 +104,7 @@ export function GrpcStreamCall(
   service: string | undefined,
   method?: string,
 ): MethodDecorator {
-  return (
-    target: object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) => {
-    const metadata = createGrpcMethodMetadata(
-      target,
-      key,
-      service,
-      method,
-      GrpcMethodStreamingType.PT_STREAMING,
-    );
-    return MessagePattern(metadata, Transport.GRPC)(target, key, descriptor);
-  };
+    throw new Error("STUB");
 }
 
 export function createGrpcMethodMetadata(
@@ -220,19 +114,5 @@ export function createGrpcMethodMetadata(
   method: string | undefined,
   streaming = GrpcMethodStreamingType.NO_STREAMING,
 ) {
-  const capitalizeFirstLetter = (str: string) =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-
-  if (!service) {
-    const { name } = target.constructor;
-    return {
-      service: name,
-      rpc: capitalizeFirstLetter(key as string),
-      streaming,
-    };
-  }
-  if (service && !method) {
-    return { service, rpc: capitalizeFirstLetter(key as string), streaming };
-  }
-  return { service, rpc: method, streaming };
+    throw new Error("STUB");
 }

@@ -48,14 +48,7 @@ export class ServerNats<
   private readonly subscriptions: Subscription[] = [];
 
   constructor(private readonly options: Required<NatsOptions>['options']) {
-    super();
-
-    natsPackage = this.loadPackage('nats', ServerNats.name, () =>
-      require('nats'),
-    );
-
-    this.initializeSerializer(options);
-    this.initializeDeserializer(options);
+      throw new Error("STUB");
   }
 
   public async listen(
@@ -103,9 +96,7 @@ export class ServerNats<
       NATS_DEFAULT_GRACE_PERIOD,
     );
     await new Promise<void>(res => {
-      setTimeout(() => {
-        res();
-      }, gracePeriod);
+        throw new Error("STUB");
     });
   }
 
@@ -115,7 +106,7 @@ export class ServerNats<
     }
     const graceful = this.getOptionsProp(this.options, 'gracefulShutdown');
     if (graceful) {
-      this.subscriptions.forEach(sub => sub.unsubscribe());
+      this.subscriptions.forEach(sub => { throw new Error("STUB"); });
       await this.waitForGracePeriod();
     }
     await this.natsClient?.close();
@@ -133,10 +124,7 @@ export class ServerNats<
 
   public getMessageHandler(channel: string): Function {
     return async (error: object | undefined, message: NatsMsg) => {
-      if (error) {
-        return this.logger.error(error);
-      }
-      return this.handleMessage(channel, message);
+        throw new Error("STUB");
     };
   }
 
@@ -169,31 +157,23 @@ export class ServerNats<
       return publish(noHandlerPacket);
     }
     return this.onProcessingStartHook(this.transportId, natsCtx, async () => {
-      const response$ = this.transformToObservable(
-        await handler(message.data, natsCtx),
-      );
-      response$ && this.send(response$, publish);
+        throw new Error("STUB");
     });
   }
 
   public getPublisher(natsMsg: NatsMsg, id: string, ctx: NatsContext) {
     if (natsMsg.reply) {
       return (response: any) => {
-        Object.assign(response, { id });
-        const outgoingResponse: NatsRecord =
-          this.serializer.serialize(response);
-
-        this.onProcessingEndHook?.(this.transportId, ctx);
-        return natsMsg.respond(outgoingResponse.data, {
-          headers: outgoingResponse.headers,
-        });
+          throw new Error("STUB");
       };
     }
 
     // In case the "reply" topic is not provided, there's no need for a reply.
     // Method returns a noop function instead
 
-    return () => {};
+    return () => {
+        throw new Error("STUB");
+    };
   }
 
   public async handleStatusUpdates(client: Client) {
@@ -263,12 +243,7 @@ export class ServerNats<
   }
 
   public unwrap<T>(): T {
-    if (!this.natsClient) {
-      throw new Error(
-        'Not initialized. Please call the "listen"/"startAllMicroservices" method before accessing the server.',
-      );
-    }
-    return this.natsClient as T;
+      throw new Error("STUB");
   }
 
   public on<
@@ -279,11 +254,10 @@ export class ServerNats<
   }
 
   protected initializeSerializer(options: NatsOptions['options']) {
-    this.serializer = options?.serializer ?? new NatsRecordSerializer();
+      throw new Error("STUB");
   }
 
   protected initializeDeserializer(options: NatsOptions['options']) {
-    this.deserializer =
-      options?.deserializer ?? new NatsRequestJSONDeserializer();
+      throw new Error("STUB");
   }
 }

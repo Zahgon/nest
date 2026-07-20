@@ -31,7 +31,7 @@ export class StreamableFile {
   };
 
   protected logError: (err: Error) => void = (err: Error) => {
-    this.logger.error(err);
+      throw new Error("STUB");
   };
 
   constructor(buffer: Uint8Array, options?: StreamableFileOptions);
@@ -40,14 +40,7 @@ export class StreamableFile {
     bufferOrReadStream: Uint8Array | Readable,
     readonly options: StreamableFileOptions = {},
   ) {
-    if (types.isUint8Array(bufferOrReadStream)) {
-      this.stream = new Readable();
-      this.stream.push(bufferOrReadStream);
-      this.stream.push(null);
-      this.options.length ??= bufferOrReadStream.length;
-    } else if (bufferOrReadStream.pipe && isFunction(bufferOrReadStream.pipe)) {
-      this.stream = bufferOrReadStream;
-    }
+      throw new Error("STUB");
   }
 
   getStream(): Readable {
@@ -82,11 +75,10 @@ export class StreamableFile {
   }
 
   get errorLogger() {
-    return this.logError;
+      throw new Error("STUB");
   }
 
   setErrorLogger(handler: (err: Error) => void) {
-    this.logError = handler;
-    return this;
+      throw new Error("STUB");
   }
 }

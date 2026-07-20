@@ -39,17 +39,6 @@ export class UnsupportedMediaTypeException extends HttpException {
       | string
       | HttpExceptionOptions = 'Unsupported Media Type',
   ) {
-    const { description, httpExceptionOptions } =
-      HttpException.extractDescriptionAndOptionsFrom(descriptionOrOptions);
-
-    super(
-      HttpException.createBody(
-        objectOrError,
-        description!,
-        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-      ),
-      HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-      httpExceptionOptions,
-    );
+      throw new Error("STUB");
   }
 }

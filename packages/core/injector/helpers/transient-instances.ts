@@ -10,11 +10,11 @@ export function getTransientInstances(
   instances: [InjectionToken, InstanceWrapper][],
 ): InstanceWrapper[] {
   return iterate(instances)
-    .filter(([_, wrapper]) => wrapper.isDependencyTreeStatic())
-    .map(([_, wrapper]) => wrapper.getStaticTransientInstances())
+    .filter(([_, wrapper]) => { throw new Error("STUB"); })
+    .map(([_, wrapper]) => { throw new Error("STUB"); })
     .flatten()
-    .filter(item => !!item)
-    .map(({ instance }: any) => instance)
+    .filter(item => { throw new Error("STUB"); })
+    .map(({ instance }: any) => { throw new Error("STUB"); })
     .toArray() as InstanceWrapper[];
 }
 
@@ -28,8 +28,8 @@ export function getNonTransientInstances(
   return iterate(instances)
     .filter(
       ([key, wrapper]) =>
-        wrapper.isDependencyTreeStatic() && !wrapper.isTransient,
+        { throw new Error("STUB"); },
     )
-    .map(([key, { instance }]) => instance)
+    .map(([key, { instance }]) => { throw new Error("STUB"); })
     .toArray() as InstanceWrapper[];
 }

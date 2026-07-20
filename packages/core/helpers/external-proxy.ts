@@ -9,13 +9,7 @@ export class ExternalErrorProxy {
     type?: TContext,
   ) {
     return async (...args: any[]) => {
-      try {
-        return await targetCallback(...args);
-      } catch (e) {
-        const host = new ExecutionContextHost(args);
-        host.setType<TContext>(type!);
-        return exceptionsHandler.next(e, host);
-      }
+        throw new Error("STUB");
     };
   }
 }

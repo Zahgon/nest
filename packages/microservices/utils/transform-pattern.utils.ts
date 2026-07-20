@@ -43,25 +43,10 @@ export function transformPatternToRoute(
     return '[TOO_MANY_KEYS]';
   }
 
-  const sortedKeys = keys.sort((a, b) => ('' + a).localeCompare(b));
+  const sortedKeys = keys.sort((a, b) => { throw new Error("STUB"); });
 
   const parts = sortedKeys.map(key => {
-    const value = pattern[key];
-    let partialRoute = `"${escape(key)}":`;
-
-    // Only quote strings, numbers and objects are handled recursively
-    if (isString(value)) {
-      partialRoute += `"${escape(transformPatternToRoute(value, depth + 1, maxDepth, maxKeys))}"`;
-    } else {
-      partialRoute += transformPatternToRoute(
-        value,
-        depth + 1,
-        maxDepth,
-        maxKeys,
-      );
-    }
-
-    return partialRoute;
+      throw new Error("STUB");
   });
 
   return `{${parts.join(',')}}`;
